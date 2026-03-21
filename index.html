@@ -4128,7 +4128,7 @@
       if (closeBtn.parentElement !== dialog) dialog.insertBefore(closeBtn, dialog.firstChild);
 
       // Camera viewport height
-      const vpHeight = window.innerWidth <= 480 ? '220px'
+      const vpHeight = window.innerWidth <= 480 ? '280px'
         : window.innerWidth <= 768 ? '260px'
           : '300px';
       viewport.style.height = vpHeight;
@@ -4222,13 +4222,14 @@
           hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
 
           zxingReader = new ZXing.BrowserMultiFormatReader(hints, 400);
+          const requiredReads = window.innerWidth <= 768 ? 1 : 2;
 
           // Use decodeFromVideoElement since we manage the stream ourselves
           zxingReader.decodeFromVideoElement(video, (result, err) => {
             if (result) {
               const code = result.getText();
               scanCounts[code] = (scanCounts[code] || 0) + 1;
-              if (scanCounts[code] >= 2) {
+              if (scanCounts[code] >= requiredReads) {
                 stopCamera();
                 document.getElementById('manual-barcode').value = code;
                 document.getElementById('scanner-status').textContent = '✓ Captured: ' + code;
