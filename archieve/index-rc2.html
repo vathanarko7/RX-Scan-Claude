@@ -1,0 +1,2982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0e14">
+<title>RxScan — Pharmacy Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@zxing/library@0.19.1/umd/index.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0e14;
+    --surface: #111620;
+    --surface2: #171d28;
+    --border: #1e2736;
+    --accent: #00d4aa;
+    --accent2: #0088ff;
+    --warn: #ff6b35;
+    --danger: #ff3b5c;
+    --text: #e8edf5;
+    --muted: #5a6680;
+    --success: #00c97b;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BG */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,14,20,0.92);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+
+  .logo span { color: var(--accent); }
+
+  nav {
+    display: flex;
+    gap: 0.25rem;
+    margin-left: auto;
+  }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+
+  .nav-btn:hover { color: var(--text); background: var(--surface); }
+  .nav-btn.active { color: var(--accent); background: rgba(0,212,170,0.08); }
+
+  .header-scan-btn {
+    background: linear-gradient(135deg, var(--accent), #00b890);
+    color: #0a0e14;
+    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 0.4rem;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .header-scan-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,212,170,0.35); }
+
+  /* MAIN */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .stat-card:hover { border-color: rgba(0,212,170,0.3); }
+  .stat-card:hover::before { opacity: 1; }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-sub {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .stat-icon {
+    position: absolute;
+    right: 1.25rem;
+    top: 1.25rem;
+    font-size: 1.5rem;
+    opacity: 0.2;
+  }
+
+  .stat-card.warn { border-color: rgba(255,107,53,0.3); }
+  .stat-card.warn .stat-value { color: var(--warn); }
+  .stat-card.danger { border-color: rgba(255,59,92,0.25); }
+  .stat-card.danger .stat-value { color: var(--danger); }
+
+  /* TOOLBAR */
+  .toolbar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .search-wrap {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    padding: 0.65rem 1rem 0.65rem 2.5rem;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--muted); }
+
+  .filter-select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .btn {
+    border: none;
+    border-radius: 8px;
+    padding: 0.65rem 1.2rem;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 0.4rem;
+    transition: all 0.2s;
+  }
+
+  .btn-primary { background: var(--accent); color: #0a0e14; font-weight: 700; }
+  .btn-primary:hover { background: #00b890; box-shadow: 0 4px 16px rgba(0,212,170,0.3); }
+  .btn-ghost { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: rgba(255,59,92,0.12); border: 1px solid rgba(255,59,92,0.3); color: var(--danger); }
+  .btn-danger:hover { background: rgba(255,59,92,0.2); }
+
+  /* TABLE */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead { background: var(--surface2); }
+
+  th {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.9rem 1.25rem;
+    text-align: left;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+  }
+
+  th:hover { color: var(--accent); }
+
+  td {
+    padding: 0.9rem 1.25rem;
+    font-size: 0.875rem;
+    border-top: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  tr { transition: background 0.15s; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .drug-name {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.1rem;
+  }
+
+  .drug-generic {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+  }
+
+  .location-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(0,136,255,0.1);
+    border: 1px solid rgba(0,136,255,0.2);
+    color: var(--accent2);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .location-badge:hover { background: rgba(0,136,255,0.2); }
+
+  .stock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.8rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+  }
+
+  .stock-ok { background: rgba(0,201,123,0.1); color: var(--success); border: 1px solid rgba(0,201,123,0.2); }
+  .stock-low { background: rgba(255,107,53,0.1); color: var(--warn); border: 1px solid rgba(255,107,53,0.2); }
+  .stock-out { background: rgba(255,59,92,0.1); color: var(--danger); border: 1px solid rgba(255,59,92,0.2); animation: pulse-danger 2s infinite; }
+
+  @keyframes pulse-danger {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .price-box { font-family: var(--font-mono); font-weight: 500; }
+  .price-unit { font-size: 0.75rem; color: var(--muted); }
+
+  .expiry-ok { color: var(--success); font-family: var(--font-mono); font-size: 0.8rem; }
+  .expiry-warn { color: var(--warn); font-family: var(--font-mono); font-size: 0.8rem; }
+  .expiry-bad { color: var(--danger); font-family: var(--font-mono); font-size: 0.8rem; }
+
+  .action-btns { display: flex; gap: 0.4rem; }
+
+  .icon-btn {
+    width: 30px; height: 30px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .icon-btn.del:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* PAGINATION */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .page-info { font-size: 0.8rem; color: var(--muted); font-family: var(--font-mono); }
+  .page-btns { display: flex; gap: 0.4rem; }
+  .page-btn {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-mono);
+  }
+  .page-btn.active { background: var(--accent); border-color: var(--accent); color: #0a0e14; font-weight: 700; }
+  .page-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+
+  /* SCANNER OVERLAY */
+  .scanner-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(10,14,20,0.97);
+    backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .scanner-overlay.open { display: flex; }
+
+  .scanner-close {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .scanner-close:hover { color: var(--danger); border-color: var(--danger); }
+
+  .scanner-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .scanner-sub {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .scanner-box {
+    width: 380px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #scanner-viewport {
+    width: 100%;
+    height: 260px;
+    background: #000;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #scanner-viewport video,
+  #scanner-viewport canvas {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+  }
+
+  .scan-line {
+    position: absolute;
+    left: 10%; right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: scan 2s ease-in-out infinite;
+    z-index: 10;
+    display: none;
+  }
+
+  .scanning .scan-line { display: block; }
+
+  @keyframes scan {
+    0% { top: 20%; }
+    50% { top: 80%; }
+    100% { top: 20%; }
+  }
+
+  .scan-corners {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 11;
+  }
+
+  .scan-corner {
+    position: absolute;
+    width: 24px; height: 24px;
+    border-color: var(--accent);
+    border-style: solid;
+  }
+
+  .scan-corner.tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
+  .scan-corner.tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; }
+  .scan-corner.bl { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; }
+  .scan-corner.br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
+
+  .scanner-controls {
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .manual-input-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .manual-input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .manual-input:focus { border-color: var(--accent); }
+  .manual-input::placeholder { color: var(--muted); }
+
+  .scanner-status {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 0.25rem;
+  }
+
+  .scanner-status.found { color: var(--success); }
+  .scanner-status.notfound { color: var(--danger); }
+
+  /* SCAN RESULT CARD */
+  .scan-result {
+    display: none;
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-top: 1rem;
+    width: 380px;
+    animation: slideUp 0.3s ease;
+  }
+
+  .scan-result.show { display: block; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .result-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .result-barcode {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .result-item {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+  }
+
+  .result-item-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3rem;
+  }
+
+  .result-item-val {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .result-location {
+    grid-column: 1 / -1;
+    background: rgba(0,136,255,0.08);
+    border: 1px solid rgba(0,136,255,0.2);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .result-location-icon { font-size: 1.5rem; }
+
+  .result-location-text .main { font-weight: 600; color: var(--accent2); }
+  .result-location-text .sub { font-size: 0.75rem; color: var(--muted); font-family: var(--font-mono); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    background: rgba(10,14,20,0.85);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalIn 0.25s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.97) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    padding: 1.5rem 1.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .modal-body { padding: 1.5rem; }
+  .modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .form-input, .form-select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+
+  /* MAP PAGE */
+  .map-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.5rem;
+    height: calc(100vh - 180px);
+  }
+
+  .map-sidebar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    overflow-y: auto;
+  }
+
+  .map-sidebar h3 {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+
+  .zone-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .zone-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .zone-item:hover, .zone-item.active { border-color: var(--accent); background: rgba(0,212,170,0.05); }
+
+  .zone-color {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .zone-info { flex: 1; }
+  .zone-name { font-size: 0.85rem; font-weight: 600; }
+  .zone-count { font-size: 0.75rem; color: var(--muted); font-family: var(--font-mono); }
+
+  .pharmacy-map {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-canvas {
+    width: 100%;
+    max-width: 700px;
+    position: relative;
+  }
+
+  .shelf-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    justify-content: center;
+  }
+
+  .shelf-unit {
+    width: 64px;
+    border-radius: 6px;
+    padding: 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+    position: relative;
+  }
+
+  .shelf-unit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+  .shelf-unit.highlighted { border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(0,212,170,0.25); animation: highlight-pulse 1.5s infinite; }
+
+  @keyframes highlight-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(0,212,170,0.25); }
+    50% { box-shadow: 0 0 0 8px rgba(0,212,170,0.1); }
+  }
+
+  .shelf-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .shelf-items-count {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .shelf-items-label {
+    font-size: 0.55rem;
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+
+  .map-legend {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+  }
+
+  /* ALERTS PAGE */
+  .alerts-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .alert-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s;
+  }
+
+  .alert-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .alert-critical .alert-icon { background: rgba(255,59,92,0.15); }
+  .alert-warning .alert-icon { background: rgba(255,107,53,0.15); }
+  .alert-info .alert-icon { background: rgba(0,136,255,0.15); }
+
+  .alert-content { flex: 1; }
+  .alert-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; }
+  .alert-desc { font-size: 0.8rem; color: var(--muted); }
+  .alert-time { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+
+  .alert-card.alert-critical { border-color: rgba(255,59,92,0.3); }
+  .alert-card.alert-warning { border-color: rgba(255,107,53,0.25); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    font-size: 0.875rem;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 360px;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.error { border-color: var(--danger); }
+
+  /* PAGE TITLE */
+  .page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .page-title span { color: var(--accent); }
+  .page-subtitle { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+
+  /* ANALYTICS */
+  .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .chart-title {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .bar-chart { display: flex; flex-direction: column; gap: 0.6rem; }
+
+  .bar-row { display: flex; align-items: center; gap: 0.75rem; }
+
+  .bar-name { font-size: 0.78rem; color: var(--muted); width: 120px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 1s ease;
+  }
+
+  .bar-val { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text); width: 40px; text-align: right; flex-shrink: 0; }
+
+  /* CATEGORY PILLS */
+  .cat-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+  .cat-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-mono);
+  }
+
+  .cat-pill:hover, .cat-pill.active { border-color: var(--accent); color: var(--accent); background: rgba(0,212,170,0.06); }
+
+  .cat-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* LOW STOCK ROW */
+  .low-stock-banner {
+    background: rgba(255,107,53,0.07);
+    border: 1px solid rgba(255,107,53,0.25);
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .low-stock-banner span { color: var(--warn); font-weight: 600; }
+
+  /* ============================
+     MOBILE BOTTOM NAV
+     ============================ */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 9999;
+    background: #0d1119;
+    border-top: 1px solid var(--border);
+    padding: 0.5rem 0.25rem calc(0.5rem + env(safe-area-inset-bottom));
+    justify-content: space-around;
+    align-items: center;
+    pointer-events: auto;
+    isolation: isolate;
+  }
+
+  .mobile-nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    font-weight: 500;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 52px;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    pointer-events: auto;
+  }
+
+  .mobile-nav-btn .mn-icon { font-size: 1.25rem; line-height: 1; }
+  .mobile-nav-btn.active { color: var(--accent); }
+  .mobile-nav-btn.active .mn-icon { filter: drop-shadow(0 0 6px var(--accent)); }
+
+  .mobile-nav-scan {
+    background: linear-gradient(135deg, var(--accent), #00b890);
+    color: #0a0e14 !important;
+    border-radius: 14px;
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    min-width: 70px;
+  }
+
+  .mobile-nav-scan .mn-icon { font-size: 1.1rem; }
+
+  .mn-badge {
+    position: absolute;
+    top: 2px; right: 4px;
+    background: var(--danger);
+    color: #fff;
+    font-size: 0.55rem;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 1px 4px;
+    line-height: 1.2;
+    min-width: 14px;
+    text-align: center;
+  }
+
+
+  /* ============================================================
+     RESPONSIVE BREAKPOINTS — Real device sizes
+     
+     Mobile phones  : ≤ 480px  (Samsung S22=360, iPhone XR=414, iPhone 14 Pro Max=430)
+     Large phones   : ≤ 768px  (covers all phones + small tablets)
+     Tablets        : ≤ 1024px (iPad Mini=768, iPad Air=820, iPad Pro=1024)
+     Desktop        : > 1024px
+     
+     Bottom nav shows on phones (≤ 768px).
+     JS threshold matches: window.innerWidth <= 768
+  ============================================================ */
+
+  /* -- TABLET + LARGE PHONE (≤ 1024px) -------------------- */
+  @media (max-width: 1024px) {
+    .chart-row { grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .map-grid { grid-template-columns: 280px 1fr; }
+    .dash-bottom { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* -- TABLET (≤ 768px) ------------------------------------ */
+  @media (max-width: 768px) {
+    body { padding-bottom: 76px; }
+    main { padding: 1rem; }
+
+    /* Header slim */
+    header { padding: 0 1rem; height: 56px; }
+    nav { display: none; }
+    .header-scan-btn { display: none; }
+
+    /* Page header */
+    .page-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.25rem; }
+    .page-header .btn { width: 100%; justify-content: center; }
+    .page-title { font-size: 1.5rem; }
+
+    /* Stats 2-col */
+    .stats-row { grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
+
+    /* Dashboard */
+    .dash-bottom { grid-template-columns: 1fr; gap: 1rem; }
+
+    /* Map */
+    .map-grid { grid-template-columns: 1fr; height: auto; gap: 1rem; }
+    .map-sidebar { max-height: 240px; }
+    .pharmacy-map { overflow-x: auto; min-height: 280px; }
+    .map-canvas { min-width: 420px; }
+    .map-legend { display: none; }
+
+    /* Charts */
+    .chart-row { grid-template-columns: 1fr; }
+
+    /* Form */
+    .form-row { grid-template-columns: 1fr 1fr; }
+
+    /* Modal */
+    .modal-overlay { align-items: flex-end; }
+    .modal { max-width: 100%; border-radius: 20px 20px 0 0; max-height: 88vh; margin: 0; animation: sheetUp 0.3s ease; }
+    @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+    /* Alerts */
+    .alert-time { display: none; }
+
+    /* Toast above nav */
+    .toast { bottom: 86px; right: 1rem; left: 1rem; max-width: unset; }
+  }
+
+  /* -- PHONE (≤ 480px) ------------------------------------- */
+  @media (max-width: 480px) {
+    body { padding-bottom: 72px; }
+    main { padding: 0.75rem; }
+
+    /* Header */
+    header { padding: 0 0.75rem; height: 52px; gap: 0.5rem; }
+    .logo { font-size: 1.05rem; }
+    .logo-icon { width: 26px; height: 26px; font-size: 0.8rem; }
+
+    /* Page header */
+    .page-title { font-size: 1.3rem; }
+    .page-subtitle { font-size: 0.78rem; }
+
+    /* Stats 2-col compact */
+    .stats-row { grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem; }
+    .stat-card { padding: 0.75rem 0.85rem; }
+    .stat-value { font-size: 1.35rem; }
+    .stat-label { font-size: 0.62rem; }
+    .stat-sub { font-size: 0.65rem; }
+    .stat-icon { display: none; }
+
+    /* Toolbar stacked */
+    .toolbar { flex-direction: column; gap: 0.5rem; align-items: stretch; }
+    .search-wrap { min-width: unset; }
+    .filter-select { width: 100%; font-size: 0.82rem; }
+    .toolbar .btn-ghost { width: 100%; justify-content: center; }
+
+    /* Table → cards */
+    .desktop-table { display: none !important; }
+    .mobile-cards { display: flex !important; flex-direction: column; }
+    .pagination { flex-direction: column; gap: 0.4rem; align-items: center; }
+
+    /* Scanner full width */
+    .scanner-overlay { padding: 0; justify-content: flex-start; overflow-y: auto; }
+    .scanner-title { font-size: 1.1rem; margin-top: 3.5rem; }
+    .scanner-sub { font-size: 0.75rem; margin-bottom: 0.75rem; padding: 0 0.75rem; }
+    .scanner-box { width: calc(100vw - 1.5rem); margin: 0 0.75rem; }
+    #scanner-viewport { height: 200px; }
+    .scan-result { width: calc(100vw - 1.5rem); margin: 0.75rem 0.75rem 1.5rem; }
+    .scanner-close { top: 0.6rem; right: 0.6rem; width: 38px; height: 38px; }
+
+    /* Modal full-width sheet */
+    .modal-body { padding: 0.85rem; }
+    .modal-header { padding: 0.85rem 0.85rem 0.75rem; }
+    .modal-footer { padding: 0.75rem 0.85rem; }
+    .form-row { grid-template-columns: 1fr; gap: 0.6rem; margin-bottom: 0.75rem; }
+    .form-input, .form-select { font-size: 16px; } /* Prevent iOS zoom on focus */
+
+    /* Map */
+    .map-sidebar { max-height: 180px; padding: 0.75rem; }
+    .pharmacy-map { padding: 0.75rem; }
+    .shelf-unit { width: 48px; padding: 4px; }
+    .shelf-items-count { font-size: 0.85rem; }
+    .shelf-label { font-size: 0.5rem; }
+
+    /* Alerts */
+    .alert-card { padding: 0.75rem; gap: 0.6rem; }
+    .alert-icon { width: 34px; height: 34px; font-size: 0.95rem; }
+    .alert-title { font-size: 0.8rem; }
+    .alert-desc { font-size: 0.72rem; }
+
+    /* Analytics */
+    .chart-card { padding: 0.85rem; }
+    .chart-title { font-size: 0.82rem; }
+    .bar-name { width: 80px; font-size: 0.68rem; }
+    .bar-val { font-size: 0.68rem; width: 32px; }
+
+    /* Misc */
+    .low-stock-banner { font-size: 0.75rem; padding: 0.6rem 0.85rem; }
+    .toast { bottom: 80px; right: 0.75rem; left: 0.75rem; font-size: 0.82rem; padding: 0.75rem 1rem; }
+  }
+
+  /* -- VERY SMALL PHONES (≤ 360px — Samsung Galaxy S22 base) -- */
+  @media (max-width: 360px) {
+    main { padding: 0.6rem; }
+    .stats-row { gap: 0.4rem; }
+    .stat-card { padding: 0.65rem 0.75rem; }
+    .stat-value { font-size: 1.2rem; }
+    .page-title { font-size: 1.15rem; }
+    .mobile-nav-btn, #mobile-nav-bottom button { min-width: 44px !important; padding: 6px 6px !important; font-size: 0.55rem !important; }
+  }
+
+
+  /* ============================
+     MOBILE CARD VIEW (inventory)
+     ============================ */
+  .mobile-cards { display: none; }
+
+  .med-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    border-top: none;
+  }
+
+  .med-card + .med-card { border-top: 1px solid var(--border); border-radius: 0; }
+  .med-card:first-child { border-radius: 0; }
+  .med-card:last-child { border-radius: 0 0 10px 10px; }
+
+  .med-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .med-card-name { font-weight: 700; font-size: 0.95rem; }
+  .med-card-generic { font-size: 0.72rem; color: var(--muted); font-family: var(--font-mono); }
+
+  .med-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .med-card-stat {
+    background: var(--bg);
+    border-radius: 7px;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .med-card-stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+  }
+
+  .med-card-stat-val {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .med-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .med-card-location {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--accent2);
+    background: rgba(0,136,255,0.08);
+    border: 1px solid rgba(0,136,255,0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .med-card-actions { display: flex; gap: 0.4rem; }
+
+  .icon-btn { width: 34px; height: 34px; } /* larger touch target */
+
+  /* NEW DRUG CARD — shown when barcode not in inventory */
+  .new-drug-card {
+    display: none;
+    background: var(--surface2);
+    border: 1.5px dashed var(--accent);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-top: 1rem;
+    width: 380px;
+    animation: slideUp 0.3s ease;
+  }
+
+  @media (max-width: 900px) {
+    .new-drug-card { width: calc(100vw - 2rem); margin: 0.75rem 1rem 2rem; }
+  }
+
+  .new-drug-card.show { display: block; }
+
+  .new-drug-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .new-drug-icon {
+    width: 42px; height: 42px;
+    background: rgba(0,212,170,0.12);
+    border: 1px solid rgba(0,212,170,0.3);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .new-drug-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.2rem;
+  }
+
+  .new-drug-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+  }
+
+  .new-drug-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .new-drug-meta-item {
+    background: var(--bg);
+    border-radius: 7px;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .new-drug-meta-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 2px;
+  }
+
+  .new-drug-meta-val {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    word-break: break-all;
+  }
+
+  .new-drug-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btn-add-new {
+    flex: 1;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--accent), #00b890);
+    color: #0a0e14;
+    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    border: none;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 0.5rem;
+    transition: all 0.2s;
+    animation: pulse-add 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-add {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,170,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(0,212,170,0); }
+  }
+
+  .btn-add-new:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,212,170,0.4); }
+
+  .lookup-spinner {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border: 2px solid rgba(0,212,170,0.3);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+  }
+
+  .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+  .empty-state h3 { font-family: var(--font-display); margin-bottom: 0.5rem; color: var(--text); }
+
+  .tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .tag-blue { background: rgba(0,136,255,0.1); color: var(--accent2); }
+  .tag-green { background: rgba(0,201,123,0.1); color: var(--success); }
+  .tag-orange { background: rgba(255,107,53,0.1); color: var(--warn); }
+
+  /* DASHBOARD GRID */
+  .dash-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+  .recent-scans {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .scan-history-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+  }
+
+  .scan-history-item:first-child { border-top: none; }
+
+  .scan-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .scan-hist-name { flex: 1; font-weight: 500; }
+  .scan-hist-time { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+
+  /* MAP ENTRANCE/LABELS */
+  .map-room-label {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .map-section { margin-bottom: 1.5rem; }
+
+  .dispensing-counter {
+    width: 100%;
+    background: rgba(0,212,170,0.06);
+    border: 1.5px solid rgba(0,212,170,0.25);
+    border-radius: 8px;
+    padding: 0.6rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">💊</div>
+    Rx<span>Scan</span>
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="showPage('dashboard')">⬡ Dashboard</button>
+    <button class="nav-btn" onclick="showPage('inventory')">📦 Inventory</button>
+    <button class="nav-btn" onclick="showPage('map')">🗺 Store Map</button>
+    <button class="nav-btn" onclick="showPage('alerts')">🔔 Alerts <span id="alert-badge" style="background:var(--danger);color:#fff;font-size:0.65rem;padding:1px 5px;border-radius:10px;margin-left:2px;">5</span></button>
+    <button class="nav-btn" onclick="showPage('analytics')">📊 Analytics</button>
+  </nav>
+  <button class="header-scan-btn" onclick="openScanner()">⬡ SCAN BARCODE</button>
+</header>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav" id="mobile-nav">
+  <button class="mobile-nav-btn active" id="mn-dashboard" onclick="showPage('dashboard')">
+    <span class="mn-icon">⬡</span>Dash
+  </button>
+  <button class="mobile-nav-btn" id="mn-inventory" onclick="showPage('inventory')">
+    <span class="mn-icon">📦</span>Stock
+  </button>
+  <button class="mobile-nav-btn mobile-nav-scan" onclick="openScanner()">
+    <span class="mn-icon">📷</span>Scan
+  </button>
+  <button class="mobile-nav-btn" id="mn-alerts" onclick="showPage('alerts')">
+    <span class="mn-icon">🔔</span>Alerts
+    <span class="mn-badge" id="mn-badge">5</span>
+  </button>
+  <button class="mobile-nav-btn" id="mn-map" onclick="showPage('map')">
+    <span class="mn-icon">🗺</span>Map
+  </button>
+</nav>
+
+<main>
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Good morning, <span>Pharmacist</span> 👋</div>
+        <div class="page-subtitle" id="dashboard-date"></div>
+      </div>
+      <button class="btn btn-primary" onclick="showPage('inventory'); openAddModal()">+ Add Medication</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total SKUs</div>
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-sub">Unique medications</div>
+        <div class="stat-icon">📦</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Value</div>
+        <div class="stat-value" id="stat-value">$0</div>
+        <div class="stat-sub">Inventory valuation</div>
+        <div class="stat-icon">💰</div>
+      </div>
+      <div class="stat-card warn">
+        <div class="stat-label">Low Stock</div>
+        <div class="stat-value" id="stat-low">0</div>
+        <div class="stat-sub">Below reorder point</div>
+        <div class="stat-icon">⚠️</div>
+      </div>
+      <div class="stat-card danger">
+        <div class="stat-label">Expiring Soon</div>
+        <div class="stat-value" id="stat-expiry">0</div>
+        <div class="stat-sub">Within 90 days</div>
+        <div class="stat-icon">🗓</div>
+      </div>
+    </div>
+
+    <div class="dash-bottom">
+      <div>
+        <div class="recent-scans">
+          <div class="section-header">Recent Scans <span style="color:var(--muted);font-family:var(--font-mono);font-size:0.75rem;font-weight:400;">Last 24h</span></div>
+          <div id="scan-history-list"></div>
+        </div>
+      </div>
+      <div>
+        <div class="chart-card">
+          <div class="chart-title">Stock by Category <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);font-weight:400;">items</span></div>
+          <div class="bar-chart" id="category-chart"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVENTORY -->
+  <div class="page" id="page-inventory">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Inventory <span>Management</span></div>
+        <div class="page-subtitle">Full medication stock control</div>
+      </div>
+      <button class="btn btn-primary" onclick="openAddModal()">+ Add Medication</button>
+    </div>
+
+    <div id="low-stock-banner-inv"></div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="search-inv" placeholder="Search by name, barcode, generic..." oninput="renderInventory()">
+      </div>
+      <select class="filter-select" id="filter-cat" onchange="renderInventory()">
+        <option value="">All Categories</option>
+      </select>
+      <select class="filter-select" id="filter-stock" onchange="renderInventory()">
+        <option value="">All Stock</option>
+        <option value="ok">In Stock</option>
+        <option value="low">Low Stock</option>
+        <option value="out">Out of Stock</option>
+      </select>
+      <select class="filter-select" id="filter-zone" onchange="renderInventory()">
+        <option value="">All Zones</option>
+      </select>
+      <button class="btn btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+    </div>
+
+    <div class="table-wrap">
+      <div class="desktop-table">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortBy('name')">Medication ↕</th>
+            <th onclick="sortBy('barcode')">Barcode ↕</th>
+            <th onclick="sortBy('location')">Location ↕</th>
+            <th onclick="sortBy('stock')">Stock ↕</th>
+            <th onclick="sortBy('price_box')">Box Price ↕</th>
+            <th onclick="sortBy('price_unit')">Unit Price ↕</th>
+            <th onclick="sortBy('expiry')">Expiry ↕</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="inventory-tbody"></tbody>
+      </table>
+      </div>
+      <div class="mobile-cards" id="inventory-cards"></div>
+      <div class="pagination">
+        <div class="page-info" id="page-info"></div>
+        <div class="page-btns" id="page-btns"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORE MAP -->
+  <div class="page" id="page-map">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Store <span>Map</span></div>
+        <div class="page-subtitle">Visual layout — click a shelf to see its contents</div>
+      </div>
+    </div>
+    <div class="map-grid">
+      <div class="map-sidebar">
+        <h3>⬡ Zones</h3>
+        <div class="zone-list" id="zone-list"></div>
+        <div style="margin-top:1.5rem;">
+          <h3>Selected Shelf</h3>
+          <div id="shelf-detail" style="color:var(--muted);font-size:0.82rem;line-height:1.6;margin-top:0.5rem;">Click a shelf on the map to view its medications.</div>
+        </div>
+      </div>
+      <div class="pharmacy-map">
+        <div class="map-canvas" id="map-canvas"></div>
+        <div class="map-legend" id="map-legend"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="page" id="page-alerts">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Smart <span>Alerts</span></div>
+        <div class="page-subtitle">Automated inventory intelligence</div>
+      </div>
+      <button class="btn btn-ghost" onclick="renderAlerts()">↻ Refresh</button>
+    </div>
+    <div class="alerts-list" id="alerts-list"></div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div class="page" id="page-analytics">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Analytics <span>&amp; Reports</span></div>
+        <div class="page-subtitle">Inventory trends and financial overview</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Avg Box Price</div>
+        <div class="stat-value" id="an-avg-price">$0</div>
+        <div class="stat-sub">Across all medications</div>
+        <div class="stat-icon">💲</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Units</div>
+        <div class="stat-value" id="an-total-units">0</div>
+        <div class="stat-sub">Across all products</div>
+        <div class="stat-icon">🔢</div>
+      </div>
+      <div class="stat-card warn">
+        <div class="stat-label">Expiring &lt;30d</div>
+        <div class="stat-value" id="an-expiring-soon">0</div>
+        <div class="stat-sub">Urgent attention needed</div>
+        <div class="stat-icon">⏰</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Categories</div>
+        <div class="stat-value" id="an-cats">0</div>
+        <div class="stat-sub">Drug categories</div>
+        <div class="stat-icon">🏷</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-title">Top 8 by Stock Level</div>
+        <div class="bar-chart" id="an-stock-chart"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Top 8 by Value (box price × stock)</div>
+        <div class="bar-chart" id="an-value-chart"></div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Category Distribution</div>
+      <div class="cat-pills" id="an-cat-pills" style="gap:0.6rem;"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- SCANNER OVERLAY -->
+<div class="scanner-overlay" id="scanner-overlay">
+  <button class="scanner-close" onclick="closeScanner()">✕</button>
+  <div class="scanner-title">⬡ Scan Barcode</div>
+  <div class="scanner-sub">Point camera at barcode — or enter manually</div>
+
+  <div class="scanner-box" id="scanner-box">
+    <div id="scanner-viewport">
+      <video id="scanner-video" autoplay muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+      <div class="scan-line"></div>
+      <div class="scan-corners">
+        <div class="scan-corner tl"></div>
+        <div class="scan-corner tr"></div>
+        <div class="scan-corner bl"></div>
+        <div class="scan-corner br"></div>
+      </div>
+    </div>
+    <div class="scanner-controls">
+      <div class="manual-input-row">
+        <input type="text" class="manual-input" id="manual-barcode" placeholder="Enter barcode manually..." onkeydown="if(event.key==='Enter') lookupBarcode()">
+        <button class="btn btn-primary" onclick="lookupBarcode()">Look up</button>
+      </div>
+      <div class="scanner-status" id="scanner-status">Camera ready — or type barcode above</div>
+    </div>
+  </div>
+
+  <div class="scan-result" id="scan-result">
+    <div class="result-header">
+      <div>
+        <div class="result-name" id="result-name"></div>
+        <div class="result-barcode" id="result-barcode"></div>
+      </div>
+      <div id="result-stock-badge"></div>
+    </div>
+    <div class="result-grid">
+      <div class="result-item">
+        <div class="result-item-label">📦 Box Price</div>
+        <div class="result-item-val" id="result-box-price"></div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">💊 Unit Price</div>
+        <div class="result-item-val" id="result-unit-price"></div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">📊 Stock</div>
+        <div class="result-item-val" id="result-stock"></div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">🗓 Expiry</div>
+        <div class="result-item-val" id="result-expiry" style="font-size:0.85rem;"></div>
+      </div>
+      <div class="result-location">
+        <div class="result-location-icon">📍</div>
+        <div class="result-location-text">
+          <div class="main" id="result-location"></div>
+          <div class="sub" id="result-zone"></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
+      <button class="btn btn-ghost" style="flex:1;justify-content:center;" onclick="highlightOnMap()">🗺 Show on Map</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="quickUpdateStock()">📦 Update Stock</button>
+    </div>
+  </div>
+
+  <!-- NEW DRUG CARD — shown when barcode not in inventory -->
+  <div class="new-drug-card" id="new-drug-card">
+    <div class="new-drug-header">
+      <div class="new-drug-icon">✨</div>
+      <div>
+        <div class="new-drug-label">New medication detected</div>
+        <div class="new-drug-name" id="nd-name">Unknown Medication</div>
+      </div>
+    </div>
+    <div class="new-drug-meta">
+      <div class="new-drug-meta-item">
+        <div class="new-drug-meta-label">Generic</div>
+        <div class="new-drug-meta-val" id="nd-generic">—</div>
+      </div>
+      <div class="new-drug-meta-item">
+        <div class="new-drug-meta-label">Manufacturer</div>
+        <div class="new-drug-meta-val" id="nd-mfr">—</div>
+      </div>
+      <div class="new-drug-meta-item" style="grid-column:1/-1">
+        <div class="new-drug-meta-label">Barcode</div>
+        <div class="new-drug-meta-val" id="nd-barcode" style="color:var(--accent);font-family:var(--font-mono)">—</div>
+      </div>
+    </div>
+    <div class="new-drug-actions">
+      <button class="btn-add-new" onclick="openAddFromScan()">
+        ➕ Add to Inventory
+      </button>
+      <button class="btn btn-ghost" onclick="document.getElementById('new-drug-card').classList.remove('show')">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Add Medication</div>
+      <button class="icon-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Brand Name *</label>
+          <input type="text" class="form-input" id="f-name" placeholder="e.g. Amoxil">
+        </div>
+        <div class="form-group">
+          <label>Generic Name</label>
+          <input type="text" class="form-input" id="f-generic" placeholder="e.g. Amoxicillin">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Barcode *</label>
+          <input type="text" class="form-input" id="f-barcode" placeholder="e.g. 3400936345507">
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select class="form-select" id="f-category">
+            <option>Antibiotics</option>
+            <option>Analgesics</option>
+            <option>Cardiovascular</option>
+            <option>Diabetes</option>
+            <option>Respiratory</option>
+            <option>Gastrointestinal</option>
+            <option>Vitamins & Supplements</option>
+            <option>Dermatology</option>
+            <option>Neurology</option>
+            <option>Oncology</option>
+            <option>Hormones</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Box Price ($) *</label>
+          <input type="number" class="form-input" id="f-price-box" step="0.01" placeholder="12.50">
+        </div>
+        <div class="form-group">
+          <label>Units per Box</label>
+          <input type="number" class="form-input" id="f-units" placeholder="30">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Current Stock (boxes)</label>
+          <input type="number" class="form-input" id="f-stock" placeholder="50">
+        </div>
+        <div class="form-group">
+          <label>Reorder Point</label>
+          <input type="number" class="form-input" id="f-reorder" placeholder="10">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Zone *</label>
+          <select class="form-select" id="f-zone">
+            <option>A — Antibiotics</option>
+            <option>B — Pain Relief</option>
+            <option>C — Cardio</option>
+            <option>D — Diabetes</option>
+            <option>E — Vitamins</option>
+            <option>F — Refrigerated</option>
+            <option>G — Dermatology</option>
+            <option>H — Respiratory</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Shelf</label>
+          <input type="text" class="form-input" id="f-shelf" placeholder="e.g. A2-L3">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="date" class="form-input" id="f-expiry">
+        </div>
+        <div class="form-group">
+          <label>Manufacturer</label>
+          <input type="text" class="form-input" id="f-mfr" placeholder="e.g. Pfizer">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMedication()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-icon">✓</span>
+  <span id="toast-msg">Saved!</span>
+</div>
+
+<script>
+// ============================
+// DATA STORE
+// ============================
+const STORAGE_KEY = 'rxscan_inventory';
+
+const SAMPLE_DATA = [
+  { id: 1, name: 'Amoxil', generic: 'Amoxicillin', barcode: '3400936345507', category: 'Antibiotics', price_box: 12.50, units_per_box: 21, stock: 45, reorder: 10, zone: 'A — Antibiotics', shelf: 'A1-L2', expiry: '2026-08-15', mfr: 'GSK' },
+  { id: 2, name: 'Doliprane', generic: 'Paracetamol', barcode: '3400935851218', category: 'Analgesics', price_box: 2.80, units_per_box: 16, stock: 120, reorder: 30, zone: 'B — Pain Relief', shelf: 'B3-L1', expiry: '2027-03-20', mfr: 'Sanofi' },
+  { id: 3, name: 'Kardégic', generic: 'Aspirin 75mg', barcode: '3400936123456', category: 'Cardiovascular', price_box: 6.20, units_per_box: 30, stock: 8, reorder: 15, zone: 'C — Cardio', shelf: 'C2-L3', expiry: '2025-12-01', mfr: 'Sanofi' },
+  { id: 4, name: 'Metformine', generic: 'Metformin 850mg', barcode: '3400937654321', category: 'Diabetes', price_box: 4.10, units_per_box: 30, stock: 0, reorder: 20, zone: 'D — Diabetes', shelf: 'D1-L2', expiry: '2026-06-30', mfr: 'Biogaran' },
+  { id: 5, name: 'Ventoline', generic: 'Salbutamol', barcode: '3400934567890', category: 'Respiratory', price_box: 7.90, units_per_box: 1, stock: 28, reorder: 8, zone: 'H — Respiratory', shelf: 'H1-L1', expiry: '2026-09-15', mfr: 'GSK' },
+  { id: 6, name: 'Atorvastatine', generic: 'Atorvastatin 20mg', barcode: '3400930012345', category: 'Cardiovascular', price_box: 16.40, units_per_box: 30, stock: 5, reorder: 10, zone: 'C — Cardio', shelf: 'C1-L2', expiry: '2026-11-20', mfr: 'Pfizer' },
+  { id: 7, name: 'Oméprazole', generic: 'Omeprazole 20mg', barcode: '3400935098765', category: 'Gastrointestinal', price_box: 3.60, units_per_box: 28, stock: 62, reorder: 15, zone: 'B — Pain Relief', shelf: 'B2-L1', expiry: '2027-01-10', mfr: 'Mylan' },
+  { id: 8, name: 'Vitamine D3', generic: 'Cholecalciferol 2000UI', barcode: '3400931122334', category: 'Vitamins & Supplements', price_box: 5.20, units_per_box: 60, stock: 88, reorder: 20, zone: 'E — Vitamins', shelf: 'E1-L1', expiry: '2026-05-15', mfr: 'Lescuyer' },
+  { id: 9, name: 'Augmentin', generic: 'Amoxicillin+Clavulanate', barcode: '3400932233445', category: 'Antibiotics', price_box: 18.90, units_per_box: 12, stock: 3, reorder: 8, zone: 'A — Antibiotics', shelf: 'A2-L1', expiry: '2025-11-30', mfr: 'GSK' },
+  { id: 10, name: 'Bisoprolol', generic: 'Bisoprolol 5mg', barcode: '3400933344556', category: 'Cardiovascular', price_box: 9.30, units_per_box: 30, stock: 34, reorder: 10, zone: 'C — Cardio', shelf: 'C3-L2', expiry: '2026-07-18', mfr: 'Teva' },
+  { id: 11, name: 'Fluoxétine', generic: 'Fluoxetine 20mg', barcode: '3400934455667', category: 'Neurology', price_box: 11.50, units_per_box: 28, stock: 18, reorder: 5, zone: 'B — Pain Relief', shelf: 'B4-L3', expiry: '2026-10-22', mfr: 'Eli Lilly' },
+  { id: 12, name: 'Cetirizine', generic: 'Cetirizine 10mg', barcode: '3400935566778', category: 'Respiratory', price_box: 3.90, units_per_box: 7, stock: 71, reorder: 15, zone: 'H — Respiratory', shelf: 'H2-L2', expiry: '2027-02-28', mfr: 'Zentiva' },
+  { id: 13, name: 'Insuline Glargine', generic: 'Insulin Glargine', barcode: '3400936677889', category: 'Diabetes', price_box: 48.70, units_per_box: 5, stock: 12, reorder: 4, zone: 'F — Refrigerated', shelf: 'F1-L1', expiry: '2026-04-10', mfr: 'Sanofi' },
+  { id: 14, name: 'Hydrocortisone 1%', generic: 'Hydrocortisone', barcode: '3400937788990', category: 'Dermatology', price_box: 4.80, units_per_box: 1, stock: 22, reorder: 6, zone: 'G — Dermatology', shelf: 'G1-L1', expiry: '2026-12-15', mfr: 'Biogaran' },
+  { id: 15, name: 'Levothyrox', generic: 'Levothyroxine 50mcg', barcode: '3400938899001', category: 'Hormones', price_box: 5.50, units_per_box: 30, stock: 41, reorder: 10, zone: 'D — Diabetes', shelf: 'D2-L1', expiry: '2026-08-30', mfr: 'Merck' },
+];
+
+let inventory = [];
+let editId = null;
+let currentPage = 1;
+const PER_PAGE = 8;
+let sortCol = 'name';
+let sortDir = 1;
+let scanHistory = [];
+let highlightShelf = null;
+
+function loadData() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    inventory = JSON.parse(saved);
+  } else {
+    inventory = SAMPLE_DATA.map(d => ({...d}));
+    saveData();
+  }
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(inventory));
+}
+
+// ============================
+// NAVIGATION
+// ============================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-btn:not(.mobile-nav-scan)').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const btns = document.querySelectorAll('.nav-btn');
+  const pageNames = ['dashboard', 'inventory', 'map', 'alerts', 'analytics'];
+  const idx = pageNames.indexOf(name);
+  if (idx >= 0) btns[idx].classList.add('active');
+  // Mobile nav sync
+  const mnMap = { dashboard: 'mn-dashboard', inventory: 'mn-inventory', alerts: 'mn-alerts', map: 'mn-map' };
+  if (mnMap[name]) { const el = document.getElementById(mnMap[name]); if(el) el.classList.add('active'); }
+
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'inventory') renderInventory();
+  if (name === 'map') renderMap();
+  if (name === 'alerts') renderAlerts();
+  if (name === 'analytics') renderAnalytics();
+}
+
+// ============================
+// DASHBOARD
+// ============================
+function renderDashboard() {
+  const d = new Date();
+  document.getElementById('dashboard-date').textContent = d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  document.getElementById('stat-total').textContent = inventory.length;
+
+  const totalVal = inventory.reduce((s, m) => s + m.price_box * m.stock, 0);
+  document.getElementById('stat-value').textContent = '$' + Math.round(totalVal).toLocaleString();
+
+  const low = inventory.filter(m => m.stock > 0 && m.stock <= m.reorder).length;
+  document.getElementById('stat-low').textContent = low;
+
+  const now = new Date();
+  const in90 = new Date(now); in90.setDate(in90.getDate() + 90);
+  const expiring = inventory.filter(m => new Date(m.expiry) <= in90).length;
+  document.getElementById('stat-expiry').textContent = expiring;
+
+  // Category chart
+  const cats = {};
+  inventory.forEach(m => { cats[m.category] = (cats[m.category]||0) + m.stock; });
+  const sorted = Object.entries(cats).sort((a,b) => b[1]-a[1]).slice(0,8);
+  const max = Math.max(...sorted.map(x=>x[1]));
+  document.getElementById('category-chart').innerHTML = sorted.map(([cat, val]) =>
+    `<div class="bar-row">
+      <div class="bar-name" title="${cat}">${cat}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(val/max*100)}%"></div></div>
+      <div class="bar-val">${val}</div>
+    </div>`
+  ).join('');
+
+  // Scan history
+  const list = document.getElementById('scan-history-list');
+  if (scanHistory.length === 0) {
+    list.innerHTML = '<div style="padding:1.5rem 1.25rem;color:var(--muted);font-size:0.82rem;">No scans yet — use the SCAN button to begin</div>';
+  } else {
+    list.innerHTML = scanHistory.slice(0, 8).map(s =>
+      `<div class="scan-history-item">
+        <div class="scan-dot"></div>
+        <div class="scan-hist-name">${s.name} <span class="tag tag-blue">${s.barcode}</span></div>
+        <div class="scan-hist-time">${s.time}</div>
+      </div>`
+    ).join('');
+  }
+}
+
+// ============================
+// INVENTORY TABLE
+// ============================
+function getFiltered() {
+  const q = (document.getElementById('search-inv')?.value || '').toLowerCase();
+  const cat = document.getElementById('filter-cat')?.value || '';
+  const stock = document.getElementById('filter-stock')?.value || '';
+  const zone = document.getElementById('filter-zone')?.value || '';
+
+  return inventory.filter(m => {
+    if (q && !m.name.toLowerCase().includes(q) && !m.generic?.toLowerCase().includes(q) && !m.barcode.includes(q)) return false;
+    if (cat && m.category !== cat) return false;
+    if (zone && m.zone !== zone) return false;
+    if (stock === 'ok' && !(m.stock > m.reorder)) return false;
+    if (stock === 'low' && !(m.stock > 0 && m.stock <= m.reorder)) return false;
+    if (stock === 'out' && m.stock !== 0) return false;
+    return true;
+  }).sort((a,b) => {
+    let va = a[sortCol], vb = b[sortCol];
+    if (typeof va === 'string') va = va.toLowerCase();
+    if (typeof vb === 'string') vb = vb.toLowerCase();
+    return va < vb ? -sortDir : va > vb ? sortDir : 0;
+  });
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = 1; }
+  renderInventory();
+}
+
+function renderInventory() {
+  populateFilters();
+  const filtered = getFiltered();
+  const total = filtered.length;
+  const pages = Math.ceil(total / PER_PAGE);
+  if (currentPage > pages) currentPage = 1;
+
+  const slice = filtered.slice((currentPage-1)*PER_PAGE, currentPage*PER_PAGE);
+  const now = new Date();
+
+  // Low stock banner
+  const lowItems = inventory.filter(m => m.stock > 0 && m.stock <= m.reorder);
+  const el = document.getElementById('low-stock-banner-inv');
+  if (lowItems.length) {
+    el.innerHTML = `<div class="low-stock-banner">⚠️ <span>${lowItems.length} medication(s)</span> are below their reorder point — review needed.</div>`;
+  } else el.innerHTML = '';
+
+  const tbody = document.getElementById('inventory-tbody');
+  if (!slice.length) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="icon">🔍</div><h3>No results</h3><p>Try adjusting your filters</p></div></td></tr>`;
+    document.getElementById('inventory-cards').innerHTML = `<div class="empty-state"><div class="icon">🔍</div><h3>No results</h3><p>Try adjusting your filters</p></div>`;
+  } else {
+    tbody.innerHTML = slice.map(m => {
+      const expDate = new Date(m.expiry);
+      const daysLeft = Math.round((expDate - now) / 86400000);
+      const expiryClass = daysLeft < 0 ? 'expiry-bad' : daysLeft < 30 ? 'expiry-bad' : daysLeft < 90 ? 'expiry-warn' : 'expiry-ok';
+      const expiryLabel = daysLeft < 0 ? '⛔ Expired' : daysLeft < 90 ? `⚠ ${daysLeft}d` : m.expiry;
+
+      let stockClass = 'stock-ok', stockLabel = '✓ ' + m.stock;
+      if (m.stock === 0) { stockClass = 'stock-out'; stockLabel = '✕ Out'; }
+      else if (m.stock <= m.reorder) { stockClass = 'stock-low'; stockLabel = '⚡ ' + m.stock; }
+
+      const unitPrice = m.units_per_box ? (m.price_box / m.units_per_box).toFixed(2) : '—';
+
+      return `<tr>
+        <td>
+          <div class="drug-name">${m.name}</div>
+          <div class="drug-generic">${m.generic || '—'}</div>
+        </td>
+        <td><span class="tag tag-blue" style="cursor:pointer" onclick="fillScannerWith('${m.barcode}')">${m.barcode}</span></td>
+        <td>
+          <span class="location-badge" onclick="goToShelf('${m.shelf}')">📍 ${m.shelf}</span>
+          <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;font-family:var(--font-mono)">${m.zone.split('—')[0].trim()}</div>
+        </td>
+        <td><span class="stock-badge ${stockClass}">${stockLabel}</span></td>
+        <td><div class="price-box">$${m.price_box.toFixed(2)}</div></td>
+        <td><div class="price-box">$${unitPrice}<div class="price-unit">per unit</div></div></td>
+        <td><span class="${expiryClass}">${expiryLabel}</span></td>
+        <td>
+          <div class="action-btns">
+            <button class="icon-btn" title="Edit" onclick="openEditModal(${m.id})">✏️</button>
+            <button class="icon-btn" title="Scan" onclick="fillScannerWith('${m.barcode}')">📷</button>
+            <button class="icon-btn del" title="Delete" onclick="deleteMed(${m.id})">🗑</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    // MOBILE CARDS
+    document.getElementById('inventory-cards').innerHTML = slice.map(m => {
+      const expDate = new Date(m.expiry);
+      const daysLeft = Math.round((expDate - now) / 86400000);
+      const expiryClass = daysLeft < 0 ? 'expiry-bad' : daysLeft < 30 ? 'expiry-bad' : daysLeft < 90 ? 'expiry-warn' : 'expiry-ok';
+      const expiryLabel = daysLeft < 0 ? '⛔ Exp' : daysLeft < 90 ? `⚠ ${daysLeft}d` : m.expiry.slice(0,7);
+      let stockClass = 'stock-ok', stockLabel = '✓ '+m.stock;
+      if (m.stock === 0) { stockClass = 'stock-out'; stockLabel = '✕ Out'; }
+      else if (m.stock <= m.reorder) { stockClass = 'stock-low'; stockLabel = '⚡ '+m.stock; }
+      const unitPrice = m.units_per_box ? (m.price_box / m.units_per_box).toFixed(2) : '—';
+      return `<div class="med-card">
+        <div class="med-card-top">
+          <div>
+            <div class="med-card-name">${m.name}</div>
+            <div class="med-card-generic">${m.generic || m.category}</div>
+          </div>
+          <span class="stock-badge ${stockClass}" style="font-size:0.72rem">${stockLabel}</span>
+        </div>
+        <div class="med-card-grid">
+          <div class="med-card-stat">
+            <div class="med-card-stat-label">Box</div>
+            <div class="med-card-stat-val" style="color:var(--accent)">$${m.price_box.toFixed(2)}</div>
+          </div>
+          <div class="med-card-stat">
+            <div class="med-card-stat-label">Unit</div>
+            <div class="med-card-stat-val" style="color:var(--accent2)">$${unitPrice}</div>
+          </div>
+          <div class="med-card-stat">
+            <div class="med-card-stat-label">Expiry</div>
+            <div class="med-card-stat-val ${expiryClass}" style="font-size:0.75rem">${expiryLabel}</div>
+          </div>
+        </div>
+        <div class="med-card-bottom">
+          <div class="med-card-location" onclick="goToShelf('${m.shelf}')">📍 ${m.shelf} · ${m.zone.split('—')[0].trim()}</div>
+          <div class="med-card-actions">
+            <button class="icon-btn" onclick="openEditModal(${m.id})">✏️</button>
+            <button class="icon-btn" onclick="fillScannerWith('${m.barcode}')">📷</button>
+            <button class="icon-btn del" onclick="deleteMed(${m.id})">🗑</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Pagination
+  document.getElementById('page-info').textContent = `${total} results — page ${currentPage} of ${Math.max(1,pages)}`;
+  const pbEl = document.getElementById('page-btns');
+  let pb = '';
+  for (let i = 1; i <= pages; i++) {
+    pb += `<button class="page-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  pbEl.innerHTML = pb;
+}
+
+function goPage(p) { currentPage = p; renderInventory(); }
+
+function populateFilters() {
+  const catSel = document.getElementById('filter-cat');
+  const zoneSel = document.getElementById('filter-zone');
+  if (!catSel) return;
+  const cats = [...new Set(inventory.map(m => m.category))].sort();
+  const zones = [...new Set(inventory.map(m => m.zone))].sort();
+  const catVal = catSel.value;
+  const zoneVal = zoneSel.value;
+  catSel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option${c===catVal?' selected':''}>${c}</option>`).join('');
+  zoneSel.innerHTML = '<option value="">All Zones</option>' + zones.map(z => `<option${z===zoneVal?' selected':''}>${z}</option>`).join('');
+}
+
+// ============================
+// ADD / EDIT MODAL
+// ============================
+function openAddModal() {
+  editId = null;
+  document.getElementById('modal-title').textContent = 'Add Medication';
+  ['name','generic','barcode','price-box','units','stock','reorder','shelf','mfr'].forEach(f => {
+    const el = document.getElementById('f-' + f);
+    if (el) el.value = '';
+  });
+  document.getElementById('f-expiry').value = '';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function openEditModal(id) {
+  editId = id;
+  const m = inventory.find(x => x.id === id);
+  if (!m) return;
+  document.getElementById('modal-title').textContent = 'Edit Medication';
+  document.getElementById('f-name').value = m.name;
+  document.getElementById('f-generic').value = m.generic || '';
+  document.getElementById('f-barcode').value = m.barcode;
+  document.getElementById('f-category').value = m.category;
+  document.getElementById('f-price-box').value = m.price_box;
+  document.getElementById('f-units').value = m.units_per_box || '';
+  document.getElementById('f-stock').value = m.stock;
+  document.getElementById('f-reorder').value = m.reorder;
+  document.getElementById('f-zone').value = m.zone;
+  document.getElementById('f-shelf').value = m.shelf;
+  document.getElementById('f-expiry').value = m.expiry;
+  document.getElementById('f-mfr').value = m.mfr || '';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+
+function saveMedication() {
+  const name = document.getElementById('f-name').value.trim();
+  const barcode = document.getElementById('f-barcode').value.trim();
+  const price_box = parseFloat(document.getElementById('f-price-box').value);
+  if (!name || !barcode || isNaN(price_box)) {
+    showToast('Please fill in all required fields', true);
+    return;
+  }
+
+  const data = {
+    name,
+    generic: document.getElementById('f-generic').value.trim(),
+    barcode,
+    category: document.getElementById('f-category').value,
+    price_box,
+    units_per_box: parseInt(document.getElementById('f-units').value) || 1,
+    stock: parseInt(document.getElementById('f-stock').value) || 0,
+    reorder: parseInt(document.getElementById('f-reorder').value) || 10,
+    zone: document.getElementById('f-zone').value,
+    shelf: document.getElementById('f-shelf').value.trim(),
+    expiry: document.getElementById('f-expiry').value,
+    mfr: document.getElementById('f-mfr').value.trim(),
+  };
+
+  if (editId) {
+    const idx = inventory.findIndex(m => m.id === editId);
+    inventory[idx] = { ...inventory[idx], ...data };
+    showToast('✓ Medication updated');
+  } else {
+    data.id = Date.now();
+    inventory.push(data);
+    showToast('✓ Medication added');
+  }
+
+  saveData();
+  closeModal();
+  renderInventory();
+  renderDashboard();
+}
+
+function deleteMed(id) {
+  if (!confirm('Delete this medication from inventory?')) return;
+  inventory = inventory.filter(m => m.id !== id);
+  saveData();
+  renderInventory();
+  renderDashboard();
+  showToast('Medication removed');
+}
+
+// ============================
+// BARCODE SCANNER
+// ============================
+function openScanner() {
+  document.getElementById('scanner-overlay').classList.add('open');
+  document.getElementById('scan-result').classList.remove('show');
+  document.getElementById('new-drug-card').classList.remove('show');
+  document.getElementById('manual-barcode').value = '';
+  document.getElementById('scanner-status').textContent = 'Ready — point camera or type barcode';
+  document.getElementById('scanner-status').className = 'scanner-status';
+  startCamera();
+}
+
+function closeScanner() {
+  document.getElementById('scanner-overlay').classList.remove('open');
+  stopCamera();
+}
+
+let zxingReader = null;
+let zxingActive = false;
+let scanCounts = {}; // barcode → count, require 2 consistent reads before accepting
+
+function startCamera() {
+  if (zxingActive) return;
+  document.getElementById('scanner-box').classList.add('scanning');
+  document.getElementById('scanner-status').textContent = 'Starting camera…';
+  scanCounts = {};
+
+  const video = document.getElementById('scanner-video');
+
+  try {
+    const hints = new Map();
+    const formats = [
+      ZXing.BarcodeFormat.EAN_13,
+      ZXing.BarcodeFormat.EAN_8,
+      ZXing.BarcodeFormat.CODE_128,
+      ZXing.BarcodeFormat.CODE_39,
+      ZXing.BarcodeFormat.UPC_A,
+      ZXing.BarcodeFormat.UPC_E,
+      ZXing.BarcodeFormat.ITF,
+      ZXing.BarcodeFormat.DATA_MATRIX,
+      ZXing.BarcodeFormat.QR_CODE,
+    ];
+    hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
+    hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
+
+    zxingReader = new ZXing.BrowserMultiFormatReader(hints, 300); // scan every 300ms
+
+    zxingReader.decodeFromVideoDevice(null, video, (result, err) => {
+      if (result) {
+        const code = result.getText();
+        // Require 2 consistent reads to avoid false positives
+        scanCounts[code] = (scanCounts[code] || 0) + 1;
+        if (scanCounts[code] >= 2) {
+          stopCamera();
+          document.getElementById('manual-barcode').value = code;
+          document.getElementById('scanner-status').textContent = '✓ Barcode captured: ' + code;
+          lookupBarcode(code);
+        } else {
+          document.getElementById('scanner-status').textContent = '⟳ Confirming read…';
+        }
+      }
+      // err is normal when no barcode in frame — ignore
+    });
+
+    zxingActive = true;
+    document.getElementById('scanner-status').textContent = 'Point camera at barcode';
+
+  } catch (e) {
+    document.getElementById('scanner-status').textContent = 'Camera unavailable — use manual input below';
+    document.getElementById('scanner-box').classList.remove('scanning');
+  }
+}
+
+function stopCamera() {
+  if (zxingReader) {
+    try { zxingReader.reset(); } catch(e) {}
+    zxingReader = null;
+  }
+  zxingActive = false;
+  scanCounts = {};
+  document.getElementById('scanner-box').classList.remove('scanning');
+  // Stop video tracks to release camera indicator light
+  const video = document.getElementById('scanner-video');
+  if (video && video.srcObject) {
+    video.srcObject.getTracks().forEach(t => t.stop());
+    video.srcObject = null;
+  }
+}
+
+function lookupBarcode(code) {
+  const input = code || document.getElementById('manual-barcode').value.trim();
+  if (!input) return;
+
+  const med = inventory.find(m => m.barcode === input);
+  const statusEl = document.getElementById('scanner-status');
+  const resultEl = document.getElementById('scan-result');
+
+  if (!med) {
+    statusEl.textContent = `🔍 New barcode — searching online...`;
+    statusEl.className = 'scanner-status';
+    resultEl.classList.remove('show');
+    document.getElementById('new-drug-card').classList.remove('show');
+    lookupOnline(input);
+    return;
+  }
+
+  statusEl.textContent = `✓ Found: ${med.name}`;
+  statusEl.className = 'scanner-status found';
+
+  // Fill result card
+  document.getElementById('result-name').textContent = med.name + (med.generic ? ` (${med.generic})` : '');
+  document.getElementById('result-barcode').textContent = '# ' + med.barcode;
+  document.getElementById('result-box-price').textContent = '$' + med.price_box.toFixed(2);
+  const up = med.units_per_box ? (med.price_box / med.units_per_box).toFixed(2) : '—';
+  document.getElementById('result-unit-price').textContent = '$' + up;
+  document.getElementById('result-stock').textContent = med.stock + ' boxes';
+  document.getElementById('result-expiry').textContent = med.expiry;
+  document.getElementById('result-location').textContent = med.shelf || 'Unknown';
+  document.getElementById('result-zone').textContent = med.zone;
+
+  let sb = '';
+  if (med.stock === 0) sb = '<span class="stock-badge stock-out">✕ Out of Stock</span>';
+  else if (med.stock <= med.reorder) sb = '<span class="stock-badge stock-low">⚡ Low</span>';
+  else sb = '<span class="stock-badge stock-ok">✓ In Stock</span>';
+  document.getElementById('result-stock-badge').innerHTML = sb;
+
+  resultEl.classList.add('show');
+
+  // Log to scan history
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+  scanHistory.unshift({ name: med.name, barcode: med.barcode, time: timeStr });
+  if (scanHistory.length > 50) scanHistory.pop();
+
+  window._lastScannedMed = med;
+}
+
+function fillScannerWith(barcode) {
+  openScanner();
+  setTimeout(() => {
+    document.getElementById('manual-barcode').value = barcode;
+    lookupBarcode(barcode);
+  }, 200);
+}
+
+// ============================
+// ONLINE DRUG LOOKUP (Open Food Facts + OpenFDA)
+// ============================
+async function lookupOnline(barcode) {
+  const statusEl = document.getElementById('scanner-status');
+  const newCard = document.getElementById('new-drug-card');
+  let found = { name: '', generic: '', mfr: '', barcode };
+
+  try {
+    // Try Open Food Facts first (has many EU EAN-13 products)
+    const r1 = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
+    const d1 = await r1.json();
+    if (d1.status === 1 && d1.product) {
+      const p = d1.product;
+      found.name = p.product_name || p.product_name_en || '';
+      found.mfr = p.brands || '';
+    }
+  } catch(e) {}
+
+  // Try OpenFDA drug lookup by package NDC / UPC
+  if (!found.name) {
+    try {
+      const r2 = await fetch(`https://api.fda.gov/drug/ndc.json?search=package_ndc:"${barcode}"&limit=1`);
+      const d2 = await r2.json();
+      if (d2.results && d2.results[0]) {
+        const p = d2.results[0];
+        found.name = p.brand_name || p.generic_name || '';
+        found.generic = p.generic_name || '';
+        found.mfr = p.labeler_name || '';
+      }
+    } catch(e) {}
+  }
+
+  // Also try OpenFDA by NDC without dashes
+  if (!found.name) {
+    try {
+      const r3 = await fetch(`https://api.fda.gov/drug/label.json?search=openfda.upc:"${barcode}"&limit=1`);
+      const d3 = await r3.json();
+      if (d3.results && d3.results[0]) {
+        const p = d3.results[0];
+        const openfda = p.openfda || {};
+        found.name = (openfda.brand_name && openfda.brand_name[0]) || (openfda.generic_name && openfda.generic_name[0]) || '';
+        found.generic = (openfda.generic_name && openfda.generic_name[0]) || '';
+        found.mfr = (openfda.manufacturer_name && openfda.manufacturer_name[0]) || '';
+      }
+    } catch(e) {}
+  }
+
+  // Show the new-drug card regardless (even if name not found online)
+  window._pendingNewBarcode = barcode;
+  window._pendingNewDrug = found;
+
+  if (found.name) {
+    statusEl.textContent = `✨ Found online: "${found.name}" — not yet in your inventory`;
+    statusEl.className = 'scanner-status found';
+    document.getElementById('nd-name').textContent = found.name;
+    document.getElementById('nd-generic').textContent = found.generic || '—';
+    document.getElementById('nd-mfr').textContent = found.mfr || '—';
+    document.getElementById('nd-barcode').textContent = barcode;
+  } else {
+    statusEl.textContent = `❓ Unknown barcode — add it manually to your inventory`;
+    statusEl.className = 'scanner-status notfound';
+    document.getElementById('nd-name').textContent = 'Unknown Medication';
+    document.getElementById('nd-generic').textContent = '—';
+    document.getElementById('nd-mfr').textContent = '—';
+    document.getElementById('nd-barcode').textContent = barcode;
+  }
+
+  newCard.classList.add('show');
+}
+
+function openAddFromScan() {
+  const drug = window._pendingNewDrug || {};
+  const barcode = window._pendingNewBarcode || '';
+  closeScanner();
+
+  editId = null;
+  document.getElementById('modal-title').textContent = '➕ Add New Medication';
+  document.getElementById('f-name').value = drug.name || '';
+  document.getElementById('f-generic').value = drug.generic || '';
+  document.getElementById('f-barcode').value = barcode;
+  document.getElementById('f-mfr').value = drug.mfr || '';
+  document.getElementById('f-category').value = 'Other';
+  document.getElementById('f-price-box').value = '';
+  document.getElementById('f-units').value = '';
+  document.getElementById('f-stock').value = '';
+  document.getElementById('f-reorder').value = '10';
+  document.getElementById('f-zone').value = 'A — Antibiotics';
+  document.getElementById('f-shelf').value = '';
+  document.getElementById('f-expiry').value = '';
+  document.getElementById('modal-overlay').classList.add('open');
+
+  // Focus the first empty important field
+  setTimeout(() => {
+    const el = drug.name ? document.getElementById('f-price-box') : document.getElementById('f-name');
+    el.focus();
+  }, 350);
+}
+
+
+function highlightOnMap() {
+  const med = window._lastScannedMed;
+  if (!med) return;
+  highlightShelf = med.shelf;
+  closeScanner();
+  showPage('map');
+}
+
+function quickUpdateStock() {
+  const med = window._lastScannedMed;
+  if (!med) return;
+  const val = prompt(`Update stock for ${med.name}\nCurrent stock: ${med.stock} boxes\nNew stock:`, med.stock);
+  if (val === null) return;
+  const n = parseInt(val);
+  if (isNaN(n) || n < 0) { showToast('Invalid stock value', true); return; }
+  const idx = inventory.findIndex(m => m.id === med.id);
+  inventory[idx].stock = n;
+  saveData();
+  lookupBarcode(med.barcode);
+  showToast(`✓ Stock updated to ${n} boxes`);
+}
+
+// ============================
+// STORE MAP
+// ============================
+const ZONES = [
+  { id: 'A', label: 'Antibiotics', color: '#00d4aa', shelves: ['A1-L1','A1-L2','A2-L1','A2-L2'] },
+  { id: 'B', label: 'Pain Relief / GI', color: '#0088ff', shelves: ['B1-L1','B2-L1','B3-L1','B4-L3'] },
+  { id: 'C', label: 'Cardiovascular', color: '#ff3b5c', shelves: ['C1-L2','C2-L3','C3-L2'] },
+  { id: 'D', label: 'Diabetes / Hormones', color: '#a855f7', shelves: ['D1-L2','D2-L1'] },
+  { id: 'E', label: 'Vitamins & Suppl.', color: '#f59e0b', shelves: ['E1-L1','E2-L1'] },
+  { id: 'F', label: 'Refrigerated', color: '#06b6d4', shelves: ['F1-L1','F2-L1'] },
+  { id: 'G', label: 'Dermatology', color: '#ec4899', shelves: ['G1-L1','G2-L1'] },
+  { id: 'H', label: 'Respiratory', color: '#84cc16', shelves: ['H1-L1','H2-L2'] },
+];
+
+function renderMap() {
+  // Zone sidebar
+  const zl = document.getElementById('zone-list');
+  zl.innerHTML = ZONES.map(z => {
+    const count = inventory.filter(m => m.zone.startsWith(z.id + ' ')).length;
+    return `<div class="zone-item" id="zone-${z.id}" onclick="filterZoneMap('${z.id}')">
+      <div class="zone-color" style="background:${z.color}"></div>
+      <div class="zone-info">
+        <div class="zone-name">${z.id} — ${z.label}</div>
+        <div class="zone-count">${count} medications</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Map canvas
+  const canvas = document.getElementById('map-canvas');
+
+  canvas.innerHTML = `
+    <div class="dispensing-counter">🏪 DISPENSING COUNTER</div>
+    <div class="map-section">
+      <div class="map-room-label">— Zone A / B —</div>
+      <div class="shelf-row">
+        ${renderShelfUnit('A1-L1','A','A1-L1')} ${renderShelfUnit('A1-L2','A','A1-L2')}
+        <div style="width:20px"></div>
+        ${renderShelfUnit('B1-L1','B','B1-L1')} ${renderShelfUnit('B2-L1','B','B2-L1')}
+      </div>
+      <div class="shelf-row">
+        ${renderShelfUnit('A2-L1','A','A2-L1')} ${renderShelfUnit('A2-L2','A','A2-L2')}
+        <div style="width:20px"></div>
+        ${renderShelfUnit('B3-L1','B','B3-L1')} ${renderShelfUnit('B4-L3','B','B4-L3')}
+      </div>
+    </div>
+    <div class="map-section">
+      <div class="map-room-label">— Zone C / D —</div>
+      <div class="shelf-row">
+        ${renderShelfUnit('C1-L2','C','C1-L2')} ${renderShelfUnit('C2-L3','C','C2-L3')} ${renderShelfUnit('C3-L2','C','C3-L2')}
+        <div style="width:20px"></div>
+        ${renderShelfUnit('D1-L2','D','D1-L2')} ${renderShelfUnit('D2-L1','D','D2-L1')}
+      </div>
+    </div>
+    <div class="map-section">
+      <div class="map-room-label">— Zone E / F / G / H —</div>
+      <div class="shelf-row">
+        ${renderShelfUnit('E1-L1','E','E1-L1')} ${renderShelfUnit('E2-L1','E','E2-L1')}
+        <div style="width:20px"></div>
+        ${renderShelfUnit('F1-L1','F','F1-L1')} ${renderShelfUnit('F2-L1','F','F2-L1')}
+        <div style="width:20px"></div>
+        ${renderShelfUnit('G1-L1','G','G1-L1')} ${renderShelfUnit('G2-L1','G','G2-L1')}
+        <div style="width:20px"></div>
+        ${renderShelfUnit('H1-L1','H','H1-L1')} ${renderShelfUnit('H2-L2','H','H2-L2')}
+      </div>
+    </div>
+  `;
+
+  // Legend
+  document.getElementById('map-legend').innerHTML = ZONES.slice(0,4).map(z =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${z.color}"></div>${z.label}</div>`
+  ).join('');
+
+  if (highlightShelf) {
+    setTimeout(() => {
+      const el = document.getElementById('shelf-' + highlightShelf.replace(/\W/g,'-'));
+      if (el) {
+        el.classList.add('highlighted');
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showShelfDetail(highlightShelf);
+      }
+      highlightShelf = null;
+    }, 100);
+  }
+}
+
+function renderShelfUnit(shelf, zoneId, shelfId) {
+  const zone = ZONES.find(z => z.id === zoneId);
+  const color = zone ? zone.color : '#888';
+  const items = inventory.filter(m => m.shelf === shelf);
+  const count = items.length;
+  const isHighlighted = highlightShelf === shelf;
+  const safeId = shelf.replace(/\W/g,'-');
+
+  return `<div class="shelf-unit${isHighlighted?' highlighted':''}" id="shelf-${safeId}"
+    style="background:${color}18;border-color:${color}44;"
+    onclick="showShelfDetail('${shelf}')">
+    <div class="shelf-label" style="color:${color}">${shelf}</div>
+    <div class="shelf-items-count" style="color:${color}">${count}</div>
+    <div class="shelf-items-label" style="color:${color}99">items</div>
+  </div>`;
+}
+
+function showShelfDetail(shelf) {
+  const items = inventory.filter(m => m.shelf === shelf);
+  const el = document.getElementById('shelf-detail');
+  if (!items.length) {
+    el.innerHTML = `<strong>${shelf}</strong><br>No medications assigned to this shelf.`;
+    return;
+  }
+  el.innerHTML = `<strong style="color:var(--accent)">${shelf}</strong><br><br>` +
+    items.map(m => {
+      let sc = m.stock === 0 ? 'color:var(--danger)' : m.stock <= m.reorder ? 'color:var(--warn)' : 'color:var(--success)';
+      return `<div style="margin-bottom:0.6rem;padding:0.5rem;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
+        <div style="font-weight:600;font-size:0.85rem">${m.name}</div>
+        <div style="font-size:0.75rem;color:var(--muted);font-family:var(--font-mono)">${m.generic || ''}</div>
+        <div style="font-size:0.75rem;margin-top:4px"><span style="${sc};font-family:var(--font-mono)">${m.stock} boxes</span> · $${m.price_box.toFixed(2)}/box</div>
+      </div>`;
+    }).join('');
+}
+
+function filterZoneMap(zoneId) {
+  document.querySelectorAll('.zone-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('zone-' + zoneId).classList.add('active');
+}
+
+function goToShelf(shelf) {
+  highlightShelf = shelf;
+  showPage('map');
+}
+
+// ============================
+// ALERTS
+// ============================
+function renderAlerts() {
+  const now = new Date();
+  const alerts = [];
+
+  // Out of stock
+  const out = inventory.filter(m => m.stock === 0);
+  out.forEach(m => alerts.push({ type: 'critical', icon: '🚨', title: `OUT OF STOCK: ${m.name}`, desc: `Barcode ${m.barcode} · ${m.zone} · ${m.shelf}`, time: 'Now' }));
+
+  // Low stock
+  const low = inventory.filter(m => m.stock > 0 && m.stock <= m.reorder);
+  low.forEach(m => alerts.push({ type: 'warning', icon: '⚠️', title: `Low Stock: ${m.name}`, desc: `${m.stock} boxes left (reorder at ${m.reorder}) · ${m.shelf}`, time: 'Now' }));
+
+  // Expired
+  const expired = inventory.filter(m => new Date(m.expiry) < now);
+  expired.forEach(m => alerts.push({ type: 'critical', icon: '⛔', title: `EXPIRED: ${m.name}`, desc: `Expired on ${m.expiry} · ${m.shelf} — remove from shelf immediately`, time: m.expiry }));
+
+  // Expiring soon (< 30 days)
+  const soonExp = inventory.filter(m => {
+    const d = new Date(m.expiry);
+    const diff = Math.round((d - now) / 86400000);
+    return diff >= 0 && diff < 30;
+  });
+  soonExp.forEach(m => {
+    const diff = Math.round((new Date(m.expiry) - now) / 86400000);
+    alerts.push({ type: 'warning', icon: '🗓', title: `Expiring in ${diff} days: ${m.name}`, desc: `Expires ${m.expiry} · ${m.shelf}`, time: m.expiry });
+  });
+
+  if (!alerts.length) {
+    document.getElementById('alerts-list').innerHTML = '<div class="empty-state"><div class="icon">✅</div><h3>All clear!</h3><p>No active alerts at this time</p></div>';
+    document.getElementById('alert-badge').style.display = 'none';
+    const mnb2 = document.getElementById('mn-badge'); if(mnb2) mnb2.style.display = 'none';
+    const mnb3 = document.getElementById('mnb-badge'); if(mnb3) mnb3.style.display = 'none';
+    return;
+  }
+
+  document.getElementById('alert-badge').textContent = alerts.length;
+  const mnb = document.getElementById('mn-badge'); if(mnb) mnb.textContent = alerts.length;
+  const mnb2 = document.getElementById('mnb-badge'); if(mnb2) { mnb2.textContent = alerts.length; mnb2.style.display = ''; }
+  document.getElementById('alerts-list').innerHTML = alerts.map(a => `
+    <div class="alert-card alert-${a.type}">
+      <div class="alert-icon">${a.icon}</div>
+      <div class="alert-content">
+        <div class="alert-title">${a.title}</div>
+        <div class="alert-desc">${a.desc}</div>
+      </div>
+      <div class="alert-time">${a.time}</div>
+    </div>`
+  ).join('');
+}
+
+// ============================
+// ANALYTICS
+// ============================
+function renderAnalytics() {
+  const now = new Date();
+  const in30 = new Date(now); in30.setDate(in30.getDate() + 30);
+
+  const avgPrice = inventory.length ? (inventory.reduce((s,m) => s+m.price_box, 0) / inventory.length) : 0;
+  document.getElementById('an-avg-price').textContent = '$' + avgPrice.toFixed(2);
+
+  const totalUnits = inventory.reduce((s,m) => s + m.stock * (m.units_per_box||1), 0);
+  document.getElementById('an-total-units').textContent = totalUnits.toLocaleString();
+
+  const exp30 = inventory.filter(m => new Date(m.expiry) <= in30 && new Date(m.expiry) >= now).length;
+  document.getElementById('an-expiring-soon').textContent = exp30;
+
+  const cats = [...new Set(inventory.map(m => m.category))];
+  document.getElementById('an-cats').textContent = cats.length;
+
+  // Stock chart
+  const byStock = [...inventory].sort((a,b) => b.stock - a.stock).slice(0, 8);
+  const maxS = Math.max(...byStock.map(m => m.stock));
+  document.getElementById('an-stock-chart').innerHTML = byStock.map(m =>
+    `<div class="bar-row">
+      <div class="bar-name" title="${m.name}">${m.name}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(m.stock/maxS*100)}%"></div></div>
+      <div class="bar-val">${m.stock}</div>
+    </div>`
+  ).join('');
+
+  // Value chart
+  const byValue = [...inventory].sort((a,b) => (b.price_box*b.stock) - (a.price_box*a.stock)).slice(0, 8);
+  const maxV = Math.max(...byValue.map(m => m.price_box*m.stock));
+  document.getElementById('an-value-chart').innerHTML = byValue.map(m => {
+    const v = (m.price_box * m.stock).toFixed(0);
+    return `<div class="bar-row">
+      <div class="bar-name" title="${m.name}">${m.name}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(m.price_box*m.stock/maxV*100)}%;background:linear-gradient(90deg,var(--warn),#ff6b35cc)"></div></div>
+      <div class="bar-val">$${v}</div>
+    </div>`;
+  }).join('');
+
+  // Category pills
+  const catCounts = {};
+  inventory.forEach(m => { catCounts[m.category] = (catCounts[m.category]||0) + 1; });
+  const catColors = ['#00d4aa','#0088ff','#ff3b5c','#a855f7','#f59e0b','#06b6d4','#ec4899','#84cc16','#ff6b35','#e11d48','#14b8a6','#6366f1'];
+  document.getElementById('an-cat-pills').innerHTML = Object.entries(catCounts).map(([cat, cnt], i) =>
+    `<div class="cat-pill">
+      <div class="cat-dot" style="background:${catColors[i % catColors.length]}"></div>
+      ${cat} <span style="font-size:0.65rem;opacity:0.7">(${cnt})</span>
+    </div>`
+  ).join('');
+}
+
+// ============================
+// EXPORT CSV
+// ============================
+function exportCSV() {
+  const headers = ['Name','Generic','Barcode','Category','Box Price','Unit Price','Stock','Reorder','Zone','Shelf','Expiry','Manufacturer'];
+  const rows = inventory.map(m => [
+    m.name, m.generic||'', m.barcode, m.category,
+    m.price_box, m.units_per_box ? (m.price_box/m.units_per_box).toFixed(2) : '',
+    m.stock, m.reorder, m.zone, m.shelf, m.expiry, m.mfr||''
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'rxscan_inventory.csv'; a.click();
+  showToast('✓ CSV exported');
+}
+
+// ============================
+// TOAST
+// ============================
+function showToast(msg, error = false) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.className = 'toast show' + (error ? ' error' : '');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ============================
+// INIT
+// ============================
+loadData();
+renderDashboard();
+</script>
+
+<!-- MORE POPUP MENU -->
+<div id="more-popup" style="
+  display:none;
+  position:fixed;
+  bottom:76px;right:8px;
+  z-index:9998;
+  background:#161d2a;
+  border:1px solid #1e2736;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 -8px 32px rgba(0,0,0,0.6);
+  min-width:160px;
+">
+  <button onclick="showPage('map');toggleMore()" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;border-bottom:1px solid #1e2736;color:#e8edf5;font-size:0.85rem;font-weight:500;padding:13px 16px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+    <span style="font-size:1.2rem">🗺</span> Store Map
+  </button>
+  <button onclick="showPage('analytics');toggleMore()" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:#e8edf5;font-size:0.85rem;font-weight:500;padding:13px 16px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+    <span style="font-size:1.2rem">📊</span> Analytics
+  </button>
+</div>
+<!-- POPUP BACKDROP -->
+<div id="more-backdrop" onclick="toggleMore()" style="display:none;position:fixed;inset:0;z-index:9997;"></div>
+
+<!-- MOBILE BOTTOM NAV — placed last in DOM to guarantee it paints on top -->
+<nav id="mobile-nav-bottom" style="
+  display:none;
+  position:fixed;
+  bottom:0;left:0;right:0;
+  z-index:9999;
+  background:#0d1119;
+  border-top:1px solid #1e2736;
+  padding:8px 4px calc(8px + env(safe-area-inset-bottom, 0px));
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.4);
+">
+  <button onclick="showPage('dashboard')" id="mnb-dashboard" style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#00d4aa;font-size:0.58rem;font-weight:600;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+    <span style="font-size:1.3rem;line-height:1.1">⬡</span>Dash
+  </button>
+  <button onclick="showPage('inventory')" id="mnb-inventory" style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#5a6680;font-size:0.58rem;font-weight:500;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+    <span style="font-size:1.3rem;line-height:1.1">📦</span>Stock
+  </button>
+  <button onclick="openScanner()" style="display:flex;flex-direction:column;align-items:center;gap:3px;background:linear-gradient(135deg,#00d4aa,#00b890);color:#0a0e14;border:none;font-size:0.58rem;font-weight:800;padding:9px 6px;border-radius:14px;cursor:pointer;flex:1.3;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;letter-spacing:0.04em;text-transform:uppercase;box-shadow:0 4px 14px rgba(0,212,170,0.4);">
+    <span style="font-size:1.2rem;line-height:1.1">📷</span>SCAN
+  </button>
+  <button onclick="showPage('alerts')" id="mnb-alerts" style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#5a6680;font-size:0.58rem;font-weight:500;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;position:relative;font-family:sans-serif;">
+    <span style="font-size:1.3rem;line-height:1.1">🔔</span>Alerts
+    <span id="mnb-badge" style="position:absolute;top:1px;right:4px;background:#ff3b5c;color:#fff;font-size:0.5rem;font-weight:800;border-radius:8px;padding:1px 4px;min-width:14px;text-align:center;line-height:1.5;font-family:sans-serif;">5</span>
+  </button>
+  <button onclick="toggleMore()" id="mnb-more" style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#5a6680;font-size:0.58rem;font-weight:500;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+    <span style="font-size:1.3rem;line-height:1.1">⋯</span>More
+  </button>
+</nav>
+
+<script>
+// ── More popup ──────────────────────────────────────────
+let moreOpen = false;
+function toggleMore() {
+  moreOpen = !moreOpen;
+  const popup = document.getElementById('more-popup');
+  const backdrop = document.getElementById('more-backdrop');
+  const btn = document.getElementById('mnb-more');
+  popup.style.display = moreOpen ? 'block' : 'none';
+  backdrop.style.display = moreOpen ? 'block' : 'none';
+  btn.style.color = moreOpen ? '#00d4aa' : '#5a6680';
+}
+
+// ── Show/hide nav based on screen width ────────────────
+function updateMobileNav() {
+  const nav = document.getElementById('mobile-nav-bottom');
+  const isMobile = window.innerWidth <= 768;
+  nav.style.display = isMobile ? 'flex' : 'none';
+  if (!isMobile && moreOpen) toggleMore();
+  const isSmall = window.innerWidth <= 360;
+  nav.style.padding = isSmall
+    ? '5px 2px calc(5px + env(safe-area-inset-bottom,0px))'
+    : '8px 4px calc(8px + env(safe-area-inset-bottom,0px))';
+}
+updateMobileNav();
+window.addEventListener('resize', updateMobileNav);
+
+// ── Sync active colour on nav buttons ─────────────────
+const _origShowPage = showPage;
+showPage = function(name) {
+  _origShowPage(name);
+  // close More popup if open
+  if (moreOpen) toggleMore();
+  // reset all
+  ['dashboard','inventory','alerts','more'].forEach(n => {
+    const el = document.getElementById('mnb-' + n);
+    if (el) el.style.color = '#5a6680';
+  });
+  // highlight active (map & analytics light up "More")
+  const activeId = (name === 'map' || name === 'analytics') ? 'mnb-more' : 'mnb-' + name;
+  const activeEl = document.getElementById(activeId);
+  if (activeEl) activeEl.style.color = '#00d4aa';
+};
+// Init — dashboard is active on load
+document.getElementById('mnb-dashboard').style.color = '#00d4aa';
+</script>
+</body>
+</html>
