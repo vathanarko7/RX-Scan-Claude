@@ -126,6 +126,60 @@
 
   .header-scan-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,212,170,0.35); }
 
+  .header-actions {
+    display: none;
+    margin-left: auto;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .header-alert-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    overflow: hidden;
+  }
+
+  .header-alert-btn.active {
+    color: var(--accent);
+    border-color: rgba(0,212,170,0.45);
+    background: rgba(0,212,170,0.08);
+  }
+
+  .header-alert-btn:active {
+    transform: scale(0.98);
+    background: rgba(0,212,170,0.12);
+    border-color: rgba(0,212,170,0.35);
+  }
+
+  .header-alert-badge {
+    background: var(--danger);
+    color: #fff;
+    font-size: 0.62rem;
+    font-weight: 800;
+    border-radius: 999px;
+    padding: 1px 6px;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  #mobile-nav-bottom-legacy {
+    display: none !important;
+  }
+
   /* MAIN */
   main {
     max-width: 1400px;
@@ -1293,10 +1347,14 @@
     header { padding: 0 1rem; height: 56px; }
     nav { display: none; }
     .header-scan-btn { display: none; }
+    .header-actions { display: flex; }
+    .header-alert-btn { padding: 0.38rem 0.72rem; font-size: 0.75rem; }
+    .modal { bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important; }
 
     /* Page header */
     .page-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.25rem; }
     .page-header .btn { width: 100%; justify-content: center; }
+    #page-dashboard .page-header .btn { display: none; }
     .page-title { font-size: 1.5rem; }
 
     /* Stats 2-col */
@@ -1707,6 +1765,12 @@
     <button class="nav-btn" onclick="showPage('analytics')">📊 Analytics</button>
   </nav>
   <button class="header-scan-btn" onclick="openScanner()">⬡ SCAN BARCODE</button>
+  <div class="header-actions">
+    <button class="header-alert-btn" id="mobile-header-alert" onclick="showPage('alerts')">
+      <span>🔔 Alerts</span>
+      <span class="header-alert-badge" id="header-alert-badge">5</span>
+    </button>
+  </div>
 </header>
 
 <!-- MOBILE BOTTOM NAV -->
@@ -2091,15 +2155,11 @@ function saveData() {
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.mobile-nav-btn:not(.mobile-nav-scan)').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   const btns = document.querySelectorAll('.nav-btn');
   const pageNames = ['dashboard', 'inventory', 'map', 'alerts', 'analytics'];
   const idx = pageNames.indexOf(name);
   if (idx >= 0) btns[idx].classList.add('active');
-  // Mobile nav sync
-  const mnMap = { dashboard: 'mn-dashboard', inventory: 'mn-inventory', alerts: 'mn-alerts', map: 'mn-map' };
-  if (mnMap[name]) { const el = document.getElementById(mnMap[name]); if(el) el.classList.add('active'); }
 
   if (name === 'dashboard') renderDashboard();
   if (name === 'inventory') renderInventory();
@@ -2325,6 +2385,7 @@ function openAddModal() {
   });
   document.getElementById('f-expiry').value = '';
   document.getElementById('modal-overlay').classList.add('open');
+  setMobileNavHidden(true);
 }
 
 function openEditModal(id) {
@@ -2345,9 +2406,13 @@ function openEditModal(id) {
   document.getElementById('f-expiry').value = m.expiry;
   document.getElementById('f-mfr').value = m.mfr || '';
   document.getElementById('modal-overlay').classList.add('open');
+  setMobileNavHidden(true);
 }
 
-function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  setMobileNavHidden(false);
+}
 function handleOverlayClick(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
 
 function saveMedication() {
@@ -3118,6 +3183,7 @@ function openAddFromScan() {
   // Pre-fill expiry from DataMatrix if available
   document.getElementById('f-expiry').value = drug.expiry || '';
   document.getElementById('modal-overlay').classList.add('open');
+  setMobileNavHidden(true);
 
   // Focus first empty critical field
   setTimeout(() => {
@@ -3313,14 +3379,13 @@ function renderAlerts() {
   if (!alerts.length) {
     document.getElementById('alerts-list').innerHTML = '<div class="empty-state"><div class="icon">✅</div><h3>All clear!</h3><p>No active alerts at this time</p></div>';
     document.getElementById('alert-badge').style.display = 'none';
-    const mnb2 = document.getElementById('mn-badge'); if(mnb2) mnb2.style.display = 'none';
-    const mnb3 = document.getElementById('mnb-badge'); if(mnb3) mnb3.style.display = 'none';
+    const hnb = document.getElementById('header-alert-badge'); if(hnb) hnb.style.display = 'none';
     return;
   }
 
   document.getElementById('alert-badge').textContent = alerts.length;
-  const mnb = document.getElementById('mn-badge'); if(mnb) mnb.textContent = alerts.length;
-  const mnb2 = document.getElementById('mnb-badge'); if(mnb2) { mnb2.textContent = alerts.length; mnb2.style.display = ''; }
+  document.getElementById('alert-badge').style.display = '';
+  const hnb = document.getElementById('header-alert-badge'); if(hnb) { hnb.textContent = alerts.length; hnb.style.display = ''; }
   document.getElementById('alerts-list').innerHTML = alerts.map(a => `
     <div class="alert-card alert-${a.type}">
       <div class="alert-icon">${a.icon}</div>
@@ -3420,6 +3485,7 @@ function showToast(msg, error = false) {
 // ============================
 loadData();
 renderDashboard();
+renderAlerts();
 </script>
 
 <!-- MORE POPUP MENU -->
@@ -3446,7 +3512,7 @@ renderDashboard();
 <div id="more-backdrop" onclick="toggleMore()" style="display:none;position:fixed;inset:0;z-index:9997;"></div>
 
 <!-- MOBILE BOTTOM NAV — placed last in DOM to guarantee it paints on top -->
-<nav id="mobile-nav-bottom" style="
+<nav id="mobile-nav-bottom-legacy" style="
   display:none;
   position:fixed;
   bottom:0;left:0;right:0;
@@ -3491,7 +3557,7 @@ function toggleMore() {
 
 // ── Show/hide nav based on screen width ────────────────
 function updateMobileNav() {
-  const nav = document.getElementById('mobile-nav-bottom');
+  const nav = document.getElementById('mobile-nav-bottom-legacy');
   const isMobile = window.innerWidth <= 768;
   nav.style.display = isMobile ? 'flex' : 'none';
   if (!isMobile && moreOpen) toggleMore();
@@ -3521,6 +3587,81 @@ showPage = function(name) {
 };
 // Init — dashboard is active on load
 document.getElementById('mnb-dashboard').style.color = '#00d4aa';
+</script>
+
+<nav id="mobile-nav-bottom" style="
+  display:none;
+  position:fixed;
+  bottom:0;left:0;right:0;
+  z-index:10000;
+  background:#0d1119;
+  border-top:1px solid #1e2736;
+  padding:8px 4px calc(8px + env(safe-area-inset-bottom, 0px));
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.4);
+">
+  <button onclick="showPage('dashboard')" id="mnb2-dashboard" style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#00d4aa;font-size:0.58rem;font-weight:600;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+    <span style="font-size:1.3rem;line-height:1.1">⬡</span>Dash
+  </button>
+  <button onclick="showPage('inventory')" id="mnb2-inventory" style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#5a6680;font-size:0.58rem;font-weight:500;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+    <span style="font-size:1.3rem;line-height:1.1">📦</span>Stock
+  </button>
+  <button onclick="openScanner()" style="display:flex;flex-direction:column;align-items:center;gap:3px;background:linear-gradient(135deg,#00d4aa,#00b890);color:#0a0e14;border:none;font-size:0.58rem;font-weight:800;padding:9px 6px;border-radius:14px;cursor:pointer;flex:1.3;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;letter-spacing:0.04em;text-transform:uppercase;box-shadow:0 4px 14px rgba(0,212,170,0.4);">
+    <span style="font-size:1.2rem;line-height:1.1">📷</span>SCAN
+  </button>
+  <button onclick="showPage('map')" id="mnb2-map" style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#5a6680;font-size:0.58rem;font-weight:500;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+    <span style="font-size:1.3rem;line-height:1.1">🗺</span>Map
+  </button>
+  <button onclick="showPage('analytics')" id="mnb2-analytics" style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#5a6680;font-size:0.58rem;font-weight:500;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+    <span style="font-size:1.3rem;line-height:1.1">📊</span>Stats
+  </button>
+</nav>
+
+<script>
+function updateMobileNavV2() {
+  const nav = document.getElementById('mobile-nav-bottom');
+  if (!nav) return;
+  const isMobile = window.innerWidth <= 768;
+  nav.style.display = isMobile ? 'flex' : 'none';
+  const isSmall = window.innerWidth <= 360;
+  nav.style.padding = isSmall
+    ? '5px 2px calc(5px + env(safe-area-inset-bottom,0px))'
+    : '8px 4px calc(8px + env(safe-area-inset-bottom,0px))';
+}
+
+function setMobileNavHidden(hidden) {
+  const nav = document.getElementById('mobile-nav-bottom');
+  if (!nav) return;
+  if (hidden) {
+    nav.style.display = 'none';
+    return;
+  }
+  updateMobileNavV2();
+}
+
+function syncMobileChrome(name) {
+  ['dashboard','inventory','map','analytics'].forEach(n => {
+    const el = document.getElementById('mnb2-' + n);
+    if (el) el.style.color = '#5a6680';
+  });
+  const activeId = ['dashboard','inventory','map','analytics'].includes(name) ? 'mnb2-' + name : null;
+  const activeEl = activeId ? document.getElementById(activeId) : null;
+  if (activeEl) activeEl.style.color = '#00d4aa';
+
+  const headerAlert = document.getElementById('mobile-header-alert');
+  if (headerAlert) headerAlert.classList.toggle('active', name === 'alerts');
+}
+
+const _showPageWithLegacyNav = showPage;
+showPage = function(name) {
+  _showPageWithLegacyNav(name);
+  syncMobileChrome(name);
+};
+
+updateMobileNavV2();
+window.addEventListener('resize', updateMobileNavV2);
+syncMobileChrome('dashboard');
 </script>
 
 <!-- ═══════════════════════════════════════════════════════════
