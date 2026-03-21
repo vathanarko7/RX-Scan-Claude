@@ -329,6 +329,7 @@
     body.auth-mode main,
     body.auth-mode #mobile-nav,
     body.auth-mode #mobile-nav-bottom,
+    body.auth-mode #mobile-nav-bottom-legacy,
     body.auth-mode #scanner-overlay,
     body.auth-mode #toast {
       display: none !important;
@@ -342,6 +343,7 @@
     body.booting main,
     body.booting #mobile-nav,
     body.booting #mobile-nav-bottom,
+    body.booting #mobile-nav-bottom-legacy,
     body.booting #scanner-overlay,
     body.booting #toast,
     body.booting .auth-screen {
@@ -475,6 +477,9 @@
       50% { transform: scale(0.72); opacity: 0.45; }
     }
 
+    #mobile-nav-bottom-legacy {
+      display: none !important;
+    }
 
     /* MAIN */
     main {
@@ -2851,160 +2856,6 @@
       color: var(--accent);
       margin-bottom: 1rem;
     }
-
-    /* ── CONFIRM MODAL (replaces confirm()) ── */
-    #confirm-overlay,
-    #stock-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 10001;
-      background: rgba(10,14,20,0.82);
-      backdrop-filter: blur(6px);
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
-    #confirm-overlay.open,
-    #stock-overlay.open {
-      display: flex;
-    }
-    .mini-modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 360px;
-      animation: modalIn 0.22s ease;
-      overflow: hidden;
-    }
-    .mini-modal-drag {
-      display: flex;
-      justify-content: center;
-      padding: 10px 0 4px;
-    }
-    .mini-modal-drag span {
-      width: 36px;
-      height: 4px;
-      background: var(--border);
-      border-radius: 4px;
-      display: block;
-    }
-    .mini-modal-header {
-      padding: 0 1.25rem 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .mini-modal-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-    .mini-modal-icon.danger {
-      background: rgba(255,59,92,0.12);
-      border: 1px solid rgba(255,59,92,0.25);
-    }
-    .mini-modal-icon.accent {
-      background: rgba(0,212,170,0.1);
-      border: 1px solid rgba(0,212,170,0.25);
-    }
-    .mini-modal-titles { flex: 1; }
-    .mini-modal-title {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .mini-modal-sub {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 1px;
-      font-family: var(--font-mono);
-    }
-    .mini-modal-body {
-      padding: 0 1.25rem 1rem;
-    }
-    .mini-modal-warning {
-      background: rgba(255,59,92,0.08);
-      border: 1px solid rgba(255,59,92,0.2);
-      border-radius: 10px;
-      padding: 0.65rem 0.85rem;
-      font-size: 0.82rem;
-      color: #ff9fb0;
-      line-height: 1.55;
-    }
-    .mini-modal-input-wrap {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.6rem 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-    .mini-modal-input-wrap:focus-within {
-      border-color: var(--accent);
-    }
-    .mini-modal-input-label {
-      font-size: 0.72rem;
-      color: var(--muted);
-      white-space: nowrap;
-      font-family: var(--font-mono);
-    }
-    #stock-input {
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 1.5rem;
-      font-weight: 700;
-      font-family: var(--font-display);
-      width: 80px;
-      text-align: center;
-      outline: none;
-      -moz-appearance: textfield;
-    }
-    #stock-input::-webkit-outer-spin-button,
-    #stock-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-    .mini-modal-input-unit {
-      font-size: 0.72rem;
-      color: var(--muted);
-      font-family: var(--font-mono);
-    }
-    .mini-modal-input-error {
-      font-size: 0.72rem;
-      color: var(--danger);
-      margin-top: 0.4rem;
-      min-height: 1em;
-      font-family: var(--font-mono);
-    }
-    .mini-modal-footer {
-      padding: 0 1.25rem 1.25rem;
-      display: flex;
-      gap: 0.6rem;
-    }
-    .mini-modal-footer .btn {
-      flex: 1;
-      justify-content: center;
-      padding: 0.75rem;
-    }
-    @media (max-width: 768px) {
-      #confirm-overlay,
-      #stock-overlay {
-        align-items: flex-end;
-        padding: 0;
-      }
-      .mini-modal {
-        max-width: 100%;
-        border-radius: 16px 16px 0 0;
-        animation: sheetUp 0.25s ease;
-      }
-    }
   </style>
 </head>
 
@@ -3093,7 +2944,7 @@
     </button>
     <button class="mobile-nav-btn" id="mn-alerts" onclick="showPage('alerts')">
       <span class="mn-icon">🔔</span>Alerts
-      <span class="mn-badge" id="mn-badge" style="display:none">0</span>
+      <span class="mn-badge" id="mn-badge">5</span>
     </button>
     <button class="mobile-nav-btn" id="mn-map" onclick="showPage('map')">
       <span class="mn-icon">🗺</span>Map
@@ -3423,22 +3274,6 @@
   </div>
 
   <script>
-    // ============================
-    // XSS SAFETY HELPER
-    // All user-supplied strings MUST be passed through esc() before
-    // being interpolated into innerHTML. This prevents stored XSS via
-    // medication names, barcodes, shelf codes, zones, etc.
-    // ============================
-    function esc(s) {
-      if (s === null || s === undefined) return '';
-      return String(s)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
     // ============================
     // DATA STORE
     // ============================
@@ -3915,7 +3750,7 @@
 
       const now = new Date();
       const in90 = new Date(now); in90.setDate(in90.getDate() + 90);
-      const expiring = inventory.filter(m => new Date(m.expiry + 'T00:00:00') <= in90).length;
+      const expiring = inventory.filter(m => new Date(m.expiry) <= in90).length;
       document.getElementById('stat-expiry').textContent = expiring;
 
       // Category chart
@@ -3925,7 +3760,7 @@
       const max = Math.max(...sorted.map(x => x[1]));
       document.getElementById('category-chart').innerHTML = sorted.map(([cat, val]) =>
         `<div class="bar-row">
-      <div class="bar-name" title="${esc(cat)}">${esc(cat)}</div>
+      <div class="bar-name" title="${cat}">${cat}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${Math.round(val / max * 100)}%"></div></div>
       <div class="bar-val">${val}</div>
     </div>`
@@ -3939,8 +3774,8 @@
         list.innerHTML = scanHistory.slice(0, 8).map(s =>
           `<div class="scan-history-item">
         <div class="scan-dot"></div>
-        <div class="scan-hist-name">${esc(s.name)} <span class="tag tag-blue">${esc(s.barcode)}</span></div>
-        <div class="scan-hist-time">${esc(s.time)}</div>
+        <div class="scan-hist-name">${s.name} <span class="tag tag-blue">${s.barcode}</span></div>
+        <div class="scan-hist-time">${s.time}</div>
       </div>`
         ).join('');
       }
@@ -4020,7 +3855,7 @@
         document.getElementById('inventory-cards').innerHTML = `<div class="empty-state"><div class="icon">🔍</div><h3>No results</h3><p>Try adjusting your filters</p></div>`;
       } else {
         tbody.innerHTML = slice.map(m => {
-          const expDate = new Date(m.expiry + 'T00:00:00');
+          const expDate = new Date(m.expiry);
           const daysLeft = Math.round((expDate - now) / 86400000);
           const expiryClass = daysLeft < 0 ? 'expiry-bad' : daysLeft < 30 ? 'expiry-bad' : daysLeft < 90 ? 'expiry-warn' : 'expiry-ok';
           const expiryLabel = daysLeft < 0 ? '⛔ Expired' : daysLeft < 90 ? `⚠ ${daysLeft}d` : m.expiry;
@@ -4033,13 +3868,13 @@
 
           return `<tr>
         <td>
-          <div class="drug-name">${esc(m.name)}</div>
-          <div class="drug-generic">${esc(m.generic) || '—'}</div>
+          <div class="drug-name">${m.name}</div>
+          <div class="drug-generic">${m.generic || '—'}</div>
         </td>
-        <td><span class="tag tag-blue" style="cursor:pointer" onclick="fillScannerWith('${esc(m.barcode)}')">${esc(m.barcode)}</span></td>
+        <td><span class="tag tag-blue" style="cursor:pointer" onclick="fillScannerWith('${m.barcode}')">${m.barcode}</span></td>
         <td>
-          <span class="location-badge" onclick="goToShelf('${esc(m.shelf)}')">📍 ${esc(m.shelf)}</span>
-          <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;font-family:var(--font-mono)">${esc(m.zone.split('—')[0].trim())}</div>
+          <span class="location-badge" onclick="goToShelf('${m.shelf}')">📍 ${m.shelf}</span>
+          <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;font-family:var(--font-mono)">${m.zone.split('—')[0].trim()}</div>
         </td>
         <td><span class="stock-badge ${stockClass}">${stockLabel}</span></td>
         <td><div class="price-box">$${m.price_box.toFixed(2)}</div></td>
@@ -4048,7 +3883,7 @@
         <td>
           <div class="action-btns">
             <button class="icon-btn" title="Edit" onclick="openEditModal(${m.id})">✏️</button>
-            <button class="icon-btn" title="Scan" onclick="fillScannerWith('${esc(m.barcode)}')">📷</button>
+            <button class="icon-btn" title="Scan" onclick="fillScannerWith('${m.barcode}')">📷</button>
             <button class="icon-btn del" title="Delete" onclick="deleteMed(${m.id})">🗑</button>
           </div>
         </td>
@@ -4057,7 +3892,7 @@
 
         // MOBILE CARDS
         document.getElementById('inventory-cards').innerHTML = slice.map(m => {
-          const expDate = new Date(m.expiry + 'T00:00:00');
+          const expDate = new Date(m.expiry);
           const daysLeft = Math.round((expDate - now) / 86400000);
           const expiryClass = daysLeft < 0 ? 'expiry-bad' : daysLeft < 30 ? 'expiry-bad' : daysLeft < 90 ? 'expiry-warn' : 'expiry-ok';
           const expiryLabel = daysLeft < 0 ? '⛔ Exp' : daysLeft < 90 ? `⚠ ${daysLeft}d` : m.expiry.slice(0, 7);
@@ -4068,8 +3903,8 @@
           return `<div class="med-card">
         <div class="med-card-top">
           <div>
-            <div class="med-card-name">${esc(m.name)}</div>
-            <div class="med-card-generic">${esc(m.generic) || esc(m.category)}</div>
+            <div class="med-card-name">${m.name}</div>
+            <div class="med-card-generic">${m.generic || m.category}</div>
           </div>
           <span class="stock-badge ${stockClass}" style="font-size:0.72rem">${stockLabel}</span>
         </div>
@@ -4088,10 +3923,10 @@
           </div>
         </div>
         <div class="med-card-bottom">
-          <div class="med-card-location" onclick="goToShelf('${esc(m.shelf)}')">📍 ${esc(m.shelf)} · ${esc(m.zone.split('—')[0].trim())}</div>
+          <div class="med-card-location" onclick="goToShelf('${m.shelf}')">📍 ${m.shelf} · ${m.zone.split('—')[0].trim()}</div>
           <div class="med-card-actions">
             <button class="icon-btn" onclick="openEditModal(${m.id})">✏️</button>
-            <button class="icon-btn" onclick="fillScannerWith('${esc(m.barcode)}')">📷</button>
+            <button class="icon-btn" onclick="fillScannerWith('${m.barcode}')">📷</button>
             <button class="icon-btn del" onclick="deleteMed(${m.id})">🗑</button>
           </div>
         </div>
@@ -4102,30 +3937,11 @@
       // Pagination
       document.getElementById('page-info').textContent = `${total} results — page ${currentPage} of ${Math.max(1, pages)}`;
       const pbEl = document.getElementById('page-btns');
-      // Build ellipsis pagination: always show first, last, current ±1, and … as needed
-      // Maximum 7 visible items: prev ‹ 1 … cur-1 cur cur+1 … last › next
-      (function buildPagination() {
-        const btn = (i) => `<button class="page-btn${i === currentPage ? ' active' : ''}" onclick="goPage(${i})">${i}</button>`;
-        const ellipsis = '<span class="page-ellipsis">…</span>';
-        const prevBtn = `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage <= 1 ? 'disabled' : ''}>‹</button>`;
-        const nextBtn = `<button class="page-btn" onclick="goPage(${currentPage + 1})" ${currentPage >= pages ? 'disabled' : ''}>›</button>`;
-        if (pages <= 7) {
-          let pb = prevBtn;
-          for (let i = 1; i <= pages; i++) pb += btn(i);
-          pbEl.innerHTML = pb + nextBtn;
-          return;
-        }
-        const showLeft  = currentPage > 3;
-        const showRight = currentPage < pages - 2;
-        let pb = prevBtn + btn(1);
-        if (showLeft) pb += ellipsis;
-        const lo = Math.max(2, currentPage - 1);
-        const hi = Math.min(pages - 1, currentPage + 1);
-        for (let i = lo; i <= hi; i++) pb += btn(i);
-        if (showRight) pb += ellipsis;
-        pb += btn(pages) + nextBtn;
-        pbEl.innerHTML = pb;
-      })();
+      let pb = '';
+      for (let i = 1; i <= pages; i++) {
+        pb += `<button class="page-btn${i === currentPage ? ' active' : ''}" onclick="goPage(${i})">${i}</button>`;
+      }
+      pbEl.innerHTML = pb;
     }
 
     function goPage(p) { currentPage = p; renderInventory(); }
@@ -4138,8 +3954,8 @@
       const zones = [...new Set(inventory.map(m => m.zone))].sort();
       const catVal = catSel.value;
       const zoneVal = zoneSel.value;
-      catSel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option${c === catVal ? ' selected' : ''} value="${esc(c)}">${esc(c)}</option>`).join('');
-      zoneSel.innerHTML = '<option value="">All Zones</option>' + zones.map(z => `<option${z === zoneVal ? ' selected' : ''} value="${esc(z)}">${esc(z)}</option>`).join('');
+      catSel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option${c === catVal ? ' selected' : ''}>${c}</option>`).join('');
+      zoneSel.innerHTML = '<option value="">All Zones</option>' + zones.map(z => `<option${z === zoneVal ? ' selected' : ''}>${z}</option>`).join('');
     }
 
     // ============================
@@ -4184,100 +4000,12 @@
     }
     function handleOverlayClick(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
 
-    // ============================
-    // CONFIRM MODAL (replaces confirm())
-    // Usage: showConfirmModal({ title, sub, message, okLabel, okClass, onConfirm })
-    // ============================
-    let _confirmCallback = null;
-
-    function showConfirmModal({ title, sub, message, okLabel = 'Confirm', okClass = 'btn-danger', onConfirm }) {
-      document.getElementById('confirm-title').textContent = title;
-      document.getElementById('confirm-sub').textContent = sub || '';
-      document.getElementById('confirm-message').textContent = message;
-      const okBtn = document.getElementById('confirm-ok-btn');
-      okBtn.textContent = okLabel;
-      okBtn.className = 'btn ' + okClass;
-      _confirmCallback = () => { closeConfirmModal(); onConfirm(); };
-      document.getElementById('confirm-overlay').classList.add('open');
-      setMobileNavHidden(true);
-    }
-
-    function closeConfirmModal() {
-      document.getElementById('confirm-overlay').classList.remove('open');
-      _confirmCallback = null;
-      setMobileNavHidden(false);
-    }
-
-
-    // ============================
-    // STOCK MODAL (replaces prompt())
-    // Usage: showStockModal(med, onSave)
-    // ============================
-    let _stockCallback = null;
-
-    function showStockModal(med, onSave) {
-      document.getElementById('stock-modal-title').textContent = 'Update stock — ' + med.name;
-      document.getElementById('stock-modal-sub').textContent =
-        (med.generic ? med.generic + ' · ' : '') + 'currently ' + med.stock + ' boxes';
-      const input = document.getElementById('stock-input');
-      input.value = med.stock;
-      document.getElementById('stock-input-error').textContent = '';
-      document.getElementById('stock-ok-btn').disabled = false;
-      _stockCallback = onSave;
-      document.getElementById('stock-overlay').classList.add('open');
-      setMobileNavHidden(true);
-      // Focus and select all on next tick so keyboard opens on mobile
-      setTimeout(() => { input.focus(); input.select(); }, 80);
-    }
-
-    function closeStockModal() {
-      document.getElementById('stock-overlay').classList.remove('open');
-      _stockCallback = null;
-      setMobileNavHidden(false);
-    }
-
-    function validateStockInput() {
-      const val = document.getElementById('stock-input').value;
-      const n = parseInt(val, 10);
-      const errEl = document.getElementById('stock-input-error');
-      const okBtn = document.getElementById('stock-ok-btn');
-      if (val === '' || isNaN(n) || n < 0 || !Number.isInteger(n)) {
-        errEl.textContent = 'Enter a whole number ≥ 0';
-        okBtn.disabled = true;
-      } else {
-        errEl.textContent = '';
-        okBtn.disabled = false;
-      }
-    }
-
-    function submitStockModal() {
-      const val = document.getElementById('stock-input').value;
-      const n = parseInt(val, 10);
-      if (isNaN(n) || n < 0 || !Number.isInteger(n)) {
-        validateStockInput();
-        return;
-      }
-      const cb = _stockCallback;
-      closeStockModal();
-      if (cb) cb(n);
-    }
-
-
     async function saveMedication() {
       const name = document.getElementById('f-name').value.trim();
       const barcode = document.getElementById('f-barcode').value.trim();
       const price_box = parseFloat(document.getElementById('f-price-box').value);
       if (!name || !barcode || isNaN(price_box)) {
         showToast('Please fill in all required fields', true);
-        return;
-      }
-
-      // FIX: prevent duplicate barcodes — two medications sharing a barcode
-      // means the scanner always resolves to the first match, silently losing the second.
-      const dupBarcode = inventory.find(m => m.barcode === barcode && m.id !== editId);
-      if (dupBarcode) {
-        showToast('⚠️ Barcode already assigned to “' + dupBarcode.name + '”', true);
-        document.getElementById('f-barcode').focus();
         return;
       }
 
@@ -4319,25 +4047,15 @@
     }
 
     async function deleteMed(id) {
-      const med = inventory.find(m => m.id === id);
-      if (!med) return;
-      showConfirmModal({
-        title: 'Delete medication?',
-        sub: esc(med.name) + (med.generic ? ' · ' + esc(med.generic) : ''),
-        message: 'This will permanently remove “' + med.name + '” from inventory. This cannot be undone.',
-        okLabel: '🗑 Delete',
-        okClass: 'btn-danger',
-        onConfirm: async () => {
-          try {
-            await runWithSessionRetry(() => supabaseClient.from('medications').delete().eq('id', id));
-            showToast('Medication removed');
-            await refreshInventory();
-          } catch (error) {
-            console.error(error);
-            showToast(error.message || 'Unable to delete medication', true);
-          }
-        }
-      });
+      if (!confirm('Delete this medication from inventory?')) return;
+      try {
+        await runWithSessionRetry(() => supabaseClient.from('medications').delete().eq('id', id));
+        showToast('Medication removed');
+        await refreshInventory();
+      } catch (error) {
+        console.error(error);
+        showToast(error.message || 'Unable to delete medication', true);
+      }
     }
 
     // ============================
@@ -4457,7 +4175,6 @@
       document.getElementById('manual-barcode').value = '';
       document.getElementById('scanner-status').textContent = 'Ready — point camera at barcode';
       document.getElementById('scanner-status').style.color = '#5a6680';
-      scanCounts = {}; // FIX: reset stale counts so previous barcode can't trigger instantly
       const scrollArea = document.querySelector('#scanner-dialog > div:last-child');
       if (scrollArea) scrollArea.scrollTop = 0;
       startCamera();
@@ -4480,11 +4197,11 @@
       if (scanCounts[code] >= getRequiredReads()) {
         stopCamera();
         document.getElementById('manual-barcode').value = code;
-        document.getElementById('scanner-status').textContent = '✓ Captured: ' + code;
+        document.getElementById('scanner-status').textContent = 'âœ“ Captured: ' + code;
         document.getElementById('scanner-status').style.color = '#00c97b';
         lookupBarcode(code);
       } else {
-        document.getElementById('scanner-status').textContent = '⟳ Confirming…';
+        document.getElementById('scanner-status').textContent = 'âŸ³ Confirmingâ€¦';
         document.getElementById('scanner-status').style.color = '#00d4aa';
       }
     }
@@ -4496,7 +4213,9 @@
       if (Array.isArray(caps.focusMode) && caps.focusMode.includes('continuous')) advanced.push({ focusMode: 'continuous' });
       if (Array.isArray(caps.exposureMode) && caps.exposureMode.includes('continuous')) advanced.push({ exposureMode: 'continuous' });
       if (Array.isArray(caps.whiteBalanceMode) && caps.whiteBalanceMode.includes('continuous')) advanced.push({ whiteBalanceMode: 'continuous' });
-      // Zoom intentionally removed: applyConstraints zoom on iOS resets focusMode to manual, killing autofocus.
+      if (typeof caps.zoom?.max === 'number' && caps.zoom.max >= 2) {
+        advanced.push({ zoom: Math.min(Math.max(caps.zoom.min || 1, 1.4), caps.zoom.max) });
+      }
       if (!advanced.length) return;
       try {
         await track.applyConstraints({ advanced });
@@ -4505,7 +4224,7 @@
       }
     }
 
-    function startBarcodeDetectorLoop(video, onFallback) {
+    function startBarcodeDetectorLoop(video) {
       if (!('BarcodeDetector' in window)) return false;
       try {
         barcodeDetector = new window.BarcodeDetector({
@@ -4516,12 +4235,6 @@
         return false;
       }
 
-      // After ~3s of misses, fall back to ZXing.
-      // iOS BarcodeDetector needs barcode to fill >40% of frame and silently returns
-      // nothing otherwise -- ZXing is more tolerant of distance and angle.
-      let missCount = 0;
-      const MAX_MISSES = 90;
-
       const detectFrame = async () => {
         if (!zxingActive || !barcodeDetector) return;
         try {
@@ -4531,24 +4244,12 @@
               const rawValue = codes[0].rawValue || codes[0].rawText || '';
               if (rawValue) {
                 handleDetectedCode(rawValue);
-                return; // success -- stop loop
+                return;
               }
-            }
-            missCount++;
-            if (missCount >= MAX_MISSES) {
-              console.warn('BarcodeDetector: no read after', MAX_MISSES, 'frames -- switching to ZXing');
-              barcodeDetector = null;
-              cancelAnimationFrame(barcodeDetectorFrame);
-              barcodeDetectorFrame = null;
-              if (onFallback) onFallback();
-              return;
             }
           }
         } catch (error) {
-          console.warn('BarcodeDetector failed -- switching to ZXing', error);
-          barcodeDetector = null;
-          if (onFallback) onFallback();
-          return;
+          console.warn('BarcodeDetector detect failed', error);
         }
         barcodeDetectorFrame = requestAnimationFrame(detectFrame);
       };
@@ -4566,6 +4267,8 @@
 
       const video = document.getElementById('scanner-video');
 
+      // First: explicitly get camera stream with environment-facing constraint
+      // This fixes black screen on iOS Safari and Android Chrome
       navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: { ideal: 'environment' },
@@ -4579,36 +4282,36 @@
         await tuneCameraTrack(track);
         await video.play();
 
-        zxingActive = true;
-        document.getElementById('scanner-status').textContent = '📷 Point camera at barcode';
-        document.getElementById('scanner-status').style.color = '#00d4aa';
+        try {
+          zxingActive = true;
+          document.getElementById('scanner-status').textContent = 'ðŸ“· Point camera at barcode';
+          document.getElementById('scanner-status').style.color = '#00d4aa';
 
-        // FIX: use decodeFromStream, NOT decodeFromVideoElement.
-        // decodeFromVideoElement re-calls getUserMedia internally, creating a second
-        // competing stream. On iOS Safari this causes ZXing to decode a frozen/black
-        // frame and never detect any barcode.
-        function startZXing() {
-          if (!zxingActive) return;
-          try {
-            const hints = new Map();
-            hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, [
-              ZXing.BarcodeFormat.EAN_13,
-              ZXing.BarcodeFormat.EAN_8,
-              ZXing.BarcodeFormat.CODE_128,
-              ZXing.BarcodeFormat.CODE_39,
-              ZXing.BarcodeFormat.UPC_A,
-              ZXing.BarcodeFormat.UPC_E,
-              ZXing.BarcodeFormat.ITF,
-              ZXing.BarcodeFormat.DATA_MATRIX,
-              ZXing.BarcodeFormat.QR_CODE,
-            ]);
-            hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
-            zxingReader = new ZXing.BrowserMultiFormatReader(hints, 300);
-            zxingReader.decodeFromStream(stream, video, (result) => {
-              if (!result) return;
+          if (startBarcodeDetectorLoop(video)) {
+            return;
+          }
+
+          const hints = new Map();
+          hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, [
+            ZXing.BarcodeFormat.EAN_13,
+            ZXing.BarcodeFormat.EAN_8,
+            ZXing.BarcodeFormat.CODE_128,
+            ZXing.BarcodeFormat.CODE_39,
+            ZXing.BarcodeFormat.UPC_A,
+            ZXing.BarcodeFormat.UPC_E,
+            ZXing.BarcodeFormat.ITF,
+            ZXing.BarcodeFormat.DATA_MATRIX,
+            ZXing.BarcodeFormat.QR_CODE,
+          ]);
+          hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
+
+          zxingReader = new ZXing.BrowserMultiFormatReader(hints, 400);
+          const requiredReads = getRequiredReads();
+
+          // Use decodeFromVideoElement since we manage the stream ourselves
+          zxingReader.decodeFromVideoElement(video, (result, err) => {
+            if (result) {
               const code = result.getText();
-              if (!code) return;
-              const requiredReads = getRequiredReads();
               scanCounts[code] = (scanCounts[code] || 0) + 1;
               if (scanCounts[code] >= requiredReads) {
                 stopCamera();
@@ -4620,34 +4323,32 @@
                 document.getElementById('scanner-status').textContent = '⟳ Confirming…';
                 document.getElementById('scanner-status').style.color = '#00d4aa';
               }
-            });
-          } catch (e) {
-            console.error('ZXing error', e);
-            document.getElementById('scanner-status').textContent = 'Scanner error -- use manual input';
-            document.getElementById('scanner-status').style.color = '#ff6b35';
-            document.getElementById('scanner-box').classList.remove('scanning');
-          }
-        }
+            }
+          });
 
-        // Try native BarcodeDetector first (fastest on Android Chrome).
-        // startZXing is passed as fallback: if BarcodeDetector goes ~3s without
-        // a read, it automatically hands off to ZXing.
-        const usingNative = startBarcodeDetectorLoop(video, startZXing);
-        if (!usingNative) {
-          startZXing(); // BarcodeDetector unavailable -- go straight to ZXing
+          zxingActive = true;
+          document.getElementById('scanner-status').textContent = '📷 Point camera at barcode';
+          document.getElementById('scanner-status').style.color = '#00d4aa';
+
+        } catch (e) {
+          document.getElementById('scanner-status').textContent = 'Scanner error — use manual input';
+          document.getElementById('scanner-status').style.color = '#ff6b35';
+          document.getElementById('scanner-box').classList.remove('scanning');
         }
 
       }).catch(err => {
+        // Camera permission denied or unavailable
         const msg = err.name === 'NotAllowedError'
-          ? '🔒 Camera permission denied -- type barcode below'
+          ? '🔒 Camera permission denied — type barcode below'
           : err.name === 'NotFoundError'
-            ? '📵 No camera found -- type barcode below'
-            : 'Camera unavailable -- use manual input below';
+            ? '📵 No camera found — type barcode below'
+            : 'Camera unavailable — use manual input below';
         document.getElementById('scanner-status').textContent = msg;
         document.getElementById('scanner-status').style.color = '#ff6b35';
         document.getElementById('scanner-box').classList.remove('scanning');
       });
     }
+
     function stopCamera() {
       if (barcodeDetectorFrame) {
         cancelAnimationFrame(barcodeDetectorFrame);
@@ -5140,7 +4841,7 @@
       const yy = parseInt(s.substr(0, 2));
       const mm = s.substr(2, 2);
       const dd = s.substr(4, 2) === '00' ? '28' : s.substr(4, 2);
-      const yyyy = yy <= 49 ? 2000 + yy : 1900 + yy; // GS1 spec §7.12 pivot is 49, not 30
+      const yyyy = yy >= 0 && yy <= 30 ? 2000 + yy : 1900 + yy;
       return `${yyyy}-${mm}-${dd}`;
     }
 
@@ -5187,23 +4888,22 @@
     async function quickUpdateStock() {
       const med = window._lastScannedMed;
       if (!med) return;
-      showStockModal(med, async (n) => {
-        try {
-          await runWithSessionRetry(() => supabaseClient
-            .from('medications')
-            .update({ stock: n })
-            .eq('id', med.id));
-          await refreshInventory();
-          // FIX: update in-memory reference and re-render card directly.
-          // lookupBarcode() would restart the camera while the scanner is still open.
-          const updated = inventory.find(m => m.id === med.id);
-          if (updated) { window._lastScannedMed = updated; lookupBarcode(updated.barcode); }
-          showToast(`✓ Stock updated to ${n} boxes`);
-        } catch (error) {
-          console.error(error);
-          showToast(error.message || 'Unable to update stock', true);
-        }
-      });
+      const val = prompt(`Update stock for ${med.name}\nCurrent stock: ${med.stock} boxes\nNew stock:`, med.stock);
+      if (val === null) return;
+      const n = parseInt(val);
+      if (isNaN(n) || n < 0) { showToast('Invalid stock value', true); return; }
+      try {
+        await runWithSessionRetry(() => supabaseClient
+          .from('medications')
+          .update({ stock: n })
+          .eq('id', med.id));
+        await refreshInventory();
+        lookupBarcode(med.barcode);
+        showToast(`✓ Stock updated to ${n} boxes`);
+      } catch (error) {
+        console.error(error);
+        showToast(error.message || 'Unable to update stock', true);
+      }
     }
 
     // ============================
@@ -5302,8 +5002,8 @@
 
       return `<div class="shelf-unit${isHighlighted ? ' highlighted' : ''}" id="shelf-${safeId}"
     style="background:${color}18;border-color:${color}44;"
-    onclick="showShelfDetail('${esc(shelf)}')">
-    <div class="shelf-label" style="color:${color}">${esc(shelf)}</div>
+    onclick="showShelfDetail('${shelf}')">
+    <div class="shelf-label" style="color:${color}">${shelf}</div>
     <div class="shelf-items-count" style="color:${color}">${count}</div>
     <div class="shelf-items-label" style="color:${color}99">items</div>
   </div>`;
@@ -5313,15 +5013,15 @@
       const items = inventory.filter(m => m.shelf === shelf);
       const el = document.getElementById('shelf-detail');
       if (!items.length) {
-        el.innerHTML = `<strong>${esc(shelf)}</strong><br>No medications assigned to this shelf.`;
+        el.innerHTML = `<strong>${shelf}</strong><br>No medications assigned to this shelf.`;
         return;
       }
-      el.innerHTML = `<strong style="color:var(--accent)">${esc(shelf)}</strong><br><br>` +
+      el.innerHTML = `<strong style="color:var(--accent)">${shelf}</strong><br><br>` +
         items.map(m => {
           let sc = m.stock === 0 ? 'color:var(--danger)' : m.stock <= m.reorder ? 'color:var(--warn)' : 'color:var(--success)';
           return `<div style="margin-bottom:0.6rem;padding:0.5rem;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
-        <div style="font-weight:600;font-size:0.85rem">${esc(m.name)}</div>
-        <div style="font-size:0.75rem;color:var(--muted);font-family:var(--font-mono)">${esc(m.generic) || ''}</div>
+        <div style="font-weight:600;font-size:0.85rem">${m.name}</div>
+        <div style="font-size:0.75rem;color:var(--muted);font-family:var(--font-mono)">${m.generic || ''}</div>
         <div style="font-size:0.75rem;margin-top:4px"><span style="${sc};font-family:var(--font-mono)">${m.stock} boxes</span> · $${m.price_box.toFixed(2)}/box</div>
       </div>`;
         }).join('');
@@ -5360,51 +5060,45 @@
 
       // Out of stock
       const out = inventory.filter(m => m.stock === 0);
-      out.forEach(m => alerts.push({ type: 'critical', icon: '🚨', title: `OUT OF STOCK: ${esc(m.name)}`, desc: `Barcode ${esc(m.barcode)} · ${esc(m.zone)} · ${esc(m.shelf)}`, time: 'Now' }));
+      out.forEach(m => alerts.push({ type: 'critical', icon: '🚨', title: `OUT OF STOCK: ${m.name}`, desc: `Barcode ${m.barcode} · ${m.zone} · ${m.shelf}`, time: 'Now' }));
 
       // Low stock
       const low = inventory.filter(m => m.stock > 0 && m.stock <= m.reorder);
-      low.forEach(m => alerts.push({ type: 'warning', icon: '⚠️', title: `Low Stock: ${esc(m.name)}`, desc: `${m.stock} boxes left (reorder at ${m.reorder}) · ${esc(m.shelf)}`, time: 'Now' }));
+      low.forEach(m => alerts.push({ type: 'warning', icon: '⚠️', title: `Low Stock: ${m.name}`, desc: `${m.stock} boxes left (reorder at ${m.reorder}) · ${m.shelf}`, time: 'Now' }));
 
       // Expired
-      const expired = inventory.filter(m => new Date(m.expiry + 'T00:00:00') < now);
-      expired.forEach(m => alerts.push({ type: 'critical', icon: '⛔', title: `EXPIRED: ${esc(m.name)}`, desc: `Expired on ${esc(m.expiry)} · ${esc(m.shelf)} — remove from shelf immediately`, time: esc(m.expiry) }));
+      const expired = inventory.filter(m => new Date(m.expiry) < now);
+      expired.forEach(m => alerts.push({ type: 'critical', icon: '⛔', title: `EXPIRED: ${m.name}`, desc: `Expired on ${m.expiry} · ${m.shelf} — remove from shelf immediately`, time: m.expiry }));
 
       // Expiring soon (< 30 days)
       const soonExp = inventory.filter(m => {
-        const d = new Date(m.expiry + 'T00:00:00');
+        const d = new Date(m.expiry);
         const diff = Math.round((d - now) / 86400000);
         return diff >= 0 && diff < 30;
       });
       soonExp.forEach(m => {
-        const diff = Math.round((new Date(m.expiry + 'T00:00:00') - now) / 86400000);
-        alerts.push({ type: 'warning', icon: '🗓', title: `Expiring in ${diff} days: ${esc(m.name)}`, desc: `Expires ${esc(m.expiry)} · ${esc(m.shelf)}`, time: esc(m.expiry) });
+        const diff = Math.round((new Date(m.expiry) - now) / 86400000);
+        alerts.push({ type: 'warning', icon: '🗓', title: `Expiring in ${diff} days: ${m.name}`, desc: `Expires ${m.expiry} · ${m.shelf}`, time: m.expiry });
       });
 
       if (!alerts.length) {
         document.getElementById('alerts-list').innerHTML = '<div class="empty-state"><div class="icon">✅</div><h3>All clear!</h3><p>No active alerts at this time</p></div>';
         document.getElementById('alert-badge').style.display = 'none';
         const hnb = document.getElementById('header-alert-badge'); if (hnb) hnb.style.display = 'none';
-        // Hide mobile nav alert badge
-        const mnBadgeZ = document.getElementById('mn-badge');
-        if (mnBadgeZ) mnBadgeZ.style.display = 'none';
         return;
       }
 
       document.getElementById('alert-badge').textContent = alerts.length;
       document.getElementById('alert-badge').style.display = '';
       const hnb = document.getElementById('header-alert-badge'); if (hnb) { hnb.textContent = alerts.length; hnb.style.display = ''; }
-      // Sync mobile nav alert badge
-      const mnBadge = document.getElementById('mn-badge');
-      if (mnBadge) { mnBadge.textContent = alerts.length; mnBadge.style.display = ''; }
       document.getElementById('alerts-list').innerHTML = alerts.map(a => `
     <div class="alert-card alert-${a.type}">
       <div class="alert-icon">${a.icon}</div>
       <div class="alert-content">
-        <div class="alert-title">${esc(a.title)}</div>
-        <div class="alert-desc">${esc(a.desc)}</div>
+        <div class="alert-title">${a.title}</div>
+        <div class="alert-desc">${a.desc}</div>
       </div>
-      <div class="alert-time">${esc(a.time)}</div>
+      <div class="alert-time">${a.time}</div>
     </div>`
       ).join('');
     }
@@ -5436,7 +5130,7 @@
       const totalUnits = inventory.reduce((s, m) => s + m.stock * (m.units_per_box || 1), 0);
       document.getElementById('an-total-units').textContent = totalUnits.toLocaleString();
 
-      const exp30 = inventory.filter(m => new Date(m.expiry + 'T00:00:00') <= in30 && new Date(m.expiry + 'T00:00:00') >= now).length;
+      const exp30 = inventory.filter(m => new Date(m.expiry) <= in30 && new Date(m.expiry) >= now).length;
       document.getElementById('an-expiring-soon').textContent = exp30;
 
       const cats = [...new Set(inventory.map(m => m.category))];
@@ -5447,7 +5141,7 @@
       const maxS = Math.max(...byStock.map(m => m.stock));
       document.getElementById('an-stock-chart').innerHTML = byStock.map(m =>
         `<div class="bar-row">
-      <div class="bar-name" title="${esc(m.name)}">${esc(m.name)}</div>
+      <div class="bar-name" title="${m.name}">${m.name}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${Math.round(m.stock / maxS * 100)}%"></div></div>
       <div class="bar-val">${m.stock}</div>
     </div>`
@@ -5459,7 +5153,7 @@
       document.getElementById('an-value-chart').innerHTML = byValue.map(m => {
         const v = (m.price_box * m.stock).toFixed(0);
         return `<div class="bar-row">
-      <div class="bar-name" title="${esc(m.name)}">${esc(m.name)}</div>
+      <div class="bar-name" title="${m.name}">${m.name}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${Math.round(m.price_box * m.stock / maxV * 100)}%;background:linear-gradient(90deg,var(--warn),#ff6b35cc)"></div></div>
       <div class="bar-val">$${v}</div>
     </div>`;
@@ -5472,7 +5166,7 @@
       document.getElementById('an-cat-pills').innerHTML = Object.entries(catCounts).map(([cat, cnt], i) =>
         `<div class="cat-pill">
       <div class="cat-dot" style="background:${catColors[i % catColors.length]}"></div>
-      ${esc(cat)} <span style="font-size:0.65rem;opacity:0.7">(${cnt})</span>
+      ${cat} <span style="font-size:0.65rem;opacity:0.7">(${cnt})</span>
     </div>`
       ).join('');
     }
@@ -5487,8 +5181,7 @@
         m.price_box, m.units_per_box ? (m.price_box / m.units_per_box).toFixed(2) : '',
         m.stock, m.reorder, m.zone, m.shelf, m.expiry, m.mfr || ''
       ]);
-      const csvQuote = v => '"' + String(v === null || v === undefined ? '' : v).replace(/"/g, '""') + '"';
-      const csv = [headers, ...rows].map(r => r.map(csvQuote).join(',')).join('\n');
+      const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -5529,6 +5222,113 @@
   </script>
 
   <!-- MORE POPUP MENU -->
+  <div id="more-popup" style="
+  display:none;
+  position:fixed;
+  bottom:76px;right:8px;
+  z-index:9998;
+  background:#161d2a;
+  border:1px solid #1e2736;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 -8px 32px rgba(0,0,0,0.6);
+  min-width:160px;
+">
+    <button onclick="showPage('map');toggleMore()"
+      style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;border-bottom:1px solid #1e2736;color:#e8edf5;font-size:0.85rem;font-weight:500;padding:13px 16px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+      <span style="font-size:1.2rem">🗺</span> Store Map
+    </button>
+    <button onclick="showPage('analytics');toggleMore()"
+      style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:#e8edf5;font-size:0.85rem;font-weight:500;padding:13px 16px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+      <span style="font-size:1.2rem">📊</span> Analytics
+    </button>
+  </div>
+  <!-- POPUP BACKDROP -->
+  <div id="more-backdrop" onclick="toggleMore()" style="display:none;position:fixed;inset:0;z-index:9997;"></div>
+
+  <!-- MOBILE BOTTOM NAV — placed last in DOM to guarantee it paints on top -->
+  <nav id="mobile-nav-bottom-legacy" style="
+  display:none;
+  position:fixed;
+  bottom:0;left:0;right:0;
+  z-index:9999;
+  background:#0d1119;
+  border-top:1px solid #1e2736;
+  padding:8px 4px calc(8px + env(safe-area-inset-bottom, 0px));
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.4);
+">
+    <button onclick="showPage('dashboard')" id="mnb-dashboard"
+      style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#00d4aa;font-size:0.58rem;font-weight:600;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+      <span style="font-size:1.3rem;line-height:1.1">⬡</span>Dash
+    </button>
+    <button onclick="showPage('inventory')" id="mnb-inventory"
+      style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#5a6680;font-size:0.58rem;font-weight:500;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+      <span style="font-size:1.3rem;line-height:1.1">📦</span>Stock
+    </button>
+    <button onclick="openScanner()"
+      style="display:flex;flex-direction:column;align-items:center;gap:3px;background:linear-gradient(135deg,#00d4aa,#00b890);color:#0a0e14;border:none;font-size:0.58rem;font-weight:800;padding:9px 6px;border-radius:14px;cursor:pointer;flex:1.3;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;letter-spacing:0.04em;text-transform:uppercase;box-shadow:0 4px 14px rgba(0,212,170,0.4);">
+      <span style="font-size:1.2rem;line-height:1.1">📷</span>SCAN
+    </button>
+    <button onclick="showPage('alerts')" id="mnb-alerts"
+      style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#5a6680;font-size:0.58rem;font-weight:500;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;position:relative;font-family:sans-serif;">
+      <span style="font-size:1.3rem;line-height:1.1">🔔</span>Alerts
+      <span id="mnb-badge"
+        style="position:absolute;top:1px;right:4px;background:#ff3b5c;color:#fff;font-size:0.5rem;font-weight:800;border-radius:8px;padding:1px 4px;min-width:14px;text-align:center;line-height:1.5;font-family:sans-serif;">5</span>
+    </button>
+    <button onclick="toggleMore()" id="mnb-more"
+      style="display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:#5a6680;font-size:0.58rem;font-weight:500;padding:5px 6px;border-radius:10px;cursor:pointer;flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:sans-serif;">
+      <span style="font-size:1.3rem;line-height:1.1">⋯</span>More
+    </button>
+  </nav>
+
+  <script>
+    // ── More popup ──────────────────────────────────────────
+    let moreOpen = false;
+    function toggleMore() {
+      moreOpen = !moreOpen;
+      const popup = document.getElementById('more-popup');
+      const backdrop = document.getElementById('more-backdrop');
+      const btn = document.getElementById('mnb-more');
+      popup.style.display = moreOpen ? 'block' : 'none';
+      backdrop.style.display = moreOpen ? 'block' : 'none';
+      btn.style.color = moreOpen ? '#00d4aa' : '#5a6680';
+    }
+
+    // ── Show/hide nav based on screen width ────────────────
+    function updateMobileNav() {
+      const nav = document.getElementById('mobile-nav-bottom-legacy');
+      const isMobile = window.innerWidth <= 768;
+      nav.style.display = isMobile ? 'flex' : 'none';
+      if (!isMobile && moreOpen) toggleMore();
+      const isSmall = window.innerWidth <= 360;
+      nav.style.padding = isSmall
+        ? '5px 2px calc(5px + env(safe-area-inset-bottom,0px))'
+        : '8px 4px calc(8px + env(safe-area-inset-bottom,0px))';
+    }
+    updateMobileNav();
+    window.addEventListener('resize', updateMobileNav);
+
+    // ── Sync active colour on nav buttons ─────────────────
+    const _origShowPage = showPage;
+    showPage = function (name) {
+      _origShowPage(name);
+      // close More popup if open
+      if (moreOpen) toggleMore();
+      // reset all
+      ['dashboard', 'inventory', 'alerts', 'more'].forEach(n => {
+        const el = document.getElementById('mnb-' + n);
+        if (el) el.style.color = '#5a6680';
+      });
+      // highlight active (map & analytics light up "More")
+      const activeId = (name === 'map' || name === 'analytics') ? 'mnb-more' : 'mnb-' + name;
+      const activeEl = document.getElementById(activeId);
+      if (activeEl) activeEl.style.color = '#00d4aa';
+    };
+    // Init — dashboard is active on load
+    document.getElementById('mnb-dashboard').style.color = '#00d4aa';
+  </script>
 
   <nav id="mobile-nav-bottom" style="
   display:none;
@@ -5565,9 +5365,7 @@
   </nav>
 
   <script>
-    // Single authoritative showPage wrapper — replaces the previous double monkey-patch.
-    // All mobile nav sync happens here in one place.
-    function updateMobileNav() {
+    function updateMobileNavV2() {
       const nav = document.getElementById('mobile-nav-bottom');
       if (!nav) return;
       const isMobile = window.innerWidth <= 768;
@@ -5581,28 +5379,35 @@
     function setMobileNavHidden(hidden) {
       const nav = document.getElementById('mobile-nav-bottom');
       if (!nav) return;
-      nav.style.display = hidden ? 'none' : (window.innerWidth <= 768 ? 'flex' : 'none');
+      if (hidden) {
+        nav.style.display = 'none';
+        return;
+      }
+      updateMobileNavV2();
     }
 
-    // Wrap showPage once — highlight active tab, sync header alert button
-    const _origShowPage = showPage;
-    showPage = function(name) {
-      _origShowPage(name);
-      // Highlight active button in v2 nav
+    function syncMobileChrome(name) {
       ['dashboard', 'inventory', 'map', 'analytics'].forEach(n => {
         const el = document.getElementById('mnb2-' + n);
         if (el) el.style.color = '#5a6680';
       });
       const activeId = ['dashboard', 'inventory', 'map', 'analytics'].includes(name) ? 'mnb2-' + name : null;
-      if (activeId) { const el = document.getElementById(activeId); if (el) el.style.color = '#00d4aa'; }
-      // Header alert button highlight
+      const activeEl = activeId ? document.getElementById(activeId) : null;
+      if (activeEl) activeEl.style.color = '#00d4aa';
+
       const headerAlert = document.getElementById('mobile-header-alert');
       if (headerAlert) headerAlert.classList.toggle('active', name === 'alerts');
+    }
+
+    const _showPageWithLegacyNav = showPage;
+    showPage = function (name) {
+      _showPageWithLegacyNav(name);
+      syncMobileChrome(name);
     };
 
-    updateMobileNav();
-    window.addEventListener('resize', updateMobileNav);
-    showPage('dashboard'); // init highlight state — re-call after wrapper is set
+    updateMobileNavV2();
+    window.addEventListener('resize', updateMobileNavV2);
+    syncMobileChrome('dashboard');
   </script>
 
   <!-- ═══════════════════════════════════════════════════════════
@@ -5801,57 +5606,6 @@
       </div><!-- /scrollable results -->
     </div><!-- /scanner-dialog -->
   </div><!-- /scanner-overlay -->
-
-
-  <!-- CONFIRM MODAL — replaces native confirm() for delete actions -->
-  <div id="confirm-overlay" onclick="if(event.target===this)closeConfirmModal()">
-    <div class="mini-modal" onclick="event.stopPropagation()">
-      <div class="mini-modal-drag"><span></span></div>
-      <div class="mini-modal-header">
-        <div class="mini-modal-icon danger" id="confirm-icon">🗑</div>
-        <div class="mini-modal-titles">
-          <div class="mini-modal-title" id="confirm-title">Delete medication?</div>
-          <div class="mini-modal-sub" id="confirm-sub"></div>
-        </div>
-      </div>
-      <div class="mini-modal-body">
-        <div class="mini-modal-warning" id="confirm-message"></div>
-      </div>
-      <div class="mini-modal-footer">
-        <button class="btn btn-ghost" onclick="closeConfirmModal()">Cancel</button>
-        <button class="btn btn-danger" id="confirm-ok-btn" onclick="_confirmCallback && _confirmCallback()">Delete</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- STOCK MODAL — replaces native prompt() for quick stock update -->
-  <div id="stock-overlay" onclick="closeStockModal()">
-    <div class="mini-modal" onclick="event.stopPropagation()">
-      <div class="mini-modal-drag"><span></span></div>
-      <div class="mini-modal-header">
-        <div class="mini-modal-icon accent">📦</div>
-        <div class="mini-modal-titles">
-          <div class="mini-modal-title" id="stock-modal-title">Update stock</div>
-          <div class="mini-modal-sub" id="stock-modal-sub"></div>
-        </div>
-      </div>
-      <div class="mini-modal-body">
-        <div class="mini-modal-input-wrap">
-          <div class="mini-modal-input-label">New stock</div>
-          <input type="number" id="stock-input" min="0" step="1"
-                 oninput="validateStockInput()"
-                 onkeydown="if(event.key==='Enter'){event.preventDefault();submitStockModal();}
-                            if(event.key==='Escape'){closeStockModal();}">
-          <div class="mini-modal-input-unit">boxes</div>
-        </div>
-        <div class="mini-modal-input-error" id="stock-input-error"></div>
-      </div>
-      <div class="mini-modal-footer">
-        <button class="btn btn-ghost" onclick="closeStockModal()">Cancel</button>
-        <button class="btn btn-primary" id="stock-ok-btn" onclick="submitStockModal()">💾 Save</button>
-      </div>
-    </div>
-  </div>
 
 </body>
 
