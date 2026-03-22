@@ -39,11 +39,18 @@
       box-sizing: border-box;
     }
 
+    html {
+      background: var(--bg);
+      background-color: var(--bg);
+    }
+
     body {
       background: var(--bg);
+      background-color: var(--bg);
       color: var(--text);
       font-family: var(--font-body);
       min-height: 100vh;
+      min-height: 100dvh;
       overflow-x: hidden;
     }
 
@@ -80,7 +87,14 @@
       font-size: 1.4rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
+    }
+
+    .logo-wordmark {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0;
+      letter-spacing: -0.02em;
     }
 
     .logo-icon {
@@ -94,7 +108,7 @@
       font-size: 1rem;
     }
 
-    .logo span {
+    .logo-wordmark span {
       color: var(--accent);
     }
 
@@ -166,12 +180,19 @@
 
     .auth-screen {
       min-height: 100vh;
+      min-height: 100dvh;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 2rem;
-      position: relative;
-      z-index: 2;
+      background: var(--bg);
+      background-color: var(--bg);
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      z-index: 120;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .auth-card {
@@ -190,25 +211,32 @@
 
     .auth-kicker {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.64rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.75rem;
+      color: #74c9a8;
+      opacity: 0.68;
+      margin-bottom: 0.5rem;
     }
 
     .auth-title {
       font-family: var(--font-display);
-      font-size: 2rem;
+      font-size: 1.7rem;
       font-weight: 800;
-      line-height: 1;
-      margin-bottom: 0.5rem;
+      line-height: 0.98;
+      margin-bottom: 0.4rem;
     }
 
+
+    .auth-hero-login .auth-title {
+      font-size: 1rem;
+      line-height: 1.05;
+      margin-bottom: 0.4rem;
+    }
     .auth-subtitle {
       color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.6;
+      font-size: 0.86rem;
+      line-height: 1.5;
     }
 
     .auth-body {
@@ -226,6 +254,7 @@
       padding: 0.9rem 1rem;
       font-size: 0.84rem;
       line-height: 1.55;
+      display: none;
     }
 
     .auth-error {
@@ -248,6 +277,202 @@
     .auth-actions .btn {
       flex: 1;
       justify-content: center;
+    }
+
+    .auth-note.show {
+      display: block;
+    }
+
+    #auth-signup-btn {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    #auth-signin-btn[disabled],
+    #auth-signup-btn[disabled],
+    .auth-toggle[disabled] {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+    .auth-card {
+      width: min(460px, 100%);
+    }
+
+    .auth-hero-login {
+      padding: 1.05rem 1.15rem 0.72rem;
+    }
+
+    .auth-mini-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.58rem;
+    }
+
+    .auth-mini-brand-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 1.45rem;
+      background: linear-gradient(160deg, #8ce3b1 0%, #70c7da 45%, #78a5ff 100%);
+      color: #0f1420;
+      flex-shrink: 0;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    .auth-mini-brand-text {
+      min-width: 0;
+    }
+
+    .auth-mini-brand-name {
+      font-family: var(--font-display);
+      font-size: 1.42rem;
+      line-height: 1;
+      color: var(--accent);
+      margin-bottom: 0.18rem;
+    }
+
+    .auth-mini-brand-tag {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .auth-hero-login .auth-title {
+      font-size: 1.4rem;
+      line-height: 1.05;
+      margin-bottom: 0.18rem;
+    }
+
+    .auth-hero-login .auth-subtitle {
+      max-width: 360px;
+      font-size: 0.84rem;
+      line-height: 1.4;
+    }
+
+    .auth-label {
+      display: block;
+      margin-bottom: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .auth-body .form-group {
+      margin-bottom: 0.1rem;
+    }
+
+    .auth-body .form-input {
+      background: rgba(255, 255, 255, 0.92);
+      border-color: rgba(140, 227, 177, 0.2);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      min-height: 44px;
+    }
+
+    .auth-body .form-input:focus {
+      border-color: rgba(0, 212, 170, 0.55);
+      box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.12);
+    }
+
+    .auth-actions-stack {
+      margin-top: 0.1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .auth-actions-stack .btn {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 0.92rem;
+    }
+
+    #auth-signup-btn {
+      border-color: rgba(255, 255, 255, 0.06);
+      color: #9eabc4;
+      background: rgba(255, 255, 255, 0.008);
+    }
+
+    #auth-signup-btn:hover {
+      border-color: rgba(0, 212, 170, 0.18);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .auth-footer {
+      display: none;
+    }
+
+    .auth-link-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font: inherit;
+      padding: 0;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .auth-link-btn:hover {
+      color: #7ff0bf;
+    }
+
+    @media (max-width: 768px) {
+      .auth-screen {
+        padding: 1rem;
+      }
+
+      .auth-card {
+        width: min(100%, 520px);
+        border-radius: 20px;
+      }
+
+      .auth-hero-login {
+        padding: 1rem 1rem 0.72rem;
+      }
+
+      .auth-mini-brand {
+        gap: 0.65rem;
+        margin-bottom: 0.65rem;
+      }
+
+      .auth-mini-brand-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        font-size: 1.18rem;
+      }
+
+      .auth-mini-brand-name {
+        font-size: 1.2rem;
+      }
+
+      .auth-mini-brand-tag {
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
+      }
+
+      .auth-hero-login .auth-title {
+        font-size: 1.12rem;
+      }
+
+      .auth-hero-login .auth-subtitle {
+        font-size: 0.8rem;
+      }
+
+      .auth-body {
+        padding: 1.05rem;
+      }
+
+      .auth-actions-stack {
+        grid-template-columns: 1fr;
+      }
     }
 
     .skeleton {
@@ -334,6 +559,13 @@
       display: none !important;
     }
 
+    body.auth-mode,
+    body.booting {
+      background: var(--bg);
+      background-color: var(--bg);
+      overflow: hidden;
+    }
+
     body.auth-mode .auth-screen {
       display: flex;
     }
@@ -345,6 +577,26 @@
     body.booting #scanner-overlay,
     body.booting #toast,
     body.booting .auth-screen {
+      display: none !important;
+    }
+
+    body.shell-loading {
+      background: var(--bg);
+      background-color: var(--bg);
+      overflow: hidden;
+    }
+
+    body.overlay-open #mobile-nav,
+    body.overlay-open #mobile-nav-bottom {
+      display: none !important;
+    }
+
+    body.overlay-open {
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    body.shell-loading .auth-screen {
       display: none !important;
     }
 
@@ -380,6 +632,18 @@
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       overflow: hidden;
+    }
+
+    .header-alert-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .header-alert-label {
+      display: inline;
+      line-height: 1;
     }
 
     #logout-btn-header {
@@ -586,6 +850,74 @@
       flex-wrap: wrap;
     }
 
+    .inventory-export-btn-desktop {
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    .inventory-quick-filters {
+      display: none;
+      gap: 0.45rem;
+      margin: -0.2rem 0 0.75rem;
+      overflow-x: auto;
+      padding-bottom: 0.1rem;
+      scrollbar-width: none;
+    }
+
+    .inventory-quick-filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .quick-filter-chip {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 0.42rem 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: hidden;
+    }
+
+    .quick-filter-chip.active {
+      color: #0a0e14;
+      background: var(--accent);
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    .inventory-toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: nowrap;
+    }
+
+    .inventory-toolbar-row .inventory-quick-filters {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+    }
+
+    .inventory-toolbar-row .inventory-export-btn {
+      display: none;
+    }
+
+    .inventory-export-btn {
+      width: auto !important;
+      flex-shrink: 0;
+      padding: 0.48rem 0.72rem;
+      font-size: 0.76rem;
+      white-space: nowrap;
+    }
+
     .search-wrap {
       flex: 1;
       min-width: 200px;
@@ -608,7 +940,7 @@
       color: var(--text);
       font-family: var(--font-body);
       font-size: 0.9rem;
-      padding: 0.65rem 1rem 0.65rem 2.5rem;
+      padding: 0.65rem 2.8rem 0.65rem 2.5rem;
       border-radius: 8px;
       outline: none;
       transition: border-color 0.2s;
@@ -620,6 +952,39 @@
 
     .search-input::placeholder {
       color: var(--muted);
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 0.55rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .search-clear.show {
+      display: inline-flex;
+    }
+
+    .toolbar-meta {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      padding: 0.42rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.02);
+      white-space: nowrap;
     }
 
     .filter-select {
@@ -646,6 +1011,9 @@
       align-items: center;
       gap: 0.4rem;
       transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: hidden;
     }
 
     .btn-primary {
@@ -688,6 +1056,74 @@
       overflow: hidden;
     }
 
+    .inventory-summary-strip {
+      display: flex;
+      gap: 0.75rem;
+      margin: -0.15rem 0 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .inventory-summary-pill {
+      min-width: 140px;
+      padding: 0.7rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .inventory-summary-pill:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .inventory-summary-pill.active {
+      border-color: rgba(0, 212, 170, 0.3);
+      background: rgba(0, 212, 170, 0.08);
+    }
+
+    .inventory-summary-kicker {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+    }
+
+    .inventory-summary-value {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .inventory-summary-note {
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    .inventory-summary-pill.low .inventory-summary-value {
+      color: var(--warn);
+    }
+
+    .inventory-summary-pill.out .inventory-summary-value {
+      color: var(--danger);
+    }
+
+    .inventory-summary-pill.expiring .inventory-summary-value {
+      color: #ffb347;
+    }
+
+    .desktop-table {
+      max-height: none;
+      overflow: visible;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -716,7 +1152,7 @@
     }
 
     td {
-      padding: 0.9rem 1.25rem;
+      padding: 0.82rem 1.1rem;
       font-size: 0.875rem;
       border-top: 1px solid var(--border);
       vertical-align: middle;
@@ -727,19 +1163,65 @@
     }
 
     tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(255, 255, 255, 0.03);
     }
 
     .drug-name {
       font-weight: 600;
       color: var(--text);
       margin-bottom: 0.1rem;
+      line-height: 1.15;
+      font-size: 0.96rem;
+    }
+
+    .drug-name-line {
+      display: flex;
+      align-items: baseline;
+      gap: 0.55rem;
+      min-width: 0;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.02);
+      align-self: center;
+    }
+
+    .status-dot.stock-ok {
+      background: var(--success);
+      box-shadow: 0 0 0 3px rgba(0, 201, 123, 0.12);
+    }
+
+    .status-dot.stock-low {
+      background: var(--warn);
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.12);
+    }
+
+    .status-dot.stock-out {
+      background: var(--danger);
+      box-shadow: 0 0 0 3px rgba(255, 59, 92, 0.12);
     }
 
     .drug-generic {
-      font-size: 0.75rem;
+      font-size: 0.71rem;
       color: var(--muted);
       font-family: var(--font-mono);
+      margin-left: 1.1rem;
+    }
+
+    .drug-name-cell {
+      min-width: 270px;
+    }
+
+    .barcode-cell {
+      white-space: nowrap;
+    }
+
+    .expiry-cell {
+      white-space: nowrap;
     }
 
     .location-badge {
@@ -755,10 +1237,23 @@
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: hidden;
     }
 
     .location-badge:hover {
       background: rgba(0, 136, 255, 0.2);
+    }
+
+    .location-badge.unassigned {
+      background: rgba(255, 107, 53, 0.08);
+      border-color: rgba(255, 107, 53, 0.24);
+      color: var(--warn);
+    }
+
+    .location-badge.unassigned:hover {
+      background: rgba(255, 107, 53, 0.14);
     }
 
     .stock-badge {
@@ -770,6 +1265,19 @@
       font-size: 0.8rem;
       padding: 0.25rem 0.7rem;
       border-radius: 20px;
+    }
+
+    .stock-badge.clickable {
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: hidden;
+    }
+
+    .stock-badge.clickable:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
     .stock-ok {
@@ -806,6 +1314,8 @@
     .price-box {
       font-family: var(--font-mono);
       font-weight: 500;
+      font-size: 0.82rem;
+      white-space: nowrap;
     }
 
     .price-unit {
@@ -816,24 +1326,68 @@
     .expiry-ok {
       color: var(--success);
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.76rem;
     }
 
     .expiry-warn {
       color: var(--warn);
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.76rem;
     }
 
     .expiry-bad {
       color: var(--danger);
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.76rem;
     }
 
     .action-btns {
       display: flex;
       gap: 0.4rem;
+      opacity: 0.9;
+      transition: opacity 0.18s ease;
+      align-items: center;
+    }
+
+    .desktop-table tbody tr:hover .action-btns {
+      opacity: 1;
+    }
+
+    .table-action-btn {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 0.42rem 0.78rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      line-height: 1;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: hidden;
+    }
+
+    .table-action-btn:hover {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.09);
+      transform: translateY(-1px);
+    }
+
+    .table-action-btn.map:hover {
+      color: var(--accent2);
+      border-color: rgba(0, 136, 255, 0.28);
+      background: rgba(0, 136, 255, 0.08);
+    }
+
+    .table-action-btn.danger:hover {
+      color: var(--danger);
+      border-color: rgba(255, 59, 92, 0.3);
+      background: rgba(255, 59, 92, 0.08);
     }
 
     .icon-btn {
@@ -853,6 +1407,7 @@
       /* never squish close button */
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
     }
 
     .icon-btn:hover {
@@ -896,6 +1451,9 @@
       cursor: pointer;
       transition: all 0.2s;
       font-family: var(--font-mono);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: hidden;
     }
 
     .page-btn.active {
@@ -970,14 +1528,14 @@
 
       /* On mobile: live between app header and bottom nav */
       .scanner-overlay {
-        top: 56px;
+        top: auto;
         /* below app header */
-        bottom: 72px;
+        bottom: auto;
         /* above bottom nav */
         left: 0;
         right: 0;
         inset: unset;
-        position: fixed;
+        position: relative;
       }
 
       .scanner-inner {
@@ -1347,7 +1905,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      z-index: 10000;
+      z-index: 10020;
       background: rgba(10, 14, 20, 0.88);
       backdrop-filter: blur(8px);
       align-items: center;
@@ -1399,6 +1957,61 @@
       font-weight: 700;
     }
 
+    .modal-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      min-width: 0;
+    }
+
+    .modal-status-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .modal-status-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.32rem 0.65rem;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: rgba(255,255,255,0.03);
+      white-space: nowrap;
+    }
+
+    .modal-status-tag.stock-ok,
+    .modal-status-tag.expiry-ok {
+      color: var(--success);
+      border-color: rgba(0, 201, 123, 0.22);
+      background: rgba(0, 201, 123, 0.08);
+    }
+
+    .modal-status-tag.stock-low,
+    .modal-status-tag.expiry-warn,
+    .modal-status-tag.location-missing {
+      color: var(--warn);
+      border-color: rgba(255, 107, 53, 0.22);
+      background: rgba(255, 107, 53, 0.08);
+    }
+
+    .modal-status-tag.stock-out,
+    .modal-status-tag.expiry-bad {
+      color: var(--danger);
+      border-color: rgba(255, 59, 92, 0.24);
+      background: rgba(255, 59, 92, 0.08);
+    }
+
+    .modal-status-tag.location-set {
+      color: var(--accent2);
+      border-color: rgba(0, 136, 255, 0.22);
+      background: rgba(0, 136, 255, 0.08);
+    }
+
     .modal-body {
       padding: 1.25rem 1.5rem;
       overflow-y: auto;
@@ -1416,24 +2029,31 @@
       background: var(--surface);
     }
 
-    /* ── MOBILE modal — floats ABOVE the bottom nav bar ── */
+    /* ── MOBILE modal ── */
     @media (max-width: 768px) {
       .modal-overlay {
         align-items: flex-end;
+        padding: 0;
       }
 
       .modal {
-        position: fixed;
-        left: 0;
-        right: 0;
-        top: 56px;
-        /* below app header */
-        bottom: 72px;
-        /* above bottom nav bar — the KEY fix */
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        bottom: auto;
+        width: 100%;
         max-width: 100%;
-        max-height: none;
-        border-radius: 16px;
-        border: 1px solid var(--border);
+        max-height: 100dvh;
+        min-height: 0;
+        height: auto;
+        margin: 0;
+        align-self: flex-end;
+        border-radius: 22px 22px 0 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        border-top: 1px solid var(--border);
         animation: sheetUp 0.28s ease;
         overflow: hidden;
       }
@@ -1453,17 +2073,18 @@
       .modal-header {
         padding: 0.85rem 1rem;
         flex-shrink: 0;
+        align-items: flex-start;
       }
 
       .modal-body {
-        padding: 0.85rem 1rem 1.5rem;
+        padding: 0.85rem 1rem 1rem;
         overflow-y: auto;
         flex: 1;
         -webkit-overflow-scrolling: touch;
       }
 
       .modal-footer {
-        padding: 0.85rem 1rem;
+        padding: 0.85rem 1rem calc(0.85rem + env(safe-area-inset-bottom, 0px));
         flex-shrink: 0;
         gap: 0.75rem;
         justify-content: stretch;
@@ -1476,6 +2097,19 @@
         justify-content: center;
         padding: 0.9rem;
         font-size: 0.95rem;
+      }
+
+      .modal-title-block {
+        gap: 0.55rem;
+      }
+
+      .modal-status-tags {
+        gap: 0.4rem;
+      }
+
+      .modal-status-tag {
+        font-size: 0.66rem;
+        padding: 0.3rem 0.58rem;
       }
 
       .form-row {
@@ -1829,18 +2463,22 @@
 
     .page-title {
       font-family: var(--font-display);
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: 800;
-      line-height: 1;
+      line-height: 0.98;
     }
 
     .page-title span {
       color: var(--accent);
     }
 
+    #dashboard-greeting-prefix {
+      color: var(--text);
+    }
+
     .page-subtitle {
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       margin-top: 0.25rem;
     }
 
@@ -1965,6 +2603,34 @@
     .low-stock-banner span {
       color: var(--warn);
       font-weight: 600;
+    }
+
+    .low-stock-banner strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .low-stock-banner-copy .mobile-copy {
+      display: none;
+    }
+
+    .low-stock-banner-action {
+      margin-left: auto;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 107, 53, 0.24);
+      background: rgba(255, 107, 53, 0.12);
+      color: var(--warn);
+      padding: 0.38rem 0.78rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+    }
+
+    .low-stock-banner-action:hover {
+      background: rgba(255, 107, 53, 0.18);
+      border-color: rgba(255, 107, 53, 0.36);
     }
 
     /* ============================
@@ -2115,6 +2781,15 @@
         display: inline-flex;
         padding: 0.38rem 0.72rem;
         font-size: 0.75rem;
+        gap: 0.3rem;
+      }
+
+      .header-alert-btn .header-alert-label {
+        display: none;
+      }
+
+      .header-alert-btn .header-alert-icon {
+        font-size: 1rem;
       }
 
       #connection-pill {
@@ -2162,10 +2837,6 @@
         display: none !important;
       }
 
-      .modal {
-        bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important;
-      }
-
       /* Page header */
       .page-header {
         flex-direction: column;
@@ -2184,7 +2855,23 @@
       }
 
       .page-title {
-        font-size: 1.5rem;
+        font-size: 1.24rem;
+        line-height: 0.96;
+      }
+
+      .page-subtitle {
+        font-size: 0.82rem;
+      }
+
+      #page-dashboard .dashboard-greeting {
+        font-size: 1.22rem;
+        line-height: 0.92;
+        letter-spacing: -0.015em;
+      }
+
+      #dashboard-date {
+        font-size: 0.72rem;
+        margin-top: 0.12rem;
       }
 
       /* Stats 2-col */
@@ -2198,6 +2885,73 @@
       .dash-bottom {
         grid-template-columns: 1fr;
         gap: 1rem;
+      }
+
+      .mobile-dashboard-actions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.65rem;
+        margin: -0.1rem 0 1rem;
+      }
+
+      .mobile-dashboard-action {
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        border-radius: 12px;
+        padding: 0.75rem 0.55rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.28rem;
+        font-family: var(--font-body);
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      .mobile-dashboard-action.primary {
+        background: rgba(0, 212, 170, 0.1);
+        border-color: rgba(0, 212, 170, 0.24);
+        color: var(--accent);
+      }
+
+      .mobile-dashboard-action-icon {
+        font-size: 1rem;
+        line-height: 1;
+      }
+
+      .dashboard-stat-low {
+        order: 1;
+      }
+
+      .dashboard-stat-expiry {
+        order: 2;
+      }
+
+      .dashboard-stat-total {
+        order: 3;
+      }
+
+      .dashboard-stat-value {
+        order: 4;
+      }
+
+      .dashboard-stat-low,
+      .dashboard-stat-expiry {
+        cursor: pointer;
+      }
+
+      #page-dashboard .stats-row {
+        margin-bottom: 1rem;
+      }
+
+      #page-dashboard .chart-card,
+      #page-dashboard .recent-scans {
+        min-height: 0;
       }
 
       /* Map */
@@ -2277,18 +3031,44 @@
 
       /* Page header */
       .page-title {
-        font-size: 1.3rem;
+        font-size: 1.08rem;
+        line-height: 0.95;
       }
 
       .page-subtitle {
-        font-size: 0.78rem;
+        font-size: 0.74rem;
+      }
+
+      #page-dashboard .dashboard-greeting {
+        font-size: 1.08rem;
+        line-height: 0.9;
+      }
+
+      #dashboard-date {
+        font-size: 0.66rem;
+        margin-top: 0.08rem;
+      }
+
+      .mobile-dashboard-actions {
+        gap: 0.5rem;
+        margin-bottom: 0.85rem;
+      }
+
+      .mobile-dashboard-action {
+        padding: 0.68rem 0.45rem;
+        border-radius: 11px;
+        font-size: 0.72rem;
+      }
+
+      .mobile-dashboard-action-icon {
+        font-size: 0.95rem;
       }
 
       /* Stats 2-col compact */
       .stats-row {
         grid-template-columns: 1fr 1fr;
         gap: 0.5rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.9rem;
       }
 
       .stat-card {
@@ -2313,23 +3093,103 @@
 
       /* Toolbar stacked */
       .toolbar {
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 0.5rem;
         align-items: stretch;
       }
 
       .search-wrap {
         min-width: unset;
+        grid-column: 1 / -1;
       }
 
       .filter-select {
         width: 100%;
         font-size: 0.82rem;
+        min-width: 0;
       }
 
       .toolbar .btn-ghost {
         width: 100%;
         justify-content: center;
+      }
+
+      .inventory-toolbar-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        margin-bottom: 0.6rem;
+      }
+
+      .inventory-toolbar-row .inventory-quick-filters {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .inventory-export-btn {
+        width: auto !important;
+        flex-shrink: 0;
+        padding: 0.5rem 0.72rem;
+        font-size: 0.76rem;
+      }
+
+      .inventory-export-btn-desktop {
+        display: none !important;
+      }
+
+      .inventory-quick-filters {
+        display: flex;
+      }
+
+      .inventory-toolbar-row .inventory-export-btn {
+        display: inline-flex;
+      }
+
+      .inventory-summary-strip {
+        display: none;
+      }
+
+      .low-stock-banner {
+        align-items: center;
+        flex-wrap: nowrap;
+        padding: 0.68rem 0.9rem;
+        gap: 0.55rem;
+        font-size: 0.78rem;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .low-stock-banner strong {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0;
+      }
+
+      .low-stock-banner strong::after {
+        content: 'below reorder point';
+        font-size: 0.78rem;
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .low-stock-banner-action {
+        display: none;
+      }
+
+      #page-inventory .page-header {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 0.6rem;
+      }
+
+      #page-inventory .page-header .btn {
+        width: auto;
+        flex-shrink: 0;
+        padding: 0.58rem 0.78rem;
+        font-size: 0.9rem;
       }
 
       /* Table → cards */
@@ -2467,11 +3327,15 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1rem;
+      padding: 0.68rem 0.8rem;
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 0.32rem;
       border-top: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: hidden;
     }
 
     .med-card+.med-card {
@@ -2490,72 +3354,133 @@
     .med-card-top {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
+      gap: 0.75rem;
     }
 
     .med-card-name {
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
+      line-height: 1.12;
+    }
+
+    .med-card-name-line {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+
+    .med-card-name-line .status-dot {
+      width: 8px;
+      height: 8px;
     }
 
     .med-card-generic {
-      font-size: 0.72rem;
+      font-size: 0.66rem;
       color: var(--muted);
       font-family: var(--font-mono);
+      margin-top: 0.08rem;
+      margin-left: 0.9rem;
     }
 
-    .med-card-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 0.5rem;
+    .med-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.18rem 0.5rem;
+      align-items: center;
+      margin-left: 0.9rem;
     }
 
-    .med-card-stat {
-      background: var(--bg);
-      border-radius: 7px;
-      padding: 0.4rem 0.6rem;
-    }
-
-    .med-card-stat-label {
+    .med-card-meta-item {
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.62rem;
       color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 2px;
+      white-space: nowrap;
     }
 
-    .med-card-stat-val {
-      font-family: var(--font-display);
-      font-size: 0.9rem;
-      font-weight: 700;
+    .med-card-meta-item strong {
+      color: var(--text);
+      font-weight: 500;
     }
 
-    .med-card-bottom {
+    .med-card-meta-item.meta-location {
+      color: var(--accent2);
+    }
+
+    .med-card-meta-item.meta-location strong {
+      color: #d8e8ff;
+    }
+
+    .med-card-meta-item.meta-box {
+      color: #8ccfbf;
+    }
+
+    .med-card-meta-item.meta-box strong {
+      color: var(--accent);
+    }
+
+    .med-card-meta-item.meta-unit {
+      color: #89a8ff;
+    }
+
+    .med-card-meta-item.meta-unit strong {
+      color: #6f9cff;
+    }
+
+    .med-card-meta-item.expiry-ok {
+      color: var(--success);
+    }
+
+    .med-card-meta-item.expiry-warn {
+      color: var(--warn);
+    }
+
+    .med-card-meta-item.expiry-bad {
+      color: var(--danger);
+    }
+
+    .med-card-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 0.5rem;
     }
 
-    .med-card-location {
+    .med-card-actions {
       display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .med-card-location {
+      display: inline-flex;
       align-items: center;
       gap: 0.3rem;
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--accent2);
       background: rgba(0, 136, 255, 0.08);
       border: 1px solid rgba(0, 136, 255, 0.2);
-      padding: 0.2rem 0.6rem;
+      padding: 0.16rem 0.5rem;
       border-radius: 4px;
       cursor: pointer;
       flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .med-card-actions {
+    .med-card-actions-main {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.35rem;
+      flex-shrink: 0;
+    }
+
+    .med-card-delete {
+      margin-left: auto;
+      opacity: 0.78;
     }
 
     .icon-btn {
@@ -2768,10 +3693,30 @@
     }
 
     /* DASHBOARD GRID */
+    .mobile-dashboard-actions {
+      display: none;
+    }
+
+    .dashboard-stat-card {
+      cursor: default;
+    }
+
     .dash-bottom {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
+    }
+
+
+    @media (max-width: 768px) {
+      #page-dashboard .dash-bottom {
+        grid-template-columns: 1fr !important;
+        gap: 0.9rem;
+      }
+
+      #page-dashboard .dash-bottom > div {
+        width: 100%;
+      }
     }
 
     .recent-scans {
@@ -2854,7 +3799,9 @@
 
     /* ── CONFIRM MODAL (replaces confirm()) ── */
     #confirm-overlay,
-    #stock-overlay {
+    #stock-overlay,
+    #inventory-action-overlay,
+    #filter-export-overlay {
       display: none;
       position: fixed;
       inset: 0;
@@ -2866,7 +3813,9 @@
       padding: 1rem;
     }
     #confirm-overlay.open,
-    #stock-overlay.open {
+    #stock-overlay.open,
+    #inventory-action-overlay.open,
+    #filter-export-overlay.open {
       display: flex;
     }
     .mini-modal {
@@ -2993,9 +3942,101 @@
       justify-content: center;
       padding: 0.75rem;
     }
+
+    .inventory-action-list {
+      display: grid;
+      gap: 0.55rem;
+      padding: 0 1.25rem 1rem;
+    }
+
+    .inventory-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 0.8rem 0.9rem;
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+
+    .inventory-action-btn.danger {
+      color: #ff9fb0;
+      border-color: rgba(255,59,92,0.22);
+    }
+
+    .inventory-action-label {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .inventory-action-detail {
+      padding: 0 1.25rem 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.55rem;
+    }
+
+    .inventory-action-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      padding: 0 1.25rem 0.9rem;
+    }
+
+    .inventory-action-detail-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.55rem 0.7rem;
+    }
+
+    .inventory-action-detail-label {
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.18rem;
+    }
+
+    .inventory-action-detail-value {
+      font-size: 0.82rem;
+      color: var(--text);
+      font-family: var(--font-mono);
+      word-break: break-word;
+    }
+
+    .filter-sheet-section {
+      padding: 0 1.25rem 1rem;
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .filter-sheet-section .filter-select {
+      width: 100%;
+    }
+
+    .filter-sheet-actions {
+      display: grid;
+      gap: 0.55rem;
+      padding: 0 1.25rem 1rem;
+    }
+
+    .filter-sheet-btn {
+      width: 100%;
+      justify-content: center;
+    }
     @media (max-width: 768px) {
       #confirm-overlay,
-      #stock-overlay {
+      #stock-overlay,
+      #inventory-action-overlay,
+      #filter-export-overlay {
         align-items: flex-end;
         padding: 0;
       }
@@ -3012,11 +4053,17 @@
 
   <section class="auth-screen" id="auth-screen">
     <div class="auth-card">
-      <div class="auth-hero">
+      <div class="auth-hero auth-hero-login">
+        <div class="auth-mini-brand">
+          <div class="auth-mini-brand-icon">&#128138;</div>
+          <div class="auth-mini-brand-text">
+            <div class="auth-mini-brand-name">RxScan</div>
+            <div class="auth-mini-brand-tag">Pharmacy Inventory</div>
+          </div>
+        </div>
         <div class="auth-kicker">Shared Inventory Cloud</div>
-        <div class="auth-title">RxScan Login</div>
-        <div class="auth-subtitle">Sign in with your staff email to access the shared medication database across phone,
-          desktop, and tablet.</div>
+        <div class="auth-title">Welcome back</div>
+        <div class="auth-subtitle">Sign in to access shared inventory.</div>
       </div>
       <div class="auth-body">
         <div class="auth-note" id="auth-note">
@@ -3024,30 +4071,26 @@
         </div>
         <div class="auth-error" id="auth-error"></div>
         <div class="form-group">
-          <label>Email</label>
+          <label class="auth-label">Email</label>
           <input type="email" class="form-input" id="auth-email" placeholder="staff@yourpharmacy.com"
             autocomplete="email">
         </div>
         <div class="form-group">
-          <label>Password</label>
+          <label class="auth-label">Password</label>
           <input type="password" class="form-input" id="auth-password" placeholder="Enter password"
             autocomplete="current-password" onkeydown="if(event.key==='Enter')handleAuthSignIn()">
         </div>
-        <div class="auth-actions">
+        <div class="auth-actions auth-actions-stack">
           <button class="btn btn-primary" id="auth-signin-btn" onclick="handleAuthSignIn()">Sign In</button>
           <button class="btn btn-ghost" id="auth-signup-btn" onclick="handleAuthSignUp()">Create Staff Account</button>
-        </div>
-        <div class="auth-note" style="background:rgba(0,212,170,0.06);border-color:rgba(0,212,170,0.18);color:#d9f9ee;">
-          After deployment, use Supabase Row Level Security so only authenticated staff can read and update inventory.
         </div>
       </div>
     </div>
   </section>
-
   <header>
     <div class="logo">
       <div class="logo-icon">💊</div>
-      Rx<span>Scan</span>
+      <div class="logo-wordmark">Rx<span>Scan</span></div>
       <span class="logo-connection-dot" id="logo-connection-dot"></span>
     </div>
     <nav>
@@ -3074,7 +4117,8 @@
         <span class="logout-label">Sign out</span>
       </button>
       <button class="header-alert-btn" id="mobile-header-alert" onclick="showPage('alerts')">
-        <span>🔔 Alerts</span>
+        <span class="header-alert-icon">🔔</span>
+        <span class="header-alert-label">Alerts</span>
         <span class="header-alert-badge" id="header-alert-badge">5</span>
       </button>
     </div>
@@ -3113,32 +4157,47 @@
       </div>
       <div class="page-header">
         <div>
-          <div class="page-title">Good morning, <span id="dashboard-user-name">Pharmacist</span> 👋</div>
+          <div class="page-title dashboard-greeting" id="dashboard-greeting"><span id="dashboard-greeting-prefix">Good morning</span>, <span id="dashboard-user-name">Pharmacist</span> &#128075;</div>
           <div class="page-subtitle" id="dashboard-date"></div>
         </div>
-        <button class="btn btn-primary" onclick="showPage('inventory'); openAddModal()">+ Add Medication</button>
+        <button class="btn btn-primary" onclick="showPage('inventory'); openAddModal()">+ Add Medicine</button>
+      </div>
+
+      <div class="mobile-dashboard-actions">
+        <button class="mobile-dashboard-action primary" onclick="openScanner()">
+          <span class="mobile-dashboard-action-icon">ðŸ“·</span>
+          <span>Scan</span>
+        </button>
+        <button class="mobile-dashboard-action" onclick="showPage('inventory'); openAddModal()">
+          <span class="mobile-dashboard-action-icon">+</span>
+          <span>Add</span>
+        </button>
+        <button class="mobile-dashboard-action" onclick="showPage('alerts')">
+          <span class="mobile-dashboard-action-icon">ðŸ””</span>
+          <span>Alerts</span>
+        </button>
       </div>
 
       <div class="stats-row">
-        <div class="stat-card">
+        <div class="stat-card dashboard-stat-card dashboard-stat-total">
           <div class="stat-label">Total SKUs</div>
           <div class="stat-value" id="stat-total">0</div>
-          <div class="stat-sub">Unique medications</div>
+          <div class="stat-sub">Unique medicines</div>
           <div class="stat-icon">📦</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card dashboard-stat-card dashboard-stat-value">
           <div class="stat-label">Total Value</div>
           <div class="stat-value" id="stat-value">$0</div>
           <div class="stat-sub">Inventory valuation</div>
           <div class="stat-icon">💰</div>
         </div>
-        <div class="stat-card warn">
+        <div class="stat-card warn dashboard-stat-card dashboard-stat-low" onclick="showPage('inventory'); currentQuickFilter='low'; currentPage=1; renderInventory();">
           <div class="stat-label">Low Stock</div>
           <div class="stat-value" id="stat-low">0</div>
           <div class="stat-sub">Below reorder point</div>
           <div class="stat-icon">⚠️</div>
         </div>
-        <div class="stat-card danger">
+        <div class="stat-card danger dashboard-stat-card dashboard-stat-expiry" onclick="showPage('inventory'); currentQuickFilter='expiring'; currentPage=1; renderInventory();">
           <div class="stat-label">Expiring Soon</div>
           <div class="stat-value" id="stat-expiry">0</div>
           <div class="stat-sub">Within 90 days</div>
@@ -3171,9 +4230,9 @@
       <div class="page-header">
         <div>
           <div class="page-title">Inventory <span>Management</span></div>
-          <div class="page-subtitle">Full medication stock control</div>
+          <div class="page-subtitle">Full medicine stock control</div>
         </div>
-        <button class="btn btn-primary" onclick="openAddModal()">+ Add Medication</button>
+        <button class="btn btn-primary" onclick="openAddModal()">+ Add Medicine</button>
       </div>
 
       <div id="low-stock-banner-inv"></div>
@@ -3181,30 +4240,37 @@
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon">🔍</span>
-          <input type="text" class="search-input" id="search-inv" placeholder="Search by name, barcode, generic..."
-            oninput="renderInventory()">
+          <input type="text" class="search-input" id="search-inv" placeholder="Search name, barcode, shelf, manufacturer..."
+            oninput="handleInventorySearchInput()">
+          <button class="search-clear" id="search-clear-btn" onclick="clearInventorySearch()">×</button>
         </div>
         <select class="filter-select" id="filter-cat" onchange="renderInventory()">
           <option value="">All Categories</option>
         </select>
-        <select class="filter-select" id="filter-stock" onchange="renderInventory()">
-          <option value="">All Stock</option>
-          <option value="ok">In Stock</option>
-          <option value="low">Low Stock</option>
-          <option value="out">Out of Stock</option>
-        </select>
         <select class="filter-select" id="filter-zone" onchange="renderInventory()">
           <option value="">All Zones</option>
         </select>
-        <button class="btn btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+        <button class="btn btn-ghost inventory-export-btn-desktop" onclick="exportCSV('filtered')">⬇ Export CSV</button>
       </div>
+
+      <div class="inventory-toolbar-row">
+        <div class="inventory-quick-filters">
+          <button class="quick-filter-chip active" id="chip-all" onclick="setQuickFilter('all')">All</button>
+          <button class="quick-filter-chip" id="chip-low" onclick="setQuickFilter('low')">Low</button>
+          <button class="quick-filter-chip" id="chip-out" onclick="setQuickFilter('out')">Out</button>
+          <button class="quick-filter-chip" id="chip-expiring" onclick="setQuickFilter('expiring')">Expiring</button>
+        </div>
+        <button class="btn btn-ghost inventory-export-btn" onclick="exportCSV('filtered')">⬇ Export CSV</button>
+      </div>
+
+      <div class="inventory-summary-strip" id="inventory-summary-strip"></div>
 
       <div class="table-wrap">
         <div class="desktop-table">
           <table>
             <thead>
               <tr>
-                <th onclick="sortBy('name')">Medication ↕</th>
+                <th onclick="sortBy('name')">Medicine ↕</th>
                 <th onclick="sortBy('barcode')">Barcode ↕</th>
                 <th onclick="sortBy('location')">Location ↕</th>
                 <th onclick="sortBy('stock')">Stock ↕</th>
@@ -3240,7 +4306,7 @@
           <div style="margin-top:1.5rem;">
             <h3>Selected Shelf</h3>
             <div id="shelf-detail" style="color:var(--muted);font-size:0.82rem;line-height:1.6;margin-top:0.5rem;">Click
-              a shelf on the map to view its medications.</div>
+              a shelf on the map to view its medicines.</div>
           </div>
         </div>
         <div class="pharmacy-map">
@@ -3257,7 +4323,6 @@
           <div class="page-title">Smart <span>Alerts</span></div>
           <div class="page-subtitle">Automated inventory intelligence</div>
         </div>
-        <button class="btn btn-ghost" onclick="renderAlerts()">↻ Refresh</button>
       </div>
       <div class="alerts-list" id="alerts-list"></div>
     </div>
@@ -3274,7 +4339,7 @@
         <div class="stat-card">
           <div class="stat-label">Avg Box Price</div>
           <div class="stat-value" id="an-avg-price">$0</div>
-          <div class="stat-sub">Across all medications</div>
+          <div class="stat-sub">Across all medicines</div>
           <div class="stat-icon">💲</div>
         </div>
         <div class="stat-card">
@@ -3322,7 +4387,14 @@
         <div style="width:36px;height:4px;background:var(--border);border-radius:4px;"></div>
       </div>
       <div class="modal-header">
-        <div class="modal-title" id="modal-title">Add Medication</div>
+        <div class="modal-title-block">
+          <div class="modal-title" id="modal-title">Add Medicine</div>
+          <div class="modal-status-tags" id="modal-status-tags">
+            <span class="modal-status-tag stock-ok" id="modal-stock-tag">Stock OK</span>
+            <span class="modal-status-tag expiry-ok" id="modal-expiry-tag">No expiry</span>
+            <span class="modal-status-tag location-missing" id="modal-location-tag">Unassigned</span>
+          </div>
+        </div>
         <button class="icon-btn" onclick="closeModal()" style="min-width:36px;">✕</button>
       </div>
       <div class="modal-body">
@@ -3372,11 +4444,11 @@
         <div class="form-row">
           <div class="form-group">
             <label>Current Stock (boxes)</label>
-            <input type="number" class="form-input" id="f-stock" placeholder="50">
+            <input type="number" class="form-input" id="f-stock" placeholder="50" oninput="updateMedicationModalTags()">
           </div>
           <div class="form-group">
             <label>Reorder Point</label>
-            <input type="number" class="form-input" id="f-reorder" placeholder="10">
+            <input type="number" class="form-input" id="f-reorder" placeholder="10" oninput="updateMedicationModalTags()">
           </div>
         </div>
         <div class="form-row">
@@ -3395,13 +4467,13 @@
           </div>
           <div class="form-group">
             <label>Shelf</label>
-            <input type="text" class="form-input" id="f-shelf" placeholder="e.g. A2-L3">
+            <input type="text" class="form-input" id="f-shelf" placeholder="e.g. A2-L3" oninput="updateMedicationModalTags()">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Expiry Date</label>
-            <input type="date" class="form-input" id="f-expiry">
+            <input type="date" class="form-input" id="f-expiry" onchange="updateMedicationModalTags()">
           </div>
           <div class="form-group">
             <label>Manufacturer</label>
@@ -3447,6 +4519,7 @@
       anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqeGhrbHV3ZXNqaWxod3hmdmpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNTIyODEsImV4cCI6MjA4OTYyODI4MX0.YkPvsa3pn_BpQVHXWc-JnGIH9dthYubmKduLH_MBOVw',
     };
     const LAST_PAGE_KEY = 'rxscan_last_page';
+    const INVENTORY_UI_KEY = 'rxscan_inventory_ui';
 
     const MEDICATION_COLUMNS = 'id,name,generic,barcode,category,price_box,units_per_box,stock,reorder,zone,shelf,expiry,mfr,created_at,updated_at';
 
@@ -3471,7 +4544,9 @@
     let inventory = [];
     let editId = null;
     let currentPage = 1;
-    const PER_PAGE = 8;
+    function getPerPage() {
+      return window.innerWidth <= 768 ? 8 : 12;
+    }
     let sortCol = 'name';
     let sortDir = 1;
     let scanHistory = [];
@@ -3484,6 +4559,50 @@
     let syncInFlight = false;
     let lastSuccessfulSyncAt = 0;
     let bootstrappedUserId = null;
+    let authTransitionPending = false;
+    let forceDashboardAfterLogin = false;
+    let currentQuickFilter = 'all';
+    let selectedInventoryMedId = null;
+    let inventorySortPreset = '';
+
+    function clearInventorySearch() {
+      const input = document.getElementById('search-inv');
+      if (!input) return;
+      input.value = '';
+      currentPage = 1;
+      saveInventoryUiState();
+      renderInventory();
+      input.focus();
+    }
+
+    function saveInventoryUiState() {
+      try {
+        sessionStorage.setItem(INVENTORY_UI_KEY, JSON.stringify({
+          search: document.getElementById('search-inv')?.value || '',
+          category: document.getElementById('filter-cat')?.value || '',
+          zone: document.getElementById('filter-zone')?.value || '',
+          quick: currentQuickFilter,
+          sortPreset: inventorySortPreset,
+        }));
+      } catch (error) {
+        console.warn('Unable to save inventory ui state', error);
+      }
+    }
+
+    function restoreInventoryUiState() {
+      try {
+        const raw = sessionStorage.getItem(INVENTORY_UI_KEY);
+        if (!raw) return;
+        const state = JSON.parse(raw);
+        if (document.getElementById('search-inv')) document.getElementById('search-inv').value = state.search || '';
+        if (document.getElementById('filter-cat')) document.getElementById('filter-cat').value = state.category || '';
+        if (document.getElementById('filter-zone')) document.getElementById('filter-zone').value = state.zone || '';
+        currentQuickFilter = state.quick || 'all';
+        inventorySortPreset = state.sortPreset || '';
+      } catch (error) {
+        console.warn('Unable to restore inventory ui state', error);
+      }
+    }
 
     function isSupabaseConfigured() {
       return SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey &&
@@ -3674,14 +4793,41 @@
       el.style.display = message ? 'block' : 'none';
     }
 
+    function setAuthSetupNote(message = '') {
+      const note = document.getElementById('auth-note');
+      if (!note) return;
+      note.textContent = message;
+      note.classList.toggle('show', !!message);
+    }
+
+    function setAuthSubmitState(mode = 'idle', isLoading = false) {
+      const signInBtn = document.getElementById('auth-signin-btn');
+      const signUpBtn = document.getElementById('auth-signup-btn');
+      const toggleBtn = document.getElementById('auth-toggle');
+      const emailInput = document.getElementById('auth-email');
+      const passwordInput = document.getElementById('auth-password');
+      if (signInBtn) {
+        signInBtn.disabled = isLoading;
+        signInBtn.textContent = isLoading && mode === 'signin' ? 'Signing in...' : 'Sign In';
+      }
+      if (signUpBtn) {
+        signUpBtn.disabled = isLoading;
+        signUpBtn.textContent = isLoading && mode === 'signup' ? 'Creating...' : 'Create Staff Account';
+      }
+      if (toggleBtn) toggleBtn.disabled = isLoading;
+      if (emailInput) emailInput.disabled = isLoading;
+      if (passwordInput) passwordInput.disabled = isLoading;
+    }
+
     function updateSessionChrome() {
       const dashboardName = document.getElementById('dashboard-user-name');
       const logoutBtnHeader = document.getElementById('logout-btn-header');
       const sessionPillHeader = document.getElementById('session-pill-header');
       const sessionEmailHeader = document.getElementById('session-email-header');
       const displayName = getUserDisplayName(currentUser);
+      const dashboardShortName = displayName.split(/\s+/).filter(Boolean)[0] || displayName;
 
-      if (dashboardName) dashboardName.textContent = displayName;
+      if (dashboardName) dashboardName.textContent = dashboardShortName;
 
       if (currentUser) {
         if (sessionPillHeader && sessionEmailHeader) {
@@ -3708,24 +4854,50 @@
     async function handleAuthSignIn() {
       if (!supabaseClient) return;
       showAuthError('');
-      const email = document.getElementById('auth-email').value.trim();
-      const password = document.getElementById('auth-password').value;
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) showAuthError(error.message || 'Unable to sign in');
+      setAuthSubmitState('signin', true);
+      try {
+        const activeEl = document.activeElement;
+        if (activeEl && typeof activeEl.blur === 'function') {
+          activeEl.blur();
+          await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        }
+        const email = document.getElementById('auth-email').value.trim();
+        const password = document.getElementById('auth-password').value;
+        authTransitionPending = true;
+        forceDashboardAfterLogin = true;
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) {
+          authTransitionPending = false;
+          forceDashboardAfterLogin = false;
+          showAuthError(error.message || 'Unable to sign in');
+          return;
+        }
+        currentUser = data?.user || data?.session?.user || currentUser;
+        showAuthError('');
+        await bootstrapAuthenticatedApp();
+      } finally {
+        authTransitionPending = false;
+        setAuthSubmitState('signin', false);
+      }
     }
 
     async function handleAuthSignUp() {
       if (!supabaseClient) return;
       showAuthError('');
-      const email = document.getElementById('auth-email').value.trim();
-      const password = document.getElementById('auth-password').value;
-      const { data, error } = await supabaseClient.auth.signUp({ email, password });
-      if (error) {
-        showAuthError(error.message || 'Unable to create account');
-        return;
-      }
-      if (!data.session) {
-        showAuthError('Account created. Check your email for the confirmation link, then sign in.');
+      setAuthSubmitState('signup', true);
+      try {
+        const email = document.getElementById('auth-email').value.trim();
+        const password = document.getElementById('auth-password').value;
+        const { data, error } = await supabaseClient.auth.signUp({ email, password });
+        if (error) {
+          showAuthError(error.message || 'Unable to create account');
+          return;
+        }
+        if (!data.session) {
+          showAuthError('Account created. Check your email for the confirmation link, then sign in.');
+        }
+      } finally {
+        setAuthSubmitState('signup', false);
       }
     }
 
@@ -3760,12 +4932,27 @@
     }
 
     async function bootstrapAuthenticatedApp() {
-      const restoredPage = getSavedPage();
-      setAuthMode(false);
-      showPage(restoredPage);
-      subscribeToInventory();
-      await refreshInventory();
-      bootstrappedUserId = currentUser?.id || null;
+      const targetPage = forceDashboardAfterLogin ? 'dashboard' : getSavedPage();
+      forceDashboardAfterLogin = false;
+      const shouldShowSkeleton = inventory.length === 0;
+      try {
+        if (shouldShowSkeleton) {
+          isLoadingData = true;
+          showPage(targetPage);
+        }
+        document.body.classList.add('shell-loading');
+        document.body.classList.remove('booting');
+        document.body.classList.remove('auth-mode');
+        showPage(targetPage);
+        subscribeToInventory();
+        await refreshInventory();
+        bootstrappedUserId = currentUser?.id || null;
+        document.body.classList.remove('shell-loading');
+        setAuthMode(false);
+      } catch (error) {
+        document.body.classList.remove('shell-loading');
+        throw error;
+      }
     }
 
     function getSavedPage() {
@@ -3820,7 +5007,7 @@
       if (!isSupabaseConfigured()) {
         setAuthMode(true);
         showAuthError('Supabase is not configured yet. Add your project URL and anon key in SUPABASE_CONFIG before deploying.');
-        document.getElementById('auth-note').textContent = 'After you create your Supabase project, paste the project URL and anon key into SUPABASE_CONFIG in index.html.';
+        setAuthSetupNote('Configure Supabase in the app config before deploying this screen.');
         return;
       }
 
@@ -3835,6 +5022,10 @@
         currentUser = sessionNow?.user || null;
         updateSessionChrome();
         if (currentUser) {
+          if (authTransitionPending && event === 'SIGNED_IN') {
+            refreshConnectionIndicator();
+            return;
+          }
           if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
             refreshConnectionIndicator();
             return;
@@ -3856,7 +5047,11 @@
       });
 
       if (currentUser) await bootstrapAuthenticatedApp();
-      else setAuthMode(true);
+      else {
+        setAuthSetupNote('');
+        setAuthMode(true);
+      }
+
     }
 
     // ============================
@@ -3883,13 +5078,24 @@
       if (name === 'analytics') renderAnalytics();
     }
 
+    function handleInventorySearchInput() {
+      currentPage = 1;
+      renderInventory();
+    }
+
     // ============================
     // DASHBOARD
     // ============================
     function renderDashboard() {
       const d = new Date();
-      document.getElementById('dashboard-date').textContent = d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
+      const isMobileDashboard = window.innerWidth <= 768;
+      const hour = d.getHours();
+      const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+      const greetingPrefixEl = document.getElementById('dashboard-greeting-prefix');
+      if (greetingPrefixEl) greetingPrefixEl.textContent = greeting;
+      document.getElementById('dashboard-date').textContent = d.toLocaleDateString('en-US', isMobileDashboard
+        ? { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }
+        : { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
       if (isLoadingData) {
         document.getElementById('stat-total').innerHTML = '<div class="skeleton skeleton-stat"></div>';
         document.getElementById('stat-value').innerHTML = '<div class="skeleton skeleton-stat" style="width:60%;"></div>';
@@ -3921,7 +5127,7 @@
       // Category chart
       const cats = {};
       inventory.forEach(m => { cats[m.category] = (cats[m.category] || 0) + m.stock; });
-      const sorted = Object.entries(cats).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      const sorted = Object.entries(cats).sort((a, b) => b[1] - a[1]).slice(0, isMobileDashboard ? 5 : 8);
       const max = Math.max(...sorted.map(x => x[1]));
       document.getElementById('category-chart').innerHTML = sorted.map(([cat, val]) =>
         `<div class="bar-row">
@@ -3934,9 +5140,18 @@
       // Scan history
       const list = document.getElementById('scan-history-list');
       if (scanHistory.length === 0) {
-        list.innerHTML = '<div style="padding:1.5rem 1.25rem;color:var(--muted);font-size:0.82rem;">No scans yet — use the SCAN button to begin</div>';
+        list.innerHTML = isMobileDashboard
+          ? `<div style="padding:1rem 1rem 1.1rem;">
+              <div style="color:var(--text);font-size:0.82rem;font-weight:600;line-height:1.3;margin-bottom:0.32rem;">No recent scans</div>
+              <div style="color:var(--muted);font-size:0.74rem;line-height:1.5;margin-bottom:0.9rem;">Start a scan or add a medicine to update inventory quickly.</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.55rem;">
+                <button class="btn btn-primary" style="justify-content:center;padding:0.62rem 0.7rem;font-size:0.78rem;" onclick="openScanner()">Scan now</button>
+                <button class="btn btn-ghost" style="justify-content:center;padding:0.62rem 0.7rem;font-size:0.78rem;" onclick="showPage('inventory'); openAddModal()">Add medicine</button>
+              </div>
+            </div>`
+          : '<div style="padding:1.5rem 1.25rem;color:var(--muted);font-size:0.82rem;">No scans yet - use the SCAN button to begin</div>';
       } else {
-        list.innerHTML = scanHistory.slice(0, 8).map(s =>
+        list.innerHTML = scanHistory.slice(0, isMobileDashboard ? 3 : 8).map(s =>
           `<div class="scan-history-item">
         <div class="scan-dot"></div>
         <div class="scan-hist-name">${esc(s.name)} <span class="tag tag-blue">${esc(s.barcode)}</span></div>
@@ -3944,6 +5159,7 @@
       </div>`
         ).join('');
       }
+
     }
 
     // ============================
@@ -3952,18 +5168,37 @@
     function getFiltered() {
       const q = (document.getElementById('search-inv')?.value || '').toLowerCase();
       const cat = document.getElementById('filter-cat')?.value || '';
-      const stock = document.getElementById('filter-stock')?.value || '';
       const zone = document.getElementById('filter-zone')?.value || '';
+      const now = new Date();
+      const in90 = new Date(now); in90.setDate(in90.getDate() + 90);
 
       return inventory.filter(m => {
-        if (q && !m.name.toLowerCase().includes(q) && !m.generic?.toLowerCase().includes(q) && !m.barcode.includes(q)) return false;
+        if (q && !m.name.toLowerCase().includes(q) && !m.generic?.toLowerCase().includes(q) && !m.barcode.includes(q) &&
+          !m.shelf?.toLowerCase().includes(q) && !m.mfr?.toLowerCase().includes(q) &&
+          !m.zone?.toLowerCase().includes(q) && !m.category?.toLowerCase().includes(q)) return false;
         if (cat && m.category !== cat) return false;
         if (zone && m.zone !== zone) return false;
-        if (stock === 'ok' && !(m.stock > m.reorder)) return false;
-        if (stock === 'low' && !(m.stock > 0 && m.stock <= m.reorder)) return false;
-        if (stock === 'out' && m.stock !== 0) return false;
+        if (currentQuickFilter === 'low' && !(m.stock > 0 && m.stock <= m.reorder)) return false;
+        if (currentQuickFilter === 'out' && m.stock !== 0) return false;
+        if (currentQuickFilter === 'expiring' && !(m.expiry && new Date(m.expiry + 'T00:00:00') <= in90)) return false;
         return true;
       }).sort((a, b) => {
+        if (inventorySortPreset === 'low') {
+          const aScore = a.stock === 0 ? -1 : a.stock <= a.reorder ? 0 : 1;
+          const bScore = b.stock === 0 ? -1 : b.stock <= b.reorder ? 0 : 1;
+          return aScore - bScore || a.stock - b.stock || a.name.localeCompare(b.name);
+        }
+        if (inventorySortPreset === 'expiry') {
+          const aExpiry = a.expiry ? new Date(a.expiry + 'T00:00:00').getTime() : Number.MAX_SAFE_INTEGER;
+          const bExpiry = b.expiry ? new Date(b.expiry + 'T00:00:00').getTime() : Number.MAX_SAFE_INTEGER;
+          return aExpiry - bExpiry || a.name.localeCompare(b.name);
+        }
+        if (inventorySortPreset === 'value') {
+          return (b.price_box * b.stock) - (a.price_box * a.stock) || a.name.localeCompare(b.name);
+        }
+        if (inventorySortPreset === 'name') {
+          return a.name.localeCompare(b.name);
+        }
         let va = a[sortCol], vb = b[sortCol];
         if (typeof va === 'string') va = va.toLowerCase();
         if (typeof vb === 'string') vb = vb.toLowerCase();
@@ -3977,9 +5212,68 @@
       renderInventory();
     }
 
+    function setQuickFilter(filter) {
+      currentQuickFilter = filter;
+      currentPage = 1;
+      document.querySelectorAll('.quick-filter-chip').forEach(chip => chip.classList.remove('active'));
+      const activeChip = document.getElementById(`chip-${filter}`);
+      if (activeChip) activeChip.classList.add('active');
+      saveInventoryUiState();
+      renderInventory();
+    }
+
+    function openFilterExportSheet() {
+      document.getElementById('sheet-sort-preset').value = inventorySortPreset;
+      document.getElementById('sheet-filter-cat').value = document.getElementById('filter-cat')?.value || '';
+      document.getElementById('sheet-filter-zone').value = document.getElementById('filter-zone')?.value || '';
+      document.body.classList.add('overlay-open');
+      document.getElementById('filter-export-overlay').classList.add('open');
+      setMobileNavHidden(true);
+    }
+
+    function closeFilterExportSheet() {
+      document.getElementById('filter-export-overlay').classList.remove('open');
+      document.body.classList.remove('overlay-open');
+      setMobileNavHidden(false);
+    }
+
+    function applyFilterSheet() {
+      document.getElementById('filter-cat').value = document.getElementById('sheet-filter-cat').value;
+      document.getElementById('filter-zone').value = document.getElementById('sheet-filter-zone').value;
+      inventorySortPreset = document.getElementById('sheet-sort-preset').value;
+      currentPage = 1;
+      saveInventoryUiState();
+      closeFilterExportSheet();
+      renderInventory();
+    }
+
+    function clearAllInventoryFilters() {
+      currentQuickFilter = 'all';
+      const search = document.getElementById('search-inv');
+      if (search) search.value = '';
+      ['filter-cat', 'filter-zone', 'sheet-filter-cat', 'sheet-filter-zone'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      inventorySortPreset = '';
+      const sortSheet = document.getElementById('sheet-sort-preset');
+      if (sortSheet) sortSheet.value = '';
+      currentPage = 1;
+      saveInventoryUiState();
+      closeFilterExportSheet();
+      renderInventory();
+    }
+
     function renderInventory() {
+      document.querySelectorAll('.quick-filter-chip').forEach(chip => chip.classList.remove('active'));
+      const activeChip = document.getElementById(`chip-${currentQuickFilter}`);
+      if (activeChip) activeChip.classList.add('active');
+      const clearBtn = document.getElementById('search-clear-btn');
+      if (clearBtn) clearBtn.classList.toggle('show', !!(document.getElementById('search-inv')?.value || ''));
       if (isLoadingData) {
         document.getElementById('low-stock-banner-inv').innerHTML = '';
+        const summaryStrip = document.getElementById('inventory-summary-strip');
+        if (summaryStrip) summaryStrip.innerHTML = '';
         document.getElementById('inventory-tbody').innerHTML = `
           <tr><td colspan="8" style="padding:1rem;">
             <div class="skeleton-card-body">
@@ -4000,19 +5294,41 @@
 
       populateFilters();
       const filtered = getFiltered();
+      const perPage = getPerPage();
       const total = filtered.length;
-      const pages = Math.ceil(total / PER_PAGE);
+      const pages = Math.ceil(total / perPage);
       if (currentPage > pages) currentPage = 1;
 
-      const slice = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+      const slice = filtered.slice((currentPage - 1) * perPage, currentPage * perPage);
       const now = new Date();
 
       // Low stock banner
       const lowItems = inventory.filter(m => m.stock > 0 && m.stock <= m.reorder);
+      const outItems = inventory.filter(m => m.stock === 0);
+      const expiringItems = inventory.filter(m => {
+        if (!m.expiry) return false;
+        const expiryDate = new Date(m.expiry + 'T00:00:00');
+        const in90 = new Date();
+        in90.setDate(in90.getDate() + 90);
+        return expiryDate <= in90;
+      });
       const el = document.getElementById('low-stock-banner-inv');
       if (lowItems.length) {
-        el.innerHTML = `<div class="low-stock-banner">⚠️ <span>${lowItems.length} medication(s)</span> are below their reorder point — review needed.</div>`;
+        el.innerHTML = `<div class="low-stock-banner">⚠️ <span>${lowItems.length} medicine(s)</span> <strong>are below their reorder point — review needed.</strong> <button class="low-stock-banner-action" onclick="setQuickFilter('${currentQuickFilter === 'low' ? 'all' : 'low'}')">${currentQuickFilter === 'low' ? 'Show all' : 'View low stock'}</button></div>`;
       } else el.innerHTML = '';
+
+      const summaryEl = document.getElementById('inventory-summary-strip');
+      if (summaryEl) {
+        summaryEl.innerHTML = [
+          { key: 'all', label: 'All inventory', value: inventory.length, note: `${filtered.length} shown`, extraClass: '' },
+          { key: 'low', label: 'Low stock', value: lowItems.length, note: 'Needs reorder attention', extraClass: 'low' },
+          { key: 'out', label: 'Out of stock', value: outItems.length, note: 'Unavailable now', extraClass: 'out' },
+          { key: 'expiring', label: 'Expiring soon', value: expiringItems.length, note: 'Within 90 days', extraClass: 'expiring' },
+        ].map(item => `<button class="inventory-summary-pill ${item.extraClass} ${currentQuickFilter === item.key ? 'active' : ''}" onclick="setQuickFilter('${item.key}')">
+          <span class="inventory-summary-kicker">${item.label}</span>
+          <span class="inventory-summary-value">${item.value}<span class="inventory-summary-note">${item.note}</span></span>
+        </button>`).join('');
+      }
 
       const tbody = document.getElementById('inventory-tbody');
       if (!slice.length) {
@@ -4020,36 +5336,40 @@
         document.getElementById('inventory-cards').innerHTML = `<div class="empty-state"><div class="icon">🔍</div><h3>No results</h3><p>Try adjusting your filters</p></div>`;
       } else {
         tbody.innerHTML = slice.map(m => {
-          const expDate = new Date(m.expiry + 'T00:00:00');
-          const daysLeft = Math.round((expDate - now) / 86400000);
-          const expiryClass = daysLeft < 0 ? 'expiry-bad' : daysLeft < 30 ? 'expiry-bad' : daysLeft < 90 ? 'expiry-warn' : 'expiry-ok';
-          const expiryLabel = daysLeft < 0 ? '⛔ Expired' : daysLeft < 90 ? `⚠ ${daysLeft}d` : m.expiry;
+          const hasExpiry = !!m.expiry;
+          const expDate = hasExpiry ? new Date(m.expiry + 'T00:00:00') : null;
+          const daysLeft = hasExpiry ? Math.round((expDate - now) / 86400000) : null;
+          const expiryClass = !hasExpiry ? '' : daysLeft < 0 ? 'expiry-bad' : daysLeft < 30 ? 'expiry-bad' : daysLeft < 90 ? 'expiry-warn' : 'expiry-ok';
+          const expiryLabel = !hasExpiry ? 'No expiry' : daysLeft < 0 ? 'Expired' : daysLeft < 90 ? `${daysLeft}d` : m.expiry;
 
           let stockClass = 'stock-ok', stockLabel = '✓ ' + m.stock;
           if (m.stock === 0) { stockClass = 'stock-out'; stockLabel = '✕ Out'; }
           else if (m.stock <= m.reorder) { stockClass = 'stock-low'; stockLabel = '⚡ ' + m.stock; }
 
           const unitPrice = m.units_per_box ? (m.price_box / m.units_per_box).toFixed(2) : '—';
+          const hasShelf = !!(m.shelf && m.shelf.trim());
+          const locationBadge = hasShelf
+            ? `<span class="location-badge" onclick="goToShelf('${esc(m.shelf)}')">📍 ${esc(m.shelf)}</span>`
+            : `<span class="location-badge unassigned" onclick="openEditModal(${m.id})">Unassigned</span>`;
+          const mapAction = hasShelf ? `goToShelf('${esc(m.shelf)}')` : `openEditModal(${m.id})`;
+          const mapLabel = hasShelf ? 'Map' : 'Assign';
 
           return `<tr>
-        <td>
-          <div class="drug-name">${esc(m.name)}</div>
+        <td class="drug-name-cell">
+          <div class="drug-name-line"><span class="status-dot ${stockClass}"></span><div class="drug-name">${esc(m.name)}</div></div>
           <div class="drug-generic">${esc(m.generic) || '—'}</div>
         </td>
-        <td><span class="tag tag-blue" style="cursor:pointer" onclick="fillScannerWith('${esc(m.barcode)}')">${esc(m.barcode)}</span></td>
-        <td>
-          <span class="location-badge" onclick="goToShelf('${esc(m.shelf)}')">📍 ${esc(m.shelf)}</span>
-          <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;font-family:var(--font-mono)">${esc(m.zone.split('—')[0].trim())}</div>
-        </td>
-        <td><span class="stock-badge ${stockClass}">${stockLabel}</span></td>
+        <td class="barcode-cell"><span class="tag tag-blue" style="cursor:pointer" onclick="fillScannerWith('${esc(m.barcode)}')">${esc(m.barcode)}</span></td>
+        <td>${locationBadge}</td>
+        <td><span class="stock-badge clickable ${stockClass}" title="Update stock" onclick="openInventoryStock(${m.id})">${stockLabel}</span></td>
         <td><div class="price-box">$${m.price_box.toFixed(2)}</div></td>
-        <td><div class="price-box">$${unitPrice}<div class="price-unit">per unit</div></div></td>
-        <td><span class="${expiryClass}">${expiryLabel}</span></td>
+        <td><div class="price-box">$${unitPrice}</div></td>
+        <td class="expiry-cell"><span class="${expiryClass}">${expiryLabel}</span></td>
         <td>
           <div class="action-btns">
-            <button class="icon-btn" title="Edit" onclick="openEditModal(${m.id})">✏️</button>
-            <button class="icon-btn" title="Scan" onclick="fillScannerWith('${esc(m.barcode)}')">📷</button>
-            <button class="icon-btn del" title="Delete" onclick="deleteMed(${m.id})">🗑</button>
+            <button class="table-action-btn" title="Edit medicine" onclick="openEditModal(${m.id})">Edit</button>
+            <button class="table-action-btn map" title="${hasShelf ? 'Locate on map' : 'Assign shelf'}" onclick="${mapAction}">${mapLabel}</button>
+            <button class="table-action-btn danger" title="Delete medicine" onclick="deleteMed(${m.id})">Delete</button>
           </div>
         </td>
       </tr>`;
@@ -4057,50 +5377,45 @@
 
         // MOBILE CARDS
         document.getElementById('inventory-cards').innerHTML = slice.map(m => {
-          const expDate = new Date(m.expiry + 'T00:00:00');
-          const daysLeft = Math.round((expDate - now) / 86400000);
-          const expiryClass = daysLeft < 0 ? 'expiry-bad' : daysLeft < 30 ? 'expiry-bad' : daysLeft < 90 ? 'expiry-warn' : 'expiry-ok';
-          const expiryLabel = daysLeft < 0 ? '⛔ Exp' : daysLeft < 90 ? `⚠ ${daysLeft}d` : m.expiry.slice(0, 7);
+          const hasExpiry = !!m.expiry;
+          const expDate = hasExpiry ? new Date(m.expiry + 'T00:00:00') : null;
+          const daysLeft = hasExpiry ? Math.round((expDate - now) / 86400000) : null;
+          const expiryClass = !hasExpiry ? '' : daysLeft < 0 ? 'expiry-bad' : daysLeft < 30 ? 'expiry-bad' : daysLeft < 90 ? 'expiry-warn' : 'expiry-ok';
+          const expiryLabel = !hasExpiry ? 'No expiry' : daysLeft < 0 ? 'Expired' : daysLeft < 90 ? `${daysLeft}d left` : `Exp ${m.expiry.slice(0, 7)}`;
           let stockClass = 'stock-ok', stockLabel = '✓ ' + m.stock;
           if (m.stock === 0) { stockClass = 'stock-out'; stockLabel = '✕ Out'; }
           else if (m.stock <= m.reorder) { stockClass = 'stock-low'; stockLabel = '⚡ ' + m.stock; }
           const unitPrice = m.units_per_box ? (m.price_box / m.units_per_box).toFixed(2) : '—';
-          return `<div class="med-card">
+          const hasShelf = !!(m.shelf && m.shelf.trim());
+          const mobileLocationMarkup = hasShelf ? `<strong>${esc(m.shelf)}</strong>` : `<strong>Unassigned</strong>`;
+          const mobileLocationAction = hasShelf ? `goToShelf('${esc(m.shelf)}')` : `openEditModal(${m.id})`;
+          return `<div class="med-card" onclick="openInventoryActions(${m.id})">
         <div class="med-card-top">
-          <div>
-            <div class="med-card-name">${esc(m.name)}</div>
+          <div style="min-width:0;flex:1;">
+            <div class="med-card-name-line"><span class="status-dot ${stockClass}"></span><div class="med-card-name">${esc(m.name)}</div></div>
             <div class="med-card-generic">${esc(m.generic) || esc(m.category)}</div>
           </div>
           <span class="stock-badge ${stockClass}" style="font-size:0.72rem">${stockLabel}</span>
         </div>
-        <div class="med-card-grid">
-          <div class="med-card-stat">
-            <div class="med-card-stat-label">Box</div>
-            <div class="med-card-stat-val" style="color:var(--accent)">$${m.price_box.toFixed(2)}</div>
-          </div>
-          <div class="med-card-stat">
-            <div class="med-card-stat-label">Unit</div>
-            <div class="med-card-stat-val" style="color:var(--accent2)">$${unitPrice}</div>
-          </div>
-          <div class="med-card-stat">
-            <div class="med-card-stat-label">Expiry</div>
-            <div class="med-card-stat-val ${expiryClass}" style="font-size:0.75rem">${expiryLabel}</div>
-          </div>
-        </div>
-        <div class="med-card-bottom">
-          <div class="med-card-location" onclick="goToShelf('${esc(m.shelf)}')">📍 ${esc(m.shelf)} · ${esc(m.zone.split('—')[0].trim())}</div>
-          <div class="med-card-actions">
-            <button class="icon-btn" onclick="openEditModal(${m.id})">✏️</button>
-            <button class="icon-btn" onclick="fillScannerWith('${esc(m.barcode)}')">📷</button>
-            <button class="icon-btn del" onclick="deleteMed(${m.id})">🗑</button>
-          </div>
+        <div class="med-card-meta">
+          <span class="med-card-meta-item meta-location" onclick="event.stopPropagation();${mobileLocationAction}">${mobileLocationMarkup}</span>
+          <span class="med-card-meta-item meta-box">· <strong>$${m.price_box.toFixed(2)}</strong> box</span>
+          <span class="med-card-meta-item meta-unit">· <strong>$${unitPrice}</strong> unit</span>
+          <span class="med-card-meta-item ${expiryClass}">· ${expiryLabel}</span>
         </div>
       </div>`;
         }).join('');
       }
 
       // Pagination
-      document.getElementById('page-info').textContent = `${total} results — page ${currentPage} of ${Math.max(1, pages)}`;
+      const filterSummary = [
+        currentQuickFilter !== 'all' ? currentQuickFilter : '',
+        document.getElementById('filter-cat')?.value || '',
+        document.getElementById('filter-zone')?.value || '',
+        inventorySortPreset ? `sort:${inventorySortPreset}` : '',
+      ].filter(Boolean).join(' · ');
+      saveInventoryUiState();
+      document.getElementById('page-info').textContent = `${total} results — page ${currentPage} of ${Math.max(1, pages)}${filterSummary ? ` — ${filterSummary}` : ''}`;
       const pbEl = document.getElementById('page-btns');
       // Build ellipsis pagination: always show first, last, current ±1, and … as needed
       // Maximum 7 visible items: prev ‹ 1 … cur-1 cur cur+1 … last › next
@@ -4130,9 +5445,29 @@
 
     function goPage(p) { currentPage = p; renderInventory(); }
 
+    function openInventoryStock(id) {
+      const med = inventory.find(m => m.id === id);
+      if (!med) return;
+      showStockModal(med, async (n) => {
+        try {
+          await runWithSessionRetry(() => supabaseClient
+            .from('medications')
+            .update({ stock: n })
+            .eq('id', med.id));
+          await refreshInventory();
+          showToast(`Stock updated to ${n} boxes`);
+        } catch (error) {
+          console.error(error);
+          showToast(error.message || 'Unable to update stock', true);
+        }
+      });
+    }
+
     function populateFilters() {
       const catSel = document.getElementById('filter-cat');
       const zoneSel = document.getElementById('filter-zone');
+      const catSheet = document.getElementById('sheet-filter-cat');
+      const zoneSheet = document.getElementById('sheet-filter-zone');
       if (!catSel) return;
       const cats = [...new Set(inventory.map(m => m.category))].sort();
       const zones = [...new Set(inventory.map(m => m.zone))].sort();
@@ -4140,6 +5475,12 @@
       const zoneVal = zoneSel.value;
       catSel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option${c === catVal ? ' selected' : ''} value="${esc(c)}">${esc(c)}</option>`).join('');
       zoneSel.innerHTML = '<option value="">All Zones</option>' + zones.map(z => `<option${z === zoneVal ? ' selected' : ''} value="${esc(z)}">${esc(z)}</option>`).join('');
+      if (catSheet) {
+        catSheet.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option${c === (catSheet.value || catVal) ? ' selected' : ''} value="${esc(c)}">${esc(c)}</option>`).join('');
+      }
+      if (zoneSheet) {
+        zoneSheet.innerHTML = '<option value="">All Zones</option>' + zones.map(z => `<option${z === (zoneSheet.value || zoneVal) ? ' selected' : ''} value="${esc(z)}">${esc(z)}</option>`).join('');
+      }
     }
 
     // ============================
@@ -4147,7 +5488,10 @@
     // ============================
     function openAddModal() {
       editId = null;
-      document.getElementById('modal-title').textContent = 'Add Medication';
+      document.body.classList.add('overlay-open');
+      document.getElementById('modal-title').textContent = 'Add Medicine';
+      const tags = document.getElementById('modal-status-tags');
+      if (tags) tags.style.display = 'none';
       ['name', 'generic', 'barcode', 'price-box', 'units', 'stock', 'reorder', 'shelf', 'mfr'].forEach(f => {
         const el = document.getElementById('f-' + f);
         if (el) el.value = '';
@@ -4161,7 +5505,10 @@
       editId = id;
       const m = inventory.find(x => x.id === id);
       if (!m) return;
-      document.getElementById('modal-title').textContent = 'Edit Medication';
+      document.body.classList.add('overlay-open');
+      document.getElementById('modal-title').textContent = 'Edit Medicine';
+      const tags = document.getElementById('modal-status-tags');
+      if (tags) tags.style.display = '';
       document.getElementById('f-name').value = m.name;
       document.getElementById('f-generic').value = m.generic || '';
       document.getElementById('f-barcode').value = m.barcode;
@@ -4174,15 +5521,75 @@
       document.getElementById('f-shelf').value = m.shelf;
       document.getElementById('f-expiry').value = m.expiry;
       document.getElementById('f-mfr').value = m.mfr || '';
+      updateMedicationModalTags();
       document.getElementById('modal-overlay').classList.add('open');
       setMobileNavHidden(true);
     }
 
     function closeModal() {
       document.getElementById('modal-overlay').classList.remove('open');
+      document.body.classList.remove('overlay-open');
       setMobileNavHidden(false);
     }
     function handleOverlayClick(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+
+    function updateMedicationModalTags() {
+      const stock = parseInt(document.getElementById('f-stock')?.value || '0', 10) || 0;
+      const reorder = parseInt(document.getElementById('f-reorder')?.value || '0', 10) || 0;
+      const expiry = document.getElementById('f-expiry')?.value || '';
+      const shelf = (document.getElementById('f-shelf')?.value || '').trim();
+
+      const stockTag = document.getElementById('modal-stock-tag');
+      const expiryTag = document.getElementById('modal-expiry-tag');
+      const locationTag = document.getElementById('modal-location-tag');
+      if (!stockTag || !expiryTag || !locationTag) return;
+
+      stockTag.className = 'modal-status-tag';
+      expiryTag.className = 'modal-status-tag';
+      locationTag.className = 'modal-status-tag';
+
+      if (stock === 0) {
+        stockTag.classList.add('stock-out');
+        stockTag.textContent = 'Out of stock';
+      } else if (stock <= reorder && reorder > 0) {
+        stockTag.classList.add('stock-low');
+        stockTag.textContent = `Low stock · ${stock}`;
+      } else {
+        stockTag.classList.add('stock-ok');
+        stockTag.textContent = `In stock · ${stock}`;
+      }
+
+      if (!expiry) {
+        expiryTag.classList.add('expiry-ok');
+        expiryTag.textContent = 'No expiry';
+      } else {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const expiryDate = new Date(expiry + 'T00:00:00');
+        const daysLeft = Math.round((expiryDate - today) / 86400000);
+        if (daysLeft < 0) {
+          expiryTag.classList.add('expiry-bad');
+          expiryTag.textContent = 'Expired';
+        } else if (daysLeft < 30) {
+          expiryTag.classList.add('expiry-bad');
+          expiryTag.textContent = `${daysLeft}d left`;
+        } else if (daysLeft < 90) {
+          expiryTag.classList.add('expiry-warn');
+          expiryTag.textContent = `Exp ${expiry.slice(0, 7)}`;
+        } else {
+          expiryTag.classList.add('expiry-ok');
+          expiryTag.textContent = `Exp ${expiry.slice(0, 7)}`;
+        }
+      }
+
+      if (shelf) {
+        locationTag.classList.add('location-set');
+        locationTag.textContent = shelf;
+      } else {
+        locationTag.classList.add('location-missing');
+        locationTag.textContent = 'Unassigned';
+      }
+    }
 
     // ============================
     // CONFIRM MODAL (replaces confirm())
@@ -4198,6 +5605,7 @@
       okBtn.textContent = okLabel;
       okBtn.className = 'btn ' + okClass;
       _confirmCallback = () => { closeConfirmModal(); onConfirm(); };
+      document.body.classList.add('overlay-open');
       document.getElementById('confirm-overlay').classList.add('open');
       setMobileNavHidden(true);
     }
@@ -4205,6 +5613,7 @@
     function closeConfirmModal() {
       document.getElementById('confirm-overlay').classList.remove('open');
       _confirmCallback = null;
+      document.body.classList.remove('overlay-open');
       setMobileNavHidden(false);
     }
 
@@ -4224,6 +5633,7 @@
       document.getElementById('stock-input-error').textContent = '';
       document.getElementById('stock-ok-btn').disabled = false;
       _stockCallback = onSave;
+      document.body.classList.add('overlay-open');
       document.getElementById('stock-overlay').classList.add('open');
       setMobileNavHidden(true);
       // Focus and select all on next tick so keyboard opens on mobile
@@ -4233,6 +5643,7 @@
     function closeStockModal() {
       document.getElementById('stock-overlay').classList.remove('open');
       _stockCallback = null;
+      document.body.classList.remove('overlay-open');
       setMobileNavHidden(false);
     }
 
@@ -4260,6 +5671,111 @@
       const cb = _stockCallback;
       closeStockModal();
       if (cb) cb(n);
+    }
+
+    function openInventoryActions(id) {
+      const med = inventory.find(m => m.id === id);
+      if (!med) return;
+      selectedInventoryMedId = id;
+      const unitPrice = med.units_per_box ? (med.price_box / med.units_per_box).toFixed(2) : '—';
+      const hasShelf = !!(med.shelf && med.shelf.trim());
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      let expiryTagClass = 'expiry-ok';
+      let expiryTagText = 'No expiry';
+      if (med.expiry) {
+        const expiryDate = new Date(med.expiry + 'T00:00:00');
+        const daysLeft = Math.round((expiryDate - today) / 86400000);
+        if (daysLeft < 0) {
+          expiryTagClass = 'expiry-bad';
+          expiryTagText = 'Expired';
+        } else if (daysLeft < 30) {
+          expiryTagClass = 'expiry-bad';
+          expiryTagText = `${daysLeft}d left`;
+        } else if (daysLeft < 90) {
+          expiryTagClass = 'expiry-warn';
+          expiryTagText = `Exp ${med.expiry.slice(0, 7)}`;
+        } else {
+          expiryTagText = `Exp ${med.expiry.slice(0, 7)}`;
+        }
+      }
+
+      const stockTag = document.getElementById('inventory-action-stock-tag');
+      const expiryTag = document.getElementById('inventory-action-expiry-tag');
+      const locationTag = document.getElementById('inventory-action-location-tag');
+      if (stockTag) {
+        stockTag.className = 'modal-status-tag';
+        if (med.stock === 0) {
+          stockTag.classList.add('stock-out');
+          stockTag.textContent = 'Out of stock';
+        } else if (med.stock <= med.reorder && med.reorder > 0) {
+          stockTag.classList.add('stock-low');
+          stockTag.textContent = `Low stock · ${med.stock}`;
+        } else {
+          stockTag.classList.add('stock-ok');
+          stockTag.textContent = `In stock · ${med.stock}`;
+        }
+      }
+      if (expiryTag) {
+        expiryTag.className = `modal-status-tag ${expiryTagClass}`;
+        expiryTag.textContent = expiryTagText;
+      }
+      if (locationTag) {
+        locationTag.className = `modal-status-tag ${hasShelf ? 'location-set' : 'location-missing'}`;
+        locationTag.textContent = hasShelf ? med.shelf : 'Unassigned';
+      }
+      document.getElementById('inventory-action-title').textContent = med.name;
+      document.getElementById('inventory-action-sub').textContent =
+        `${med.generic || med.category} · ${med.shelf || 'No shelf'} · ${med.stock} boxes`;
+      document.getElementById('inventory-action-barcode').textContent = med.barcode || '—';
+      document.getElementById('inventory-action-location').textContent = `${med.shelf || '—'} · ${med.zone || '—'}`;
+      document.getElementById('inventory-action-price').textContent = `$${med.price_box.toFixed(2)} / $${unitPrice}`;
+      document.getElementById('inventory-action-expiry').textContent = med.expiry || 'No expiry';
+      const locateBtn = document.getElementById('inventory-action-locate-btn');
+      if (locateBtn) {
+        const locateText = locateBtn.querySelector('.inventory-action-text');
+        if (locateText) locateText.textContent = hasShelf ? 'Locate on map' : 'Assign shelf';
+      }
+      document.body.classList.add('overlay-open');
+      document.getElementById('inventory-action-overlay').classList.add('open');
+      setMobileNavHidden(true);
+    }
+
+    function closeInventoryActions() {
+      document.getElementById('inventory-action-overlay').classList.remove('open');
+      selectedInventoryMedId = null;
+      document.body.classList.remove('overlay-open');
+      setMobileNavHidden(false);
+    }
+
+    function handleInventoryAction(action) {
+      const med = inventory.find(m => m.id === selectedInventoryMedId);
+      if (!med) {
+        closeInventoryActions();
+        return;
+      }
+      closeInventoryActions();
+      if (action === 'edit') openEditModal(med.id);
+      if (action === 'locate') {
+        if (med.shelf && med.shelf.trim()) goToShelf(med.shelf);
+        else openEditModal(med.id);
+      }
+      if (action === 'stock') {
+        showStockModal(med, async (n) => {
+          try {
+            await runWithSessionRetry(() => supabaseClient
+              .from('medications')
+              .update({ stock: n })
+              .eq('id', med.id));
+            await refreshInventory();
+            showToast(`✓ Stock updated to ${n} boxes`);
+          } catch (error) {
+            console.error(error);
+            showToast(error.message || 'Unable to update stock', true);
+          }
+        });
+      }
+      if (action === 'delete') deleteMed(med.id);
     }
 
 
@@ -4302,19 +5818,19 @@
             .from('medications')
             .update(medicationPayload(data))
             .eq('id', editId));
-          showToast('✓ Medication updated');
+          showToast('✓ Medicine updated');
         } else {
           await runWithSessionRetry(() => supabaseClient
             .from('medications')
             .insert(medicationPayload(data)));
-          showToast('✓ Medication added');
+          showToast('✓ Medicine added');
         }
 
         closeModal();
         await refreshInventory();
       } catch (error) {
         console.error(error);
-        showToast(error.message || 'Unable to save medication', true);
+        showToast(error.message || 'Unable to save medicine', true);
       }
     }
 
@@ -4322,7 +5838,7 @@
       const med = inventory.find(m => m.id === id);
       if (!med) return;
       showConfirmModal({
-        title: 'Delete medication?',
+        title: 'Delete medicine?',
         sub: esc(med.name) + (med.generic ? ' · ' + esc(med.generic) : ''),
         message: 'This will permanently remove “' + med.name + '” from inventory. This cannot be undone.',
         okLabel: '🗑 Delete',
@@ -4330,11 +5846,11 @@
         onConfirm: async () => {
           try {
             await runWithSessionRetry(() => supabaseClient.from('medications').delete().eq('id', id));
-            showToast('Medication removed');
+            showToast('Medicine removed');
             await refreshInventory();
           } catch (error) {
             console.error(error);
-            showToast(error.message || 'Unable to delete medication', true);
+            showToast(error.message || 'Unable to delete medicine', true);
           }
         }
       });
@@ -4436,6 +5952,8 @@
       const overlay = document.getElementById('scanner-overlay');
       overlay.style.display = 'flex';
       applyScannerLayout();
+      const cameraWrap = document.getElementById('scanner-camera-wrap');
+      if (cameraWrap) cameraWrap.style.display = 'block';
       const sr = document.getElementById('scan-result');
       const nd = document.getElementById('new-drug-card');
       if (sr) sr.style.display = 'none';
@@ -4452,6 +5970,8 @@
     }
 
     function scanAgain() {
+      const cameraWrap = document.getElementById('scanner-camera-wrap');
+      if (cameraWrap) cameraWrap.style.display = 'block';
       document.getElementById('scan-result').style.display = 'none';
       document.getElementById('new-drug-card').style.display = 'none';
       document.getElementById('manual-barcode').value = '';
@@ -4479,6 +5999,8 @@
       scanCounts[code] = (scanCounts[code] || 0) + 1;
       if (scanCounts[code] >= getRequiredReads()) {
         stopCamera();
+        const cameraWrap = document.getElementById('scanner-camera-wrap');
+        if (cameraWrap) cameraWrap.style.display = 'none';
         document.getElementById('manual-barcode').value = code;
         document.getElementById('scanner-status').textContent = '✓ Captured: ' + code;
         document.getElementById('scanner-status').style.color = '#00c97b';
@@ -4516,11 +6038,9 @@
         return false;
       }
 
-      // After ~3s of misses, fall back to ZXing.
-      // iOS BarcodeDetector needs barcode to fill >40% of frame and silently returns
-      // nothing otherwise -- ZXing is more tolerant of distance and angle.
-      let missCount = 0;
-      const MAX_MISSES = 90;
+      // Fall back on wall-clock time rather than frame count so behavior stays
+      // consistent across slower and faster mobile browsers.
+      const fallbackDeadline = Date.now() + 2500;
 
       const detectFrame = async () => {
         if (!zxingActive || !barcodeDetector) return;
@@ -4534,12 +6054,15 @@
                 return; // success -- stop loop
               }
             }
-            missCount++;
-            if (missCount >= MAX_MISSES) {
-              console.warn('BarcodeDetector: no read after', MAX_MISSES, 'frames -- switching to ZXing');
+            if (Date.now() >= fallbackDeadline) {
+              console.warn('BarcodeDetector: timed out -- switching to ZXing');
               barcodeDetector = null;
-              cancelAnimationFrame(barcodeDetectorFrame);
-              barcodeDetectorFrame = null;
+              if (barcodeDetectorFrame) {
+                cancelAnimationFrame(barcodeDetectorFrame);
+                barcodeDetectorFrame = null;
+              }
+              document.getElementById('scanner-status').textContent = 'Trying compatibility scan...';
+              document.getElementById('scanner-status').style.color = '#f5c96a';
               if (onFallback) onFallback();
               return;
             }
@@ -4547,6 +6070,12 @@
         } catch (error) {
           console.warn('BarcodeDetector failed -- switching to ZXing', error);
           barcodeDetector = null;
+          if (barcodeDetectorFrame) {
+            cancelAnimationFrame(barcodeDetectorFrame);
+            barcodeDetectorFrame = null;
+          }
+          document.getElementById('scanner-status').textContent = 'Trying compatibility scan...';
+          document.getElementById('scanner-status').style.color = '#f5c96a';
           if (onFallback) onFallback();
           return;
         }
@@ -4588,7 +6117,7 @@
         // competing stream. On iOS Safari this causes ZXing to decode a frozen/black
         // frame and never detect any barcode.
         function startZXing() {
-          if (!zxingActive) return;
+          if (!zxingActive || zxingReader) return;
           try {
             const hints = new Map();
             hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, [
@@ -4604,10 +6133,14 @@
             ]);
             hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
             zxingReader = new ZXing.BrowserMultiFormatReader(hints, 300);
+            document.getElementById('scanner-status').textContent = 'Compatibility scan active';
+            document.getElementById('scanner-status').style.color = '#00d4aa';
             zxingReader.decodeFromStream(stream, video, (result) => {
               if (!result) return;
               const code = result.getText();
               if (!code) return;
+              handleDetectedCode(code);
+              return;
               const requiredReads = getRequiredReads();
               scanCounts[code] = (scanCounts[code] || 0) + 1;
               if (scanCounts[code] >= requiredReads) {
@@ -4675,6 +6208,8 @@
     function lookupBarcode(code) {
       const input = code || document.getElementById('manual-barcode').value.trim();
       if (!input) return;
+      const cameraWrap = document.getElementById('scanner-camera-wrap');
+      if (cameraWrap) cameraWrap.style.display = 'none';
 
       const med = inventory.find(m => m.barcode === input);
       const statusEl = document.getElementById('scanner-status');
@@ -5151,7 +6686,7 @@
       closeScanner();
 
       editId = null;
-      document.getElementById('modal-title').textContent = '➕ Add New Medication';
+      document.getElementById('modal-title').textContent = '➕ Add New Medicine';
       document.getElementById('f-name').value = drug.name || '';
       document.getElementById('f-generic').value = drug.generic || '';
       document.getElementById('f-barcode').value = barcode;
@@ -5229,7 +6764,7 @@
       <div class="zone-color" style="background:${z.color}"></div>
       <div class="zone-info">
         <div class="zone-name">${z.id} — ${z.label}</div>
-        <div class="zone-count">${count} medications</div>
+        <div class="zone-count">${count} medicines</div>
       </div>
     </div>`;
       }).join('');
@@ -5313,7 +6848,7 @@
       const items = inventory.filter(m => m.shelf === shelf);
       const el = document.getElementById('shelf-detail');
       if (!items.length) {
-        el.innerHTML = `<strong>${esc(shelf)}</strong><br>No medications assigned to this shelf.`;
+        el.innerHTML = `<strong>${esc(shelf)}</strong><br>No medicines assigned to this shelf.`;
         return;
       }
       el.innerHTML = `<strong style="color:var(--accent)">${esc(shelf)}</strong><br><br>` +
@@ -5480,9 +7015,10 @@
     // ============================
     // EXPORT CSV
     // ============================
-    function exportCSV() {
+    function exportCSV(scope = 'all') {
       const headers = ['Name', 'Generic', 'Barcode', 'Category', 'Box Price', 'Unit Price', 'Stock', 'Reorder', 'Zone', 'Shelf', 'Expiry', 'Manufacturer'];
-      const rows = inventory.map(m => [
+      const source = scope === 'filtered' ? getFiltered() : inventory;
+      const rows = source.map(m => [
         m.name, m.generic || '', m.barcode, m.category,
         m.price_box, m.units_per_box ? (m.price_box / m.units_per_box).toFixed(2) : '',
         m.stock, m.reorder, m.zone, m.shelf, m.expiry, m.mfr || ''
@@ -5492,8 +7028,10 @@
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = 'rxscan_inventory.csv'; a.click();
-      showToast('✓ CSV exported');
+      const datePart = new Date().toISOString().slice(0, 10);
+      a.href = url; a.download = `rxscan_inventory_${scope}_${datePart}.csv`; a.click();
+      showToast(`✓ Exported ${source.length} medicine(s)`);
+      if (scope === 'filtered') closeFilterExportSheet();
     }
 
     // ============================
@@ -5522,6 +7060,7 @@
         refreshConnectionIndicator();
       }
     });
+    restoreInventoryUiState();
     showPage(getSavedPage());
     renderDashboard();
     renderAlerts();
@@ -5579,9 +7118,11 @@
     }
 
     function setMobileNavHidden(hidden) {
-      const nav = document.getElementById('mobile-nav-bottom');
-      if (!nav) return;
-      nav.style.display = hidden ? 'none' : (window.innerWidth <= 768 ? 'flex' : 'none');
+      const primaryNav = document.getElementById('mobile-nav');
+      const bottomNav = document.getElementById('mobile-nav-bottom');
+      const display = hidden ? 'none' : (window.innerWidth <= 768 ? 'flex' : 'none');
+      if (primaryNav) primaryNav.style.display = display;
+      if (bottomNav) bottomNav.style.display = display;
     }
 
     // Wrap showPage once — highlight active tab, sync header alert button
@@ -5602,7 +7143,7 @@
 
     updateMobileNav();
     window.addEventListener('resize', updateMobileNav);
-    showPage('dashboard'); // init highlight state — re-call after wrapper is set
+    showPage(getSavedPage()); // init highlight state without overriding restored page
   </script>
 
   <!-- ═══════════════════════════════════════════════════════════
@@ -5633,7 +7174,7 @@
     <div id="scanner-dialog" style="display:flex;flex-direction:column;flex:1;overflow:hidden;box-sizing:border-box;">
 
       <!-- Camera box — padding on this wrapper keeps box inside card -->
-      <div style="padding:0.85rem 1rem 0;box-sizing:border-box;flex-shrink:0;">
+      <div id="scanner-camera-wrap" style="padding:0.85rem 1rem 0;box-sizing:border-box;flex-shrink:0;">
         <div id="scanner-box"
           style="width:100%;background:#111620;border:1px solid #1e2736;border-radius:12px;overflow:hidden;position:relative;box-sizing:border-box;">
           <div id="scanner-viewport" style="width:100%;height:200px;background:#000;position:relative;overflow:hidden;">
@@ -5743,7 +7284,7 @@
             <div>
               <div
                 style="font-size:0.62rem;color:#00d4aa;text-transform:uppercase;letter-spacing:0.1em;font-family:monospace;">
-                New medication detected</div>
+                New medicine detected</div>
               <div id="nd-name" style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:#e8edf5;">
               </div>
             </div>
@@ -5810,7 +7351,7 @@
       <div class="mini-modal-header">
         <div class="mini-modal-icon danger" id="confirm-icon">🗑</div>
         <div class="mini-modal-titles">
-          <div class="mini-modal-title" id="confirm-title">Delete medication?</div>
+          <div class="mini-modal-title" id="confirm-title">Delete medicine?</div>
           <div class="mini-modal-sub" id="confirm-sub"></div>
         </div>
       </div>
@@ -5853,6 +7394,113 @@
     </div>
   </div>
 
+  <div id="inventory-action-overlay" onclick="if(event.target===this)closeInventoryActions()">
+    <div class="mini-modal" onclick="event.stopPropagation()">
+      <div class="mini-modal-drag"><span></span></div>
+      <div class="mini-modal-header">
+        <div class="mini-modal-icon accent">📦</div>
+        <div class="mini-modal-titles">
+          <div class="mini-modal-title" id="inventory-action-title">Medicine</div>
+          <div class="mini-modal-sub" id="inventory-action-sub"></div>
+        </div>
+      </div>
+      <div class="inventory-action-tags">
+        <span class="modal-status-tag stock-ok" id="inventory-action-stock-tag">In stock</span>
+        <span class="modal-status-tag expiry-ok" id="inventory-action-expiry-tag">No expiry</span>
+        <span class="modal-status-tag location-set" id="inventory-action-location-tag">Assigned</span>
+      </div>
+      <div class="inventory-action-detail">
+        <div class="inventory-action-detail-item">
+          <div class="inventory-action-detail-label">Barcode</div>
+          <div class="inventory-action-detail-value" id="inventory-action-barcode">—</div>
+        </div>
+        <div class="inventory-action-detail-item">
+          <div class="inventory-action-detail-label">Location</div>
+          <div class="inventory-action-detail-value" id="inventory-action-location">—</div>
+        </div>
+        <div class="inventory-action-detail-item">
+          <div class="inventory-action-detail-label">Price</div>
+          <div class="inventory-action-detail-value" id="inventory-action-price">—</div>
+        </div>
+        <div class="inventory-action-detail-item">
+          <div class="inventory-action-detail-label">Expiry</div>
+          <div class="inventory-action-detail-value" id="inventory-action-expiry">—</div>
+        </div>
+      </div>
+      <div class="inventory-action-list">
+        <button class="inventory-action-btn" onclick="handleInventoryAction('stock')">
+          <span class="inventory-action-label"><span>🔢</span><span>Update stock</span></span>
+          <span>›</span>
+        </button>
+        <button class="inventory-action-btn" onclick="handleInventoryAction('edit')">
+          <span class="inventory-action-label"><span>✏️</span><span>Edit medicine</span></span>
+          <span>›</span>
+        </button>
+        <button class="inventory-action-btn" id="inventory-action-locate-btn" onclick="handleInventoryAction('locate')">
+          <span class="inventory-action-label"><span>📍</span><span class="inventory-action-text">Locate on map</span></span>
+          <span>›</span>
+        </button>
+        <button class="inventory-action-btn danger" onclick="handleInventoryAction('delete')">
+          <span class="inventory-action-label"><span>🗑</span><span>Delete medicine</span></span>
+          <span>›</span>
+        </button>
+      </div>
+      <div class="mini-modal-footer">
+        <button class="btn btn-ghost" onclick="closeInventoryActions()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="filter-export-overlay" onclick="if(event.target===this)closeFilterExportSheet()">
+    <div class="mini-modal" onclick="event.stopPropagation()">
+      <div class="mini-modal-drag"><span></span></div>
+      <div class="mini-modal-header">
+        <div class="mini-modal-icon accent">⚙️</div>
+        <div class="mini-modal-titles">
+          <div class="mini-modal-title">Filter & Export</div>
+          <div class="mini-modal-sub">Refine the list or export what you need</div>
+        </div>
+      </div>
+      <div class="filter-sheet-section">
+        <select class="filter-select" id="sheet-sort-preset">
+          <option value="">Current sort</option>
+          <option value="low">Low stock first</option>
+          <option value="expiry">Nearest expiry</option>
+          <option value="name">A-Z</option>
+          <option value="value">Highest value</option>
+        </select>
+        <select class="filter-select" id="sheet-filter-cat">
+          <option value="">All Categories</option>
+        </select>
+        <select class="filter-select" id="sheet-filter-zone">
+          <option value="">All Zones</option>
+        </select>
+      </div>
+      <div class="filter-sheet-actions">
+        <button class="btn btn-primary filter-sheet-btn" onclick="applyFilterSheet()">Apply filters</button>
+        <button class="btn btn-ghost filter-sheet-btn" onclick="exportCSV('filtered')">Export filtered results</button>
+        <button class="btn btn-ghost filter-sheet-btn" onclick="exportCSV('all')">Export all inventory</button>
+        <button class="btn btn-ghost filter-sheet-btn" onclick="clearAllInventoryFilters()">Clear all filters</button>
+      </div>
+      <div class="mini-modal-footer">
+        <button class="btn btn-ghost" onclick="closeFilterExportSheet()">Close</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
