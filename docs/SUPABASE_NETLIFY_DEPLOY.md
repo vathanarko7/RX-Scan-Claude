@@ -16,6 +16,7 @@ This app is now wired for:
    - `anon public` key
 
 Official docs:
+
 - https://supabase.com/docs
 
 ## 2. Create the `medications` table
@@ -95,6 +96,7 @@ using (true);
 This setup makes the inventory shared across all signed-in staff accounts.
 
 Official docs:
+
 - https://supabase.com/docs/guides/database/postgres/row-level-security
 
 ## 4. Configure email/password login
@@ -111,6 +113,7 @@ Recommended for a small internal staff app:
 - If you want stricter onboarding, leave it on and confirm each staff email.
 
 Supabase auth reference:
+
 - https://supabase.com/docs/reference/javascript/auth-signinwithpassword
 - https://supabase.com/docs/reference/javascript/auth-signup
 
@@ -122,8 +125,8 @@ Find:
 
 ```js
 const SUPABASE_CONFIG = {
-  url: 'YOUR_SUPABASE_URL',
-  anonKey: 'YOUR_SUPABASE_ANON_KEY',
+  url: "YOUR_SUPABASE_URL",
+  anonKey: "YOUR_SUPABASE_ANON_KEY",
 };
 ```
 
@@ -145,6 +148,7 @@ If you later connect a Git repo, the settings are typically:
 - Publish directory: `.`
 
 Netlify docs:
+
 - https://docs.netlify.com/site-deploys/manage-deploys/
 - https://www.netlify.com/pricing
 
@@ -183,6 +187,7 @@ The app auto-seeds sample medications the first time an authenticated project ha
 - Supabase documents backups at the platform level, but Free projects have more limited recovery options than paid production setups.
 
 Official references:
+
 - https://supabase.com/docs/guides/platform/backups
 - https://supabase.com/docs/guides/deployment/going-into-prod
 

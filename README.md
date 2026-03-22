@@ -1,64 +1,102 @@
 # RxScan
 
-RxScan is a browser-based pharmacy inventory prototype built as a single-page app inside `index.html`. It is designed to help pharmacists scan medication barcodes, manage stock, track expiry dates, locate products on shelves, and view simple operational analytics.
+RxScan is a browser-based pharmacy inventory app for scanning barcodes, managing stock, tracking expiry dates, locating medicines on shelves, and reviewing alerts and analytics.
 
-## What It Does
+## Current Structure
 
-- Scans barcodes and DataMatrix codes using the device camera
-- Looks up existing medications in local inventory
-- Supports adding, editing, deleting, and exporting medication records
-- Tracks stock levels, reorder thresholds, expiry dates, and shelf locations
-- Shows a visual store map with zone and shelf details
-- Generates alerts for low stock, out-of-stock, expired, and soon-to-expire items
-- Displays lightweight dashboard and analytics summaries
-- Attempts to enrich unknown barcodes with public drug and product APIs
+Root files:
 
-## Project Structure
+- `index.html` - main application shell
+- `README.md` - project overview
+- `supabase_setup.sql` - database setup script
+- `archieve/` - archived older revisions
 
-- `index.html` - the full application, including HTML, CSS, and JavaScript
-- `archieve/` - archived UI and feature iterations from earlier revisions
+Frontend folders:
+
+- `js/` - application logic
+- `css/` - stylesheets
+- `docs/` - deployment notes
+
+## JavaScript Modules
+
+- `js/app.js` - app bootstrap, auth flow, shared event handling, refresh flow
+- `js/state.js` - central app state and state property bindings
+- `js/supabase.js` - Supabase data/auth wrapper
+- `js/navigation.js` - page navigation and nav state sync
+- `js/overlays.js` - overlay open/close behavior
+- `js/inventory.js` - inventory rendering and inventory CRUD flows
+- `js/scanner.js` - barcode scanner and lookup flows
+- `js/map.js` - store map, zone navigation, shelf detail behavior
+- `js/alerts.js` - alert rendering and alert summary UI
+- `js/analytics.js` - analytics/statistics rendering
+
+## CSS Files
+
+- `css/base.css` - variables, resets, global foundation
+- `css/layout.css` - shared layout structure
+- `css/components.css` - reusable UI components
+- `css/pages.css` - page-specific styles
+- `css/mobile.css` - responsive mobile adjustments
 
 ## Architecture
 
-This project is a static frontend-only application:
+This project is still a static frontend app:
 
-- No backend server
-- No package manager or build step
-- No framework; it uses plain HTML, CSS, and vanilla JavaScript
-- Data is stored locally in the browser with `localStorage`
+- no build step
+- no frontend framework
+- plain HTML, CSS, and vanilla JavaScript
+- Supabase used for auth, persistence, and realtime updates
 
-Core pieces inside `index.html`:
+The app is split by feature, but it still uses browser globals and script load order rather than a bundler/module system.
 
-- Inventory data store seeded from built-in sample data
-- Page-based UI for dashboard, inventory, store map, alerts, and analytics
-- Barcode scanner powered by the ZXing browser library loaded from CDN
-- GS1/DataMatrix parsing for expiry, batch, and serial extraction
-- Background barcode enrichment via public APIs such as BDPM, Open Food Facts, OpenFDA, RxNorm, UPC Item DB, and Go-UPC
+## Main Features
+
+- staff sign-in with Supabase auth
+- inventory add, edit, delete, stock update
+- barcode scanning and lookup
+- expiry and low-stock tracking
+- store map with zones and shelf details
+- alerts for stock and expiry conditions
+- analytics summaries and charts
+- desktop and mobile layouts
 
 ## Running It
 
-Because this is a static app, you can run it by opening `index.html` in a modern browser.
+You can run the app as a static site.
 
-For the best experience:
+Simple local option:
 
-- Use a browser with camera support
-- Allow camera permissions for scanning
-- Keep internet access enabled for external fonts, ZXing, and barcode enrichment lookups
+1. Open the project folder in a local static server
+2. Serve `index.html`
+3. Open the local URL in a browser
+
+Example:
+
+- VS Code Live Server
+- any static file server
+
+Do not rely on opening the file directly with `file://` if camera or auth behavior matters.
+
+## External Dependencies
+
+- Supabase JS client loaded from CDN
+- Google Fonts
+- optional barcode/scanner-related external lookups used by scanner flow
 
 ## Data Behavior
 
-- Inventory is saved under the browser `localStorage` key `rxscan_inventory`
-- On first load, the app seeds itself with sample medication data
-- Data is local to the browser and device; it is not shared across users
-
-## Limitations
-
-- Single-user local prototype only
-- Depends on external CDNs and public APIs for some features
-- All logic lives in one HTML file, which makes long-term maintenance harder
-- No authentication, backend persistence, or server-side validation
-- Archived revisions are present, but this folder does not currently contain Git metadata
+- auth and inventory data come from Supabase
+- the app includes sample seed data behavior for first-use setup
+- session and some UI state are cached in browser storage where needed
 
 ## Notes
 
-The app appears optimized for both desktop and mobile use, with special handling for the scan flow and mobile bottom navigation. Some text output shows character-encoding issues in terminal views, although the page itself declares UTF-8.
+- mobile `Map` flow has been heavily optimized compared with the older layout
+- the codebase was previously a single large HTML file and is now split into maintainable JS/CSS modules
+- the root folder is intentionally kept shallow; current organization is `js/`, `css/`, and `docs/`
+
+## Deployment Notes
+
+See:
+
+- `docs/SUPABASE_NETLIFY_DEPLOY.md`

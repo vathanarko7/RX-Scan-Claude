@@ -1,0 +1,1345 @@
+    /* ============================
+     MOBILE CARD VIEW (inventory)
+     ============================ */
+    .mobile-cards {
+      display: none;
+    }
+
+    @media (min-width: 769px) {
+      .mobile-cards {
+        display: none !important;
+      }
+    }
+
+    .med-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.68rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.32rem;
+      border-top: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: hidden;
+    }
+
+    .med-card+.med-card {
+      border-top: 1px solid var(--border);
+      border-radius: 0;
+    }
+
+    .med-card:first-child {
+      border-radius: 0;
+    }
+
+    .med-card:last-child {
+      border-radius: 0 0 10px 10px;
+    }
+
+    .med-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .med-card-name {
+      font-weight: 700;
+      font-size: 0.93rem;
+      line-height: 1.12;
+    }
+
+    .med-card-name-line {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+
+    .med-card-name-line .status-dot {
+      width: 8px;
+      height: 8px;
+    }
+
+    .med-card-generic {
+      font-size: 0.66rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      margin-top: 0.08rem;
+      margin-left: 0.9rem;
+    }
+
+    .med-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.18rem 0.5rem;
+      align-items: center;
+      margin-left: 0.9rem;
+    }
+
+    .med-card-meta-item {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .med-card-meta-item strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .med-card-meta-item.meta-location {
+      color: var(--accent2);
+    }
+
+    .med-card-meta-item.meta-location strong {
+      color: #d8e8ff;
+    }
+
+    .med-card-meta-item.meta-box {
+      color: #8ccfbf;
+    }
+
+    .med-card-meta-item.meta-box strong {
+      color: var(--accent);
+    }
+
+    .med-card-meta-item.meta-unit {
+      color: #89a8ff;
+    }
+
+    .med-card-meta-item.meta-unit strong {
+      color: #6f9cff;
+    }
+
+    .med-card-meta-item.expiry-ok {
+      color: var(--success);
+    }
+
+    .med-card-meta-item.expiry-warn {
+      color: var(--warn);
+    }
+
+    .med-card-meta-item.expiry-bad {
+      color: var(--danger);
+    }
+
+    .med-card-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .med-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .med-card-location {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--accent2);
+      background: rgba(0, 136, 255, 0.08);
+      border: 1px solid rgba(0, 136, 255, 0.2);
+      padding: 0.16rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .med-card-actions-main {
+      display: flex;
+      gap: 0.35rem;
+      flex-shrink: 0;
+    }
+
+    .med-card-delete {
+      margin-left: auto;
+      opacity: 0.78;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+    }
+
+    /* larger touch target */
+
+    /* NEW DRUG CARD — shown when barcode not in inventory */
+    .new-drug-card {
+      display: none;
+      background: var(--surface2);
+      border: 1.5px dashed var(--accent);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+      width: 380px;
+      animation: slideUp 0.3s ease;
+    }
+
+    @media (max-width: 900px) {
+      .new-drug-card {
+        width: calc(100vw - 2rem);
+        margin: 0.75rem 1rem 2rem;
+      }
+    }
+
+    .new-drug-card.show {
+      display: block;
+    }
+
+    .new-drug-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .new-drug-icon {
+      width: 42px;
+      height: 42px;
+      background: rgba(0, 212, 170, 0.12);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .new-drug-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.2rem;
+    }
+
+    .new-drug-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .new-drug-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .new-drug-meta-item {
+      background: var(--bg);
+      border-radius: 7px;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .new-drug-meta-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+
+    .new-drug-meta-val {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      word-break: break-all;
+    }
+
+    .new-drug-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-add-new {
+      flex: 1;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent), #00b890);
+      color: #0a0e14;
+      font-weight: 700;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      border: none;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      animation: pulse-add 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-add {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(0, 212, 170, 0);
+      }
+    }
+
+    .btn-add-new:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 212, 170, 0.4);
+    }
+
+    .lookup-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(0, 212, 170, 0.3);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--muted);
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+    }
+
+    .empty-state .icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+
+    .empty-state h3 {
+      font-family: var(--font-display);
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+    }
+
+    .tag-blue {
+      background: rgba(0, 136, 255, 0.1);
+      color: var(--accent2);
+    }
+
+    .tag-green {
+      background: rgba(0, 201, 123, 0.1);
+      color: var(--success);
+    }
+
+    .tag-orange {
+      background: rgba(255, 107, 53, 0.1);
+      color: var(--warn);
+    }
+
+    /* DASHBOARD GRID */
+    .mobile-dashboard-actions {
+      display: none;
+    }
+
+    .dashboard-stat-card {
+      cursor: default;
+    }
+
+    .dash-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+
+    @media (max-width: 768px) {
+      #page-dashboard .dash-bottom {
+        grid-template-columns: 1fr !important;
+        gap: 0.9rem;
+      }
+
+      #page-dashboard .dash-bottom > div {
+        width: 100%;
+      }
+    }
+
+    .recent-scans {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .scan-history-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+
+    .scan-history-item:first-child {
+      border-top: none;
+    }
+
+    .scan-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .scan-hist-name {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .scan-hist-time {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    /* MAP ENTRANCE/LABELS */
+    .map-room-label {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .map-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .dispensing-counter {
+      width: 100%;
+      background: rgba(0, 212, 170, 0.06);
+      border: 1.5px solid rgba(0, 212, 170, 0.25);
+      border-radius: 8px;
+      padding: 0.6rem;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .shelf-detail-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.95rem;
+    }
+
+    .shelf-detail-card.selected {
+      border-color: rgba(245, 201, 106, 0.28);
+      background: linear-gradient(180deg, rgba(245, 201, 106, 0.08), rgba(255, 255, 255, 0.02));
+      box-shadow: inset 0 1px 0 rgba(245, 201, 106, 0.16);
+    }
+
+    .shelf-detail-topline {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .shelf-detail-card.selected .shelf-detail-topline {
+      color: #f5c96a;
+    }
+
+    .shelf-detail-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .shelf-detail-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .shelf-detail-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .shelf-detail-item {
+      cursor: pointer;
+      transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+    }
+
+    .shelf-detail-item:hover {
+      border-color: rgba(0, 212, 170, 0.18);
+      background: rgba(18, 28, 34, 0.68);
+      transform: translateY(-1px);
+    }
+
+    .shelf-detail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+    }
+
+    .shelf-detail-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0.6rem 0.95rem;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 212, 170, 0.24);
+      background: rgba(0, 212, 170, 0.1);
+      color: var(--accent);
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .shelf-detail-action.secondary {
+      border-color: var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+    }
+
+    .shelf-detail-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      padding: 0.7rem 0.8rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(10, 14, 20, 0.45);
+    }
+
+    .shelf-detail-item-main {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+    }
+
+    .shelf-detail-item-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.14rem;
+    }
+
+    .shelf-detail-item-meta {
+      font-size: 0.73rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    .shelf-detail-item-prices {
+      margin-top: 0.28rem;
+      font-size: 0.72rem;
+      color: rgba(188, 198, 232, 0.88);
+      font-family: var(--font-mono);
+      line-height: 1.35;
+    }
+
+    .shelf-detail-stock {
+      border-radius: 999px;
+      padding: 0.34rem 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      white-space: nowrap;
+      border: 1px solid currentColor;
+    }
+
+    .shelf-detail-stock.healthy {
+      color: var(--success);
+      background: rgba(0, 201, 123, 0.08);
+    }
+
+    .shelf-detail-stock.warning {
+      color: var(--warn);
+      background: rgba(245, 201, 106, 0.08);
+    }
+
+    .shelf-detail-stock.critical {
+      color: var(--danger);
+      background: rgba(255, 107, 53, 0.08);
+    }
+
+    /* ── CONFIRM MODAL (replaces confirm()) ── */
+    #confirm-overlay,
+    #stock-overlay,
+    #inventory-action-overlay,
+    #filter-export-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10001;
+      background: rgba(10,14,20,0.82);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    #confirm-overlay.open,
+    #stock-overlay.open,
+    #inventory-action-overlay.open,
+    #filter-export-overlay.open {
+      display: flex;
+    }
+    .mini-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 360px;
+      animation: modalIn 0.22s ease;
+      overflow: hidden;
+    }
+    .mini-modal-drag {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0 4px;
+    }
+    .mini-modal-drag span {
+      width: 36px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      display: block;
+    }
+    .mini-modal-header {
+      padding: 0 1.25rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .mini-modal-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .mini-modal-icon.danger {
+      background: rgba(255,59,92,0.12);
+      border: 1px solid rgba(255,59,92,0.25);
+    }
+    .mini-modal-icon.accent {
+      background: rgba(0,212,170,0.1);
+      border: 1px solid rgba(0,212,170,0.25);
+    }
+    .mini-modal-titles { flex: 1; }
+    .mini-modal-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .mini-modal-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 1px;
+      font-family: var(--font-mono);
+    }
+    .mini-modal-body {
+      padding: 0 1.25rem 1rem;
+    }
+    .mini-modal-warning {
+      background: rgba(255,59,92,0.08);
+      border: 1px solid rgba(255,59,92,0.2);
+      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.82rem;
+      color: #ff9fb0;
+      line-height: 1.55;
+    }
+    .mini-modal-input-wrap {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .mini-modal-input-wrap:focus-within {
+      border-color: var(--accent);
+    }
+    .mini-modal-input-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+      font-family: var(--font-mono);
+    }
+    #stock-input {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-family: var(--font-display);
+      width: 80px;
+      text-align: center;
+      outline: none;
+      -moz-appearance: textfield;
+    }
+    #stock-input::-webkit-outer-spin-button,
+    #stock-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .mini-modal-input-unit {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+    .mini-modal-input-error {
+      font-size: 0.72rem;
+      color: var(--danger);
+      margin-top: 0.4rem;
+      min-height: 1em;
+      font-family: var(--font-mono);
+    }
+    .mini-modal-footer {
+      padding: 0 1.25rem 1.25rem;
+      display: flex;
+      gap: 0.6rem;
+    }
+    .mini-modal-footer .btn {
+      flex: 1;
+      justify-content: center;
+      padding: 0.75rem;
+    }
+
+    .inventory-action-list {
+      display: grid;
+      gap: 0.55rem;
+      padding: 0 1.25rem 1rem;
+    }
+
+    .inventory-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 0.8rem 0.9rem;
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+
+    .inventory-action-btn.danger {
+      color: #ff9fb0;
+      border-color: rgba(255,59,92,0.22);
+    }
+
+    .inventory-action-label {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .inventory-action-detail {
+      padding: 0 1.25rem 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.55rem;
+    }
+
+    .inventory-action-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      padding: 0 1.25rem 0.9rem;
+    }
+
+    .inventory-action-detail-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.55rem 0.7rem;
+    }
+
+    .inventory-action-detail-label {
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.18rem;
+    }
+
+    .inventory-action-detail-value {
+      font-size: 0.82rem;
+      color: var(--text);
+      font-family: var(--font-mono);
+      word-break: break-word;
+    }
+
+    .filter-sheet-section {
+      padding: 0 1.25rem 1rem;
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .filter-sheet-section .filter-select {
+      width: 100%;
+    }
+
+    .filter-sheet-actions {
+      display: grid;
+      gap: 0.55rem;
+      padding: 0 1.25rem 1rem;
+    }
+
+    .filter-sheet-btn {
+      width: 100%;
+      justify-content: center;
+    }
+    @media (max-width: 768px) {
+      #confirm-overlay,
+      #stock-overlay,
+      #inventory-action-overlay,
+      #filter-export-overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
+      .mini-modal {
+        max-width: 100%;
+        border-radius: 16px 16px 0 0;
+        animation: sheetUp 0.25s ease;
+      }
+    }
+
+    .is-hidden {
+      display: none;
+    }
+
+    .nav-alert-badge {
+      background: var(--danger);
+      color: #fff;
+      font-size: 0.65rem;
+      padding: 1px 5px;
+      border-radius: 10px;
+      margin-left: 2px;
+    }
+
+    .logout-btn-header {
+      padding: 0.5rem 0.9rem;
+    }
+
+    .inventory-barcode-tag {
+      cursor: pointer;
+    }
+
+    .med-card-main {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .med-card-stock-badge {
+      font-size: 0.72rem;
+    }
+
+    .scanner-overlay-shell {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 99999;
+      flex-direction: column;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    .scanner-close-shell {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 2;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid #1e2736;
+      background: #111620;
+      color: #e8edf5;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.2s;
+    }
+
+    .scanner-mobile-header-shell {
+      padding: 0.6rem 3.5rem 0.4rem 1rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .scanner-mobile-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #e8edf5;
+      margin-bottom: 2px;
+    }
+
+    .scanner-mobile-subtitle {
+      font-size: 0.75rem;
+      color: #5a6680;
+    }
+
+    .scanner-dialog-shell {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .scanner-camera-wrap-shell {
+      padding: 0.85rem 1rem 0;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .scanner-box-shell {
+      width: 100%;
+      background: #111620;
+      border: 1px solid #1e2736;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .scanner-viewport-shell {
+      width: 100%;
+      height: 200px;
+      background: #000;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scanner-manual-panel {
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .scanner-manual-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .scanner-manual-input {
+      flex: 1;
+      background: #0a0e14;
+      border: 1px solid #1e2736;
+      color: #e8edf5;
+      font-size: 16px;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      outline: none;
+      font-family: sans-serif;
+    }
+
+    .scanner-lookup-btn {
+      background: #00d4aa;
+      color: #0a0e14;
+      border: none;
+      font-weight: 700;
+      padding: 0.65rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+    }
+
+    .scanner-status-shell {
+      font-size: 0.75rem;
+      color: #5a6680;
+      text-align: center;
+      font-family: monospace;
+      min-height: 1em;
+    }
+
+    .scanner-results-scroll {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 0.75rem 1rem 1.25rem;
+      min-height: 0;
+    }
+
+    .section-meta-text {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 400;
+    }
+
+    .map-sidebar-section {
+      margin-top: 1.5rem;
+    }
+
+    .shelf-detail-copy {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin-top: 0.5rem;
+    }
+
+    .analytics-cat-pills {
+      gap: 0.6rem;
+    }
+
+    .modal-drag-shell {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0 0;
+      flex-shrink: 0;
+    }
+
+    .modal-drag-indicator {
+      width: 36px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .modal-close-btn {
+      min-width: 36px;
+    }
+
+    .scanner-result-card {
+      display: none;
+      background: #171d28;
+      border: 1px solid #00d4aa;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .scanner-result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.85rem;
+    }
+
+    .scanner-result-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e8edf5;
+    }
+
+    .scanner-result-barcode {
+      font-size: 0.72rem;
+      color: #5a6680;
+      font-family: monospace;
+      margin-top: 2px;
+    }
+
+    .scanner-result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .scanner-stat-card {
+      background: #0a0e14;
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+    }
+
+    .scanner-stat-label {
+      font-size: 0.6rem;
+      color: #5a6680;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 3px;
+    }
+
+    .scanner-stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #00d4aa;
+    }
+
+    .scanner-stat-value-small {
+      font-size: 0.9rem;
+    }
+
+    .scanner-location-card {
+      background: rgba(0,136,255,0.08);
+      border: 1px solid rgba(0,136,255,0.2);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .scanner-location-icon {
+      font-size: 1.3rem;
+    }
+
+    .scanner-location-name {
+      font-weight: 600;
+      color: #0088ff;
+      font-size: 0.9rem;
+    }
+
+    .scanner-location-zone {
+      font-size: 0.72rem;
+      color: #5a6680;
+      font-family: monospace;
+    }
+
+    .scanner-action-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .scanner-action-btn {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .scanner-action-btn-ghost {
+      background: #111620;
+      border: 1px solid #1e2736;
+      color: #e8edf5;
+    }
+
+    .scanner-action-btn-primary {
+      background: #00d4aa;
+      border: none;
+      color: #0a0e14;
+      font-weight: 700;
+    }
+
+    .scanner-new-drug-card {
+      display: none;
+      background: #171d28;
+      border: 1.5px dashed #00d4aa;
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .scanner-new-drug-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .scanner-new-drug-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(0,212,170,0.12);
+      border: 1px solid rgba(0,212,170,0.3);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .scanner-new-drug-kicker {
+      font-size: 0.62rem;
+      color: #00d4aa;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: monospace;
+    }
+
+    .scanner-new-drug-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #e8edf5;
+    }
+
+    .scanner-new-drug-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .scanner-new-drug-meta {
+      background: #0a0e14;
+      border-radius: 7px;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .scanner-new-drug-meta-expiry {
+      display: none;
+      background: rgba(0,201,123,0.08);
+      border: 1px solid rgba(0,201,123,0.2);
+    }
+
+    .scanner-new-drug-meta-batch {
+      display: none;
+      background: rgba(0,136,255,0.08);
+      border: 1px solid rgba(0,136,255,0.2);
+    }
+
+    .scanner-new-drug-meta-wide {
+      grid-column: 1 / -1;
+    }
+
+    .scanner-new-drug-label {
+      font-size: 0.6rem;
+      color: #5a6680;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+      font-family: monospace;
+    }
+
+    .scanner-new-drug-label-expiry {
+      color: #00c97b;
+    }
+
+    .scanner-new-drug-label-batch {
+      color: #0088ff;
+    }
+
+    .scanner-new-drug-value {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #e8edf5;
+    }
+
+    .scanner-new-drug-value-expiry {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #00c97b;
+      font-family: monospace;
+    }
+
+    .scanner-new-drug-value-batch {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #0088ff;
+      font-family: monospace;
+      word-break: break-all;
+    }
+
+    .scanner-new-drug-barcode {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #00d4aa;
+      font-family: monospace;
+      word-break: break-all;
+    }
+
+    .scanner-add-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #00d4aa, #00b890);
+      border: none;
+      color: #0a0e14;
+      padding: 0.85rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
