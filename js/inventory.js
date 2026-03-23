@@ -644,11 +644,50 @@
     }
   }
 
-  function openInventoryActions(id) {
+  function reorderInventoryActionButtons(preferredOrder = []) {
+    const list = document.querySelector('.inventory-action-list');
+    if (!list) return;
+    const buttons = Array.from(list.querySelectorAll('.inventory-action-btn'));
+    if (!buttons.length) return;
+
+    const rank = new Map(preferredOrder.map((action, index) => [action, index]));
+    buttons
+      .sort((a, b) => {
+        const aKey = a.dataset.inventoryAction || '';
+        const bKey = b.dataset.inventoryAction || '';
+        const aRank = rank.has(aKey) ? rank.get(aKey) : preferredOrder.length + buttons.indexOf(a);
+        const bRank = rank.has(bKey) ? rank.get(bKey) : preferredOrder.length + buttons.indexOf(b);
+        return aRank - bRank;
+      })
+      .forEach((button) => list.appendChild(button));
+  }
+
+  function setVisibleInventoryActionButtons(visibleActions = []) {
+    const buttons = Array.from(document.querySelectorAll('.inventory-action-btn'));
+    if (!buttons.length) return;
+    const allowAll = !Array.isArray(visibleActions) || !visibleActions.length;
+    buttons.forEach((button) => {
+      const action = button.dataset.inventoryAction || '';
+      button.style.display = allowAll || visibleActions.includes(action) ? '' : 'none';
+    });
+  }
+
+  function openInventoryActions(id, options = {}) {
     selectedInventoryMedId = id;
     const med = inventory.find(item => item.id === id);
     if (!med) return;
     const meta = typeof getInventoryDisplayMeta === 'function' ? getInventoryDisplayMeta(med, new Date()) : null;
+    const expiryDate = med.expiry ? new Date(med.expiry + 'T00:00:00') : null;
+    const diffDays = expiryDate ? Math.round((expiryDate - new Date()) / 86400000) : null;
+    const expiryMain = !med.expiry
+      ? 'No expiry'
+      : diffDays < 0
+        ? 'Expired'
+        : diffDays < 90
+          ? `${diffDays}d left`
+          : med.expiry;
+    const expirySub = !med.expiry ? 'No expiry date recorded' : med.expiry;
+    const unitPrice = med.units_per_box ? `$${(med.price_box / med.units_per_box).toFixed(2)} / unit` : '—';
 
     document.getElementById('inventory-action-title').textContent = med.name;
     document.getElementById('inventory-action-sub').textContent = med.generic || med.category || '';
@@ -656,6 +695,15 @@
     document.getElementById('inventory-action-location').textContent = med.shelf || 'Unassigned';
     document.getElementById('inventory-action-price').textContent = `$${med.price_box.toFixed(2)} box`;
     document.getElementById('inventory-action-expiry').textContent = med.expiry || 'No expiry';
+
+    document.getElementById('inventory-action-current-stock').textContent = `${med.stock} ${med.stock === 1 ? 'box' : 'boxes'}`;
+    document.getElementById('inventory-action-stock-sub').textContent = `Reorder at ${med.reorder} ${med.reorder === 1 ? 'box' : 'boxes'}`;
+    document.getElementById('inventory-action-expiry-main').textContent = expiryMain;
+    document.getElementById('inventory-action-expiry-sub').textContent = expirySub;
+    document.getElementById('inventory-action-price-box').textContent = `$${med.price_box.toFixed(2)} / box`;
+    document.getElementById('inventory-action-price-unit').textContent = unitPrice;
+    document.getElementById('inventory-action-supplier').textContent = med.mfr || 'Unknown';
+    document.getElementById('inventory-action-category').textContent = med.category || 'Uncategorized';
 
     const stockTag = document.getElementById('inventory-action-stock-tag');
     const expiryTag = document.getElementById('inventory-action-expiry-tag');
@@ -671,14 +719,19 @@
       expiryTag.className = `modal-status-tag ${meta?.expiryClass || 'expiry-ok'}`;
       expiryTag.textContent = med.expiry || 'No expiry';
     }
-    if (locationTag) {
-      locationTag.className = `modal-status-tag ${med.shelf ? 'location-set' : 'location-missing'}`;
-      locationTag.textContent = med.shelf ? 'Assigned' : 'Unassigned';
-    }
-    if (locateText) locateText.textContent = med.shelf ? 'Locate on map' : 'Assign shelf';
+      if (locationTag) {
+        locationTag.className = `modal-status-tag ${med.shelf ? 'location-set' : 'location-missing'}`;
+        locationTag.textContent = med.shelf ? 'Assigned' : 'Unassigned';
+      }
+      if (locateText) locateText.textContent = med.shelf ? 'Locate on map' : 'Assign shelf';
 
-    openOverlay('inventory-action-overlay');
-  }
+      setVisibleInventoryActionButtons(Array.isArray(options.visibleActions) ? options.visibleActions : []);
+      reorderInventoryActionButtons(Array.isArray(options.preferredActions) && options.preferredActions.length
+        ? options.preferredActions
+        : ['stock', 'edit', 'locate', 'delete']);
+
+      openOverlay('inventory-action-overlay');
+    }
 
   function closeInventoryActions() {
     closeOverlay('inventory-action-overlay');

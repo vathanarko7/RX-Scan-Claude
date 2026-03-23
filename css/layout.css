@@ -148,6 +148,53 @@
       font-weight: 700;
     }
 
+    .quick-filter-chip.filter-all {
+      border-color: rgba(0, 212, 170, 0.14);
+      background: rgba(0, 212, 170, 0.03);
+    }
+
+    .quick-filter-chip.filter-all.active {
+      color: #0a0e14;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .quick-filter-chip.filter-low {
+      border-color: rgba(242, 181, 71, 0.16);
+      background: rgba(242, 181, 71, 0.03);
+    }
+
+    .quick-filter-chip.filter-low.active {
+      color: #ffd47e;
+      background: rgba(242, 181, 71, 0.1);
+      border-color: rgba(242, 181, 71, 0.34);
+      font-weight: 700;
+    }
+
+    .quick-filter-chip.filter-out {
+      border-color: rgba(255, 127, 152, 0.18);
+      background: rgba(255, 127, 152, 0.03);
+    }
+
+    .quick-filter-chip.filter-out.active {
+      color: #ff9bb0;
+      background: rgba(255, 127, 152, 0.1);
+      border-color: rgba(255, 127, 152, 0.34);
+      font-weight: 700;
+    }
+
+    .quick-filter-chip.filter-expiring {
+      border-color: rgba(245, 201, 106, 0.16);
+      background: rgba(245, 201, 106, 0.03);
+    }
+
+    .quick-filter-chip.filter-expiring.active {
+      color: #f5c96a;
+      background: rgba(245, 201, 106, 0.1);
+      border-color: rgba(245, 201, 106, 0.32);
+      font-weight: 700;
+    }
+
     .inventory-toolbar-row {
       display: flex;
       align-items: center;

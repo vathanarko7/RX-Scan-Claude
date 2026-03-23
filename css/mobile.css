@@ -129,18 +129,18 @@
       }
 
       #page-map .page-header {
-        gap: 0.3rem;
-        margin-bottom: 0.7rem;
+        gap: 0.2rem;
+        margin-bottom: 0.5rem;
       }
 
       #page-map .page-title {
-        font-size: 1.14rem;
+        font-size: 1.08rem;
         line-height: 0.94;
       }
 
       #page-map .page-subtitle {
-        font-size: 0.76rem;
-        line-height: 1.25;
+        font-size: 0.72rem;
+        line-height: 1.18;
       }
 
       #page-dashboard .dashboard-greeting {
@@ -501,32 +501,32 @@
 
       /* Map */
       .map-sidebar {
-        padding: 0.72rem 0.8rem;
+        padding: 0.64rem 0.74rem;
       }
 
       .pharmacy-map {
-        padding: 0.8rem;
+        padding: 0.72rem;
         border-radius: 16px;
       }
 
       .zone-list {
         display: flex;
         flex-direction: row;
-        gap: 0.5rem;
+        gap: 0.42rem;
         overflow-x: auto;
         margin-top: 0;
-        padding-top: 0.12rem;
-        padding-bottom: 0.16rem;
+        padding-top: 0.08rem;
+        padding-bottom: 0.12rem;
         scroll-snap-type: x proximity;
       }
 
 
       .zone-item {
         min-width: 138px;
-        padding: 0.58rem 0.68rem;
+        padding: 0.5rem 0.62rem;
         border-radius: 12px;
         scroll-snap-align: start;
-        gap: 0.55rem;
+        gap: 0.48rem;
         white-space: nowrap;
       }
 
@@ -558,15 +558,15 @@
       }
 
       .dispensing-counter {
-        padding: 0.72rem;
-        margin-bottom: 0.8rem;
-        font-size: 0.82rem;
+        padding: 0.62rem;
+        margin-bottom: 0.62rem;
+        font-size: 0.78rem;
         border-radius: 14px;
       }
 
       .map-section {
-        margin-bottom: 1rem;
-        padding: 0.88rem;
+        margin-bottom: 0.78rem;
+        padding: 0.72rem;
         border-radius: 16px;
         background: rgba(255, 255, 255, 0.02);
         border: 1px solid rgba(255, 255, 255, 0.04);
@@ -583,7 +583,7 @@
       }
 
       .map-section-header {
-        margin-bottom: 0.7rem;
+        margin-bottom: 0.5rem;
       }
 
       .map-section-stats {
@@ -593,14 +593,14 @@
       .map-legend-inline {
         display: flex;
         width: 100%;
-        margin: 0 0 0.85rem;
+        margin: 0 0 0.62rem;
         justify-content: flex-start;
-        gap: 0.5rem 0.8rem;
+        gap: 0.38rem 0.66rem;
       }
 
       .map-filter-bar {
         width: 100%;
-        margin: -0.15rem 0 0.85rem;
+        margin: -0.12rem 0 0.62rem;
       }
 
       .map-filter-summary {
@@ -723,14 +723,14 @@
 
       .shelf-grid {
         justify-content: flex-start;
-        gap: 0.65rem;
+        gap: 0.52rem;
         width: 100%;
       }
 
       .shelf-unit {
         width: calc(33.333% - 0.45rem);
         min-width: 84px;
-        padding: 0.68rem 0.4rem;
+        padding: 0.54rem 0.36rem;
         border-radius: 12px;
       }
 
@@ -769,22 +769,74 @@
 
       /* Alerts */
       .alert-card {
-        padding: 0.75rem;
-        gap: 0.6rem;
+        padding: 0.62rem 0.7rem;
+        gap: 0.5rem;
       }
 
-      .alert-icon {
-        width: 34px;
-        height: 34px;
-        font-size: 0.95rem;
+      .alerts-toolbar {
+        gap: 0.38rem;
+        margin-bottom: 0;
       }
 
-      .alert-title {
+      .alert-group {
+        gap: 0.35rem;
+      }
+
+      .alert-group-header {
+        gap: 0.55rem;
+      }
+
+      .alert-group-title {
         font-size: 0.8rem;
       }
 
-      .alert-desc {
-        font-size: 0.72rem;
+      .alert-group-count {
+        min-width: 1.6rem;
+        height: 1.6rem;
+        font-size: 0.66rem;
+      }
+
+      .alert-filter-chip {
+        padding: 0.36rem 0.56rem;
+        font-size: 0.64rem;
+      }
+
+      .alert-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+      }
+
+      .alert-head {
+        gap: 0.45rem;
+        margin-bottom: 0.1rem;
+      }
+
+      .alert-kicker {
+        font-size: 0.54rem;
+        margin-bottom: 0;
+      }
+
+      .alert-title {
+        font-size: 0.82rem;
+      }
+
+      .alert-info-line {
+        font-size: 0.68rem;
+        line-height: 1.25;
+      }
+
+      .alert-meter {
+        margin-top: 0.42rem;
+      }
+
+      .alert-meter-top {
+        font-size: 0.62rem;
+        margin-bottom: 0.16rem;
+      }
+
+      .alert-meter-track {
+        height: 5px;
       }
 
       /* Analytics */

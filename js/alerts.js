@@ -1,4 +1,32 @@
-﻿(function() {
+(function() {
+  let activeAlertFilter = 'all';
+
+  function buildAlertInfo(med) {
+    return [
+      med.category,
+      med.mfr,
+      med.shelf,
+      med.expiry || 'No expiry',
+    ].filter(Boolean).join(' · ');
+  }
+
+  function compareAlertPriority(a, b) {
+    const order = {
+      expired: 0,
+      out: 1,
+      low: 2,
+      expiring: 3,
+    };
+    const rankDiff = (order[a.subtype] ?? 99) - (order[b.subtype] ?? 99);
+    if (rankDiff !== 0) return rankDiff;
+
+    if (a.subtype === 'expired' || a.subtype === 'expiring') {
+      return String(a.time).localeCompare(String(b.time));
+    }
+
+    return a.title.localeCompare(b.title);
+  }
+
   function buildAlerts() {
     const now = new Date();
     const alerts = [];
@@ -6,27 +34,40 @@
     const out = inventory.filter((med) => med.stock === 0);
     out.forEach((med) => alerts.push({
       type: 'critical',
-      icon: '&#128680;',
-      title: `OUT OF STOCK: ${med.name}`,
-      desc: `Barcode ${med.barcode} · ${med.zone} · ${med.shelf}`,
+      subtype: 'out',
+      medId: med.id,
+      shelf: med.shelf || '',
+      icon: '&#8857;',
+      title: med.name,
+      info: buildAlertInfo(med),
+      stock: med.stock,
+      reorder: med.reorder,
       time: 'Now',
     }));
 
     const low = inventory.filter((med) => med.stock > 0 && med.stock <= med.reorder);
     low.forEach((med) => alerts.push({
       type: 'warning',
-      icon: '&#9888;&#65039;',
-      title: `Low Stock: ${med.name}`,
-      desc: `${med.stock} boxes left (reorder at ${med.reorder}) · ${med.shelf}`,
+      subtype: 'low',
+      medId: med.id,
+      shelf: med.shelf || '',
+      icon: '&#9888;',
+      title: med.name,
+      info: buildAlertInfo(med),
+      stock: med.stock,
+      reorder: med.reorder,
       time: 'Now',
     }));
 
     const expired = inventory.filter((med) => new Date(med.expiry + 'T00:00:00') < now);
     expired.forEach((med) => alerts.push({
       type: 'critical',
+      subtype: 'expired',
+      medId: med.id,
+      shelf: med.shelf || '',
       icon: '&#9940;',
-      title: `EXPIRED: ${med.name}`,
-      desc: `Expired on ${med.expiry} · ${med.shelf} · remove from shelf immediately`,
+      title: med.name,
+      info: [med.category, med.mfr, med.shelf, med.expiry].filter(Boolean).join(' · '),
       time: med.expiry,
     }));
 
@@ -40,14 +81,35 @@
       const diff = Math.round((new Date(med.expiry + 'T00:00:00') - now) / 86400000);
       alerts.push({
         type: 'warning',
-        icon: '&#128467;',
-        title: `Expiring in ${diff} days: ${med.name}`,
-        desc: `Expires ${med.expiry} · ${med.shelf}`,
+        subtype: 'expiring',
+        medId: med.id,
+        shelf: med.shelf || '',
+        icon: '&#9716;',
+        title: med.name,
+        info: [med.category, med.mfr, med.shelf, med.expiry].filter(Boolean).join(' · '),
+        daysLeft: diff,
         time: med.expiry,
       });
     });
 
-    return alerts;
+    return alerts.sort(compareAlertPriority);
+  }
+
+  function getFilteredAlerts(alerts) {
+    if (activeAlertFilter === 'all') return alerts;
+    if (activeAlertFilter === 'out') {
+      return alerts.filter((alert) => alert.subtype === 'expired' || alert.subtype === 'out');
+    }
+    return alerts.filter((alert) => alert.subtype === activeAlertFilter);
+  }
+
+  function getAlertFilterCounts(alerts) {
+    return {
+      all: alerts.length,
+      out: alerts.filter((alert) => alert.subtype === 'expired' || alert.subtype === 'out').length,
+      low: alerts.filter((alert) => alert.subtype === 'low').length,
+      expiring: alerts.filter((alert) => alert.subtype === 'expiring').length,
+    };
   }
 
   function syncAlertBadges(alerts = buildAlerts()) {
@@ -72,48 +134,193 @@
     return alerts;
   }
 
+  function getAlertKicker(alert) {
+    if (alert.subtype === 'expired') return 'Expired';
+    if (alert.subtype === 'out') return 'Out of stock';
+    if (alert.subtype === 'low') return 'Low stock';
+    if (alert.subtype === 'expiring') return 'Expiring soon';
+    return 'Alert';
+  }
+
+  function getAlertMeter(alert) {
+    if (alert.subtype === 'low' || alert.subtype === 'out') {
+      const reorder = Math.max(Number(alert.reorder) || 0, 1);
+      const stock = Math.max(Number(alert.stock) || 0, 0);
+      const fill = Math.max(0, Math.min(100, (stock / reorder) * 100));
+      return {
+        left: `${stock} boxes`,
+        right: `Reorder ${reorder}`,
+        fill,
+      };
+    }
+
+    if (alert.subtype === 'expiring') {
+      const daysLeft = Math.max(Number(alert.daysLeft) || 0, 0);
+      const fill = Math.max(0, Math.min(100, (daysLeft / 30) * 100));
+      return {
+        left: `${daysLeft}d left`,
+        right: '',
+        fill,
+      };
+    }
+
+    return null;
+  }
+
+  function getAlertPopupOptions(alert) {
+    if (alert.subtype === 'expired') {
+      return {
+        visibleActions: ['delete', 'locate'],
+        preferredActions: ['delete', 'locate'],
+      };
+    }
+
+    if (alert.subtype === 'low' || alert.subtype === 'out') {
+      return {
+        visibleActions: ['stock', 'locate'],
+        preferredActions: ['stock', 'locate'],
+      };
+    }
+
+    if (alert.subtype === 'expiring') {
+      return {
+        visibleActions: ['locate', 'edit'],
+        preferredActions: ['locate', 'edit'],
+      };
+    }
+
+    return {
+      visibleActions: ['stock', 'locate', 'edit', 'delete'],
+      preferredActions: ['stock', 'locate', 'edit', 'delete'],
+    };
+  }
+
   function renderAlertItem(alert) {
+    const meter = getAlertMeter(alert);
+    const popupOptions = JSON.stringify(getAlertPopupOptions(alert)).replace(/"/g, '&quot;');
     return `
-      <div class="alert-card alert-${alert.type}">
+      <button class="alert-card alert-${alert.type} alert-${alert.subtype}" onclick="openInventoryActions(${alert.medId}, ${popupOptions})">
         <div class="alert-icon">${alert.icon}</div>
         <div class="alert-content">
-          <div class="alert-title">${esc(alert.title)}</div>
-          <div class="alert-desc">${esc(alert.desc)}</div>
+          <div class="alert-head">
+            <div class="alert-title">${esc(alert.title)}</div>
+            <div class="alert-kicker">${esc(getAlertKicker(alert))}</div>
+          </div>
+          <div class="alert-info-line">${esc(alert.info)}</div>
+          ${meter ? `
+            <div class="alert-meter">
+              <div class="alert-meter-top">
+                <span>${esc(meter.left)}</span>
+                <span>${esc(meter.right)}</span>
+              </div>
+              <div class="alert-meter-track">
+                <div class="alert-meter-fill" style="width:${meter.fill}%;"></div>
+              </div>
+            </div>
+          ` : ''}
         </div>
-        <div class="alert-time">${esc(alert.time)}</div>
+      </button>`;
+  }
+
+  function getAlertGroupDefinitions() {
+    return [
+      { id: 'critical', title: 'Critical', subtypes: ['expired', 'out'] },
+      { id: 'warning', title: 'Needs reorder', subtypes: ['low'] },
+      { id: 'expiring', title: 'Expiring soon', subtypes: ['expiring'] },
+    ];
+  }
+
+  function renderAlertGroup(group, alerts) {
+    if (!alerts.length) return '';
+    return `
+      <section class="alert-group">
+        <div class="alert-group-header">
+          <div class="alert-group-title">${group.title}</div>
+          <div class="alert-group-count">${alerts.length}</div>
+        </div>
+        <div class="alert-group-list">
+          ${alerts.map(renderAlertItem).join('')}
+        </div>
+      </section>`;
+  }
+
+  function renderAlertFilterChips(alerts) {
+    const counts = getAlertFilterCounts(alerts);
+    const filters = [
+      { id: 'all', label: 'All', count: counts.all, toneClass: 'filter-all' },
+      { id: 'low', label: 'Low', count: counts.low, toneClass: 'filter-low' },
+      { id: 'out', label: 'Out', count: counts.out, toneClass: 'filter-out' },
+      { id: 'expiring', label: 'Expiring', count: counts.expiring, toneClass: 'filter-expiring' },
+    ];
+
+    return `
+      <div class="alerts-toolbar">
+        ${filters.map((filter) => `
+          <button class="alert-filter-chip ${filter.toneClass} ${activeAlertFilter === filter.id ? 'active' : ''}" onclick="setAlertFilter('${filter.id}')">
+            <span>${filter.label}</span>
+            <span class="alert-filter-count">${filter.count}</span>
+          </button>
+        `).join('')}
+      </div>`;
+  }
+
+  function renderAlertEmptyState(message = 'No alerts in this filter right now.') {
+    return `
+      <div class="empty-state alert-empty-state">
+        <div class="icon">&#9989;</div>
+        <h3>All clear</h3>
+        <p>${esc(message)}</p>
       </div>`;
   }
 
   function renderAlertsView() {
+    const alertsList = document.getElementById('alerts-list');
+    if (!alertsList) return;
+
     if (isLoadingData) {
-      document.getElementById('alerts-list').innerHTML = Array.from({ length: 4 }, () => `
+      alertsList.innerHTML = Array.from({ length: 4 }, () => `
         <div class="alert-card">
           <div class="alert-icon skeleton" style="border-radius:10px;"></div>
           <div class="alert-content" style="flex:1;">
-            <div class="skeleton skeleton-line" style="height:14px;width:68%;"></div>
-            <div class="skeleton skeleton-line" style="height:12px;width:86%;"></div>
+            <div class="skeleton skeleton-line" style="height:15px;width:68%;margin-bottom:8px;"></div>
+            <div class="skeleton skeleton-line" style="height:12px;width:86%;margin-bottom:8px;"></div>
+            <div class="skeleton skeleton-line" style="height:6px;width:100%;"></div>
           </div>
-          <div class="skeleton skeleton-line" style="height:12px;width:44px;"></div>
         </div>
       `).join('');
       return;
     }
 
     const alerts = syncAlertBadges(buildAlerts());
+    const filteredAlerts = getFilteredAlerts(alerts);
     if (!alerts.length) {
-      document.getElementById('alerts-list').innerHTML = '<div class="empty-state"><div class="icon">&#9989;</div><h3>All clear!</h3><p>No active alerts at this time</p></div>';
+      alertsList.innerHTML = renderAlertEmptyState('No active alerts at this time.');
       return;
     }
 
-    document.getElementById('alerts-list').innerHTML = alerts.map(renderAlertItem).join('');
+    const groups = getAlertGroupDefinitions();
+    const groupedMarkup = groups.map((group) => {
+      const groupAlerts = filteredAlerts.filter((alert) => group.subtypes.includes(alert.subtype));
+      return renderAlertGroup(group, groupAlerts);
+    }).join('');
+
+    alertsList.innerHTML = `
+      ${renderAlertFilterChips(alerts)}
+      ${filteredAlerts.length ? groupedMarkup : renderAlertEmptyState()}
+    `;
   }
 
   function renderAlerts() {
     return renderAlertsView();
   }
 
+  function setAlertFilter(filter) {
+    activeAlertFilter = filter;
+    renderAlertsView();
+  }
+
   globalThis.buildAlerts = buildAlerts;
   globalThis.syncAlertBadges = syncAlertBadges;
   globalThis.renderAlerts = renderAlerts;
+  globalThis.setAlertFilter = setAlertFilter;
 })();
-
