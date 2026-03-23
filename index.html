@@ -55,7 +55,6 @@
           </div>
         </div>
         <div class="auth-kicker">Shared Inventory Cloud</div>
-        <div class="auth-title">Welcome back</div>
         <div class="auth-subtitle">Sign in to access shared inventory.</div>
       </div>
       <div class="auth-body">
@@ -155,6 +154,7 @@
         <div>
           <div class="page-title dashboard-greeting" id="dashboard-greeting"><span id="dashboard-greeting-prefix">Good morning</span>, <span id="dashboard-user-name">Pharmacist</span> &#128075;</div>
           <div class="page-subtitle" id="dashboard-date"></div>
+            <div class="dashboard-attention-strip" id="dashboard-priority-line"></div>
         </div>
         <button class="btn btn-primary" data-action="inventory-add">+ Add Medicine</button>
       </div>
@@ -338,12 +338,29 @@
           <div class="page-subtitle">Inventory trends and financial overview</div>
         </div>
       </div>
+      <div class="analytics-insights" id="analytics-insights">
+        <div class="analytics-insight-card">
+          <div class="analytics-insight-label">Top stock</div>
+          <div class="analytics-insight-value" id="an-top-stock-name">-</div>
+          <div class="analytics-insight-meta" id="an-top-stock-meta">No inventory yet</div>
+        </div>
+        <div class="analytics-insight-card">
+          <div class="analytics-insight-label">Top value</div>
+          <div class="analytics-insight-value" id="an-top-value-name">-</div>
+          <div class="analytics-insight-meta" id="an-top-value-meta">No inventory yet</div>
+        </div>
+        <div class="analytics-insight-card analytics-insight-urgent">
+          <div class="analytics-insight-label">Urgency</div>
+          <div class="analytics-insight-value" id="an-urgent-value">All clear</div>
+          <div class="analytics-insight-meta" id="an-urgent-meta">No medicines expiring in 30 days</div>
+        </div>
+      </div>
       <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-label">Avg Box Price</div>
-          <div class="stat-value" id="an-avg-price">$0</div>
-          <div class="stat-sub">Across all medicines</div>
-          <div class="stat-icon">&#128178;</div>
+        <div class="stat-card warn">
+          <div class="stat-label">Expiring &lt;30d</div>
+          <div class="stat-value" id="an-expiring-soon">0</div>
+          <div class="stat-sub">Urgent attention needed</div>
+          <div class="stat-icon">&#9200;</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Total Units</div>
@@ -351,11 +368,11 @@
           <div class="stat-sub">Across all products</div>
           <div class="stat-icon">&#128290;</div>
         </div>
-        <div class="stat-card warn">
-          <div class="stat-label">Expiring &lt;30d</div>
-          <div class="stat-value" id="an-expiring-soon">0</div>
-          <div class="stat-sub">Urgent attention needed</div>
-          <div class="stat-icon">&#9200;</div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Box Price</div>
+          <div class="stat-value" id="an-avg-price">$0</div>
+          <div class="stat-sub">Across all medicines</div>
+          <div class="stat-icon">&#128178;</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Categories</div>
@@ -366,16 +383,16 @@
       </div>
       <div class="chart-row">
         <div class="chart-card">
-          <div class="chart-title">Top 8 by Stock Level</div>
+          <div class="chart-title">Top stock <span class="section-meta-text">highest quantity</span></div>
           <div class="bar-chart" id="an-stock-chart"></div>
         </div>
         <div class="chart-card">
-          <div class="chart-title">Top 8 by Value (box price x stock)</div>
+          <div class="chart-title">Top value <span class="section-meta-text">inventory worth</span></div>
           <div class="bar-chart" id="an-value-chart"></div>
         </div>
       </div>
       <div class="chart-card">
-        <div class="chart-title">Category Distribution</div>
+        <div class="chart-title">Category mix <span class="section-meta-text">medicine count</span></div>
         <div class="cat-pills analytics-cat-pills" id="an-cat-pills"></div>
       </div>
     </div>

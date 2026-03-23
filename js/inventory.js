@@ -1,6 +1,7 @@
 (function() {
   function renderDashboard() {
     const dashboardDate = document.getElementById('dashboard-date');
+    const dashboardPriorityLine = document.getElementById('dashboard-priority-line');
     if (dashboardDate) {
       dashboardDate.textContent = new Date().toLocaleDateString('en-US', {
         weekday: 'long',
@@ -47,13 +48,46 @@
     const now = new Date();
     const in90 = new Date(now);
     in90.setDate(in90.getDate() + 90);
-    const expiringCount = inventory.filter(med => {
-      if (!med.expiry) return false;
-      const expiryDate = new Date(med.expiry + 'T00:00:00');
-      return expiryDate <= in90;
-    }).length;
-    const statExpiry = document.getElementById('stat-expiry');
-    if (statExpiry) statExpiry.textContent = expiringCount;
+      const expiringCount = inventory.filter(med => {
+        if (!med.expiry) return false;
+        const expiryDate = new Date(med.expiry + 'T00:00:00');
+        return expiryDate <= in90;
+      }).length;
+      const uniqueAttentionCount = new Set(
+        inventory
+          .filter(med => {
+            if (med.stock > 0 && med.stock <= med.reorder) return true;
+            if (!med.expiry) return false;
+            const expiryDate = new Date(med.expiry + 'T00:00:00');
+            return expiryDate <= in90;
+          })
+          .map(med => med.id || med.barcode || med.name)
+      ).size;
+      const statExpiry = document.getElementById('stat-expiry');
+      if (statExpiry) statExpiry.textContent = expiringCount;
+      if (dashboardPriorityLine) {
+        if (lowCount || expiringCount) {
+          const parts = [];
+          parts.push(`${uniqueAttentionCount} medicine${uniqueAttentionCount === 1 ? '' : 's'} need attention`);
+          if (lowCount) parts.push(`${lowCount} low stock`);
+          if (expiringCount) parts.push(`${expiringCount} expiring within 90 days`);
+          dashboardPriorityLine.innerHTML = `
+            <div class="dashboard-attention-copy">
+              <span class="dashboard-attention-icon">&#9888;&#65039;</span>
+              <span class="dashboard-attention-text dashboard-attention-text-desktop">${parts.join(' &#183; ')}</span>
+              <span class="dashboard-attention-text dashboard-attention-text-mobile">${uniqueAttentionCount} medicine${uniqueAttentionCount === 1 ? '' : 's'} need attention</span>
+            </div>
+            <button class="dashboard-attention-btn" data-page="alerts">Review alerts</button>`;
+          dashboardPriorityLine.classList.remove('is-clear');
+        } else {
+          dashboardPriorityLine.innerHTML = `
+            <div class="dashboard-attention-copy">
+              <span class="dashboard-attention-icon">&#10003;</span>
+              <span>All inventory signals look healthy today</span>
+            </div>`;
+          dashboardPriorityLine.classList.add('is-clear');
+        }
+      }
 
     const categories = {};
     inventory.forEach(med => {
@@ -795,7 +829,43 @@
     renderInventory();
   }
 
-  globalThis.renderDashboard = renderDashboard;
+  function renderDashboardPolished() {
+    renderDashboard();
+
+    const scanHistoryList = document.getElementById('scan-history-list');
+    if (!scanHistoryList || isLoadingData || scanHistory.length) return;
+
+    scanHistoryList.innerHTML = `
+      <div class="dashboard-empty-state">
+        <div class="dashboard-empty-copy">No scans yet — use the SCAN button to begin.</div>
+        <button class="dashboard-empty-action" data-action="open-scanner">
+          <span class="dashboard-empty-action-icon">&#128247;</span>
+          <span>Scan</span>
+        </button>
+      </div>`;
+  }
+
+  function renderDashboardEnhanced() {
+    renderDashboardPolished();
+
+    const scanHistoryList = document.getElementById('scan-history-list');
+    if (!scanHistoryList || isLoadingData || !scanHistory.length) return;
+
+    scanHistoryList.innerHTML = scanHistory.slice(0, 8).map(scan => `
+      <div class="scan-history-item">
+        <div class="scan-dot"></div>
+        <div class="scan-history-main">
+          <div class="scan-hist-name">${esc(scan.name)}</div>
+          <div class="scan-hist-meta">
+            <span class="tag tag-blue scan-hist-barcode">${esc(scan.barcode)}</span>
+            <span class="scan-hist-separator">&#183;</span>
+            <span class="scan-hist-time">${esc(scan.time)}</span>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  globalThis.renderDashboard = renderDashboardEnhanced;
   globalThis.handleInventorySearchInput = handleInventorySearchInput;
   globalThis.getFiltered = getFiltered;
   globalThis.renderInventory = renderInventory;

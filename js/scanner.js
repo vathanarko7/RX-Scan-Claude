@@ -438,6 +438,9 @@
       const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
       scanHistory.unshift({ name: med.name, barcode: med.barcode, time: timeStr });
       if (scanHistory.length > 50) scanHistory.pop();
+      if (document.querySelector('.page.active')?.id === 'page-dashboard' && typeof globalThis.renderDashboard === 'function') {
+        globalThis.renderDashboard();
+      }
       window._lastScannedMed = med;
     }
 

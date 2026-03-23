@@ -552,7 +552,7 @@
       font-size: 0.76rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: #8391ad;
     }
 
     .auth-hero-login .auth-title {
@@ -565,6 +565,7 @@
       max-width: 360px;
       font-size: 0.84rem;
       line-height: 1.4;
+      color: #93a0bc;
     }
 
     .auth-label {
@@ -574,7 +575,7 @@
       font-size: 0.74rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: #8b98b5;
     }
 
     .auth-body .form-group {
@@ -1168,7 +1169,7 @@
     }
 
     .auth-kicker {
-      color: rgba(143, 226, 194, 0.75);
+      color: rgba(152, 233, 204, 0.84);
     }
 
     .auth-body {
@@ -1195,7 +1196,7 @@
     }
 
     .auth-body .form-input::placeholder {
-      color: rgba(148, 164, 194, 0.58);
+      color: rgba(167, 181, 208, 0.74);
     }
 
     .auth-body .form-input:focus {
@@ -1213,13 +1214,13 @@
     #auth-signin-btn {
       position: relative;
       overflow: hidden;
-      min-height: 58px;
-      border-radius: 20px;
+      min-height: 50px;
+      border-radius: 18px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       background: #00d4aa;
       color: #000000;
       font-family: var(--font-display);
-      font-size: 0.98rem;
+      font-size: 0.88rem;
       font-weight: 700;
       box-shadow: 0 14px 32px rgba(0, 212, 170, 0.18);
     }
@@ -1269,18 +1270,18 @@
       font-family: var(--font-mono);
       font-size: 0.78rem;
       letter-spacing: 0.12em;
-      color: rgba(148, 164, 194, 0.75);
+      color: rgba(170, 184, 210, 0.88);
       text-transform: uppercase;
     }
 
     #auth-signup-btn {
-      min-height: 58px;
-      border-radius: 20px;
+      min-height: 50px;
+      border-radius: 18px;
       background: rgba(255, 255, 255, 0.025);
       border-color: rgba(129, 153, 206, 0.16);
-      color: rgba(148, 164, 194, 0.92);
+      color: #aebad3;
       font-family: var(--font-body);
-      font-size: 0.98rem;
+      font-size: 0.88rem;
       font-weight: 500;
     }
 
@@ -1382,7 +1383,7 @@
 
       #auth-signin-btn,
       #auth-signup-btn {
-        min-height: 54px;
+        min-height: 48px;
         border-radius: 18px;
       }
 

@@ -1712,6 +1712,97 @@
       color: var(--text);
     }
 
+    .dashboard-attention-strip {
+      margin-top: 0.42rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      min-height: 0;
+    }
+
+    .dashboard-attention-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(245, 201, 106, 0.92);
+    }
+
+    .dashboard-attention-strip.is-clear .dashboard-attention-copy {
+      color: rgba(143, 226, 194, 0.84);
+    }
+
+    .dashboard-attention-icon {
+      line-height: 1;
+      font-size: 0.88rem;
+    }
+
+    .dashboard-attention-text-mobile {
+      display: none;
+    }
+
+    .dashboard-attention-btn {
+      height: 30px;
+      padding: 0 0.78rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(20, 26, 40, 0.74);
+      color: #edf2ff;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+
+    .dashboard-attention-btn:hover {
+      border-color: rgba(0, 212, 170, 0.28);
+      background: rgba(0, 212, 170, 0.08);
+      transform: translateY(-1px);
+    }
+
+    #page-dashboard .stats-row,
+    #page-analytics .stats-row {
+      gap: 0.9rem;
+    }
+
+    #page-dashboard .stat-card,
+    #page-analytics .stat-card {
+      border-radius: 14px;
+    }
+
+    #page-dashboard .stat-label,
+    #page-analytics .stat-label {
+      letter-spacing: 0.11em;
+    }
+
+    #page-dashboard .stat-sub,
+    #page-analytics .stat-sub {
+      line-height: 1.28;
+    }
+
+    #page-dashboard .chart-title,
+    #page-analytics .chart-title {
+      font-size: 0.92rem;
+      line-height: 1.1;
+    }
+
+    #page-dashboard .chart-title span:last-child,
+    #page-analytics .chart-title span:last-child {
+      color: #9baad0;
+      font-size: 0.72rem;
+    }
+
+    #page-dashboard .chart-card,
+    #page-analytics .chart-card,
+    #page-dashboard .recent-scans {
+      border-radius: 14px;
+    }
+
     .page-subtitle {
       color: var(--muted);
       font-size: 0.8rem;
@@ -1719,6 +1810,50 @@
     }
 
     /* ANALYTICS */
+    .analytics-insights {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .analytics-insight-card {
+      background: linear-gradient(180deg, rgba(18, 25, 41, 0.94), rgba(14, 18, 30, 0.96));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.88rem 0.95rem;
+      min-height: 0;
+    }
+
+    .analytics-insight-urgent {
+      border-color: rgba(245, 201, 106, 0.26);
+      background: linear-gradient(180deg, rgba(33, 28, 17, 0.9), rgba(16, 18, 28, 0.96));
+    }
+
+    .analytics-insight-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #91a0bf;
+      margin-bottom: 0.34rem;
+    }
+
+    .analytics-insight-value {
+      font-family: var(--font-display);
+      font-size: 0.98rem;
+      font-weight: 700;
+      line-height: 1;
+      color: #f3f7ff;
+      margin-bottom: 0.24rem;
+    }
+
+    .analytics-insight-meta {
+      font-size: 0.8rem;
+      color: #9aa7c5;
+      line-height: 1.3;
+    }
+
     .chart-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1730,14 +1865,14 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 1.5rem;
+      padding: 1.25rem;
     }
 
     .chart-title {
       font-family: var(--font-display);
       font-size: 0.9rem;
       font-weight: 700;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1757,7 +1892,7 @@
 
     .bar-name {
       font-size: 0.78rem;
-      color: var(--muted);
+      color: #93a0bc;
       width: 120px;
       flex-shrink: 0;
       white-space: nowrap;
@@ -1787,6 +1922,43 @@
       width: 40px;
       text-align: right;
       flex-shrink: 0;
+    }
+
+    #page-dashboard .chart-card {
+      padding: 1rem 1.1rem;
+    }
+
+    #page-dashboard .chart-title {
+      margin-bottom: 0.8rem;
+    }
+
+    #page-dashboard .chart-title span:last-child {
+      color: #9baad0;
+    }
+
+    #page-dashboard .bar-chart {
+      gap: 0.5rem;
+    }
+
+    #page-dashboard .bar-row {
+      gap: 0.6rem;
+    }
+
+    #page-dashboard .bar-name {
+      width: 132px;
+      font-size: 0.82rem;
+      color: #aab6d1;
+    }
+
+    #page-dashboard .bar {
+      height: 0.8rem;
+    }
+
+    #page-dashboard .bar-val {
+      width: 44px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #f1f5ff;
     }
 
     /* CATEGORY PILLS */
@@ -1821,6 +1993,64 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
+    }
+
+    #page-analytics .stats-row {
+      margin-bottom: 0.95rem;
+    }
+
+    #page-analytics .stat-card.warn {
+      border-color: rgba(245, 201, 106, 0.28);
+      background: linear-gradient(180deg, rgba(33, 28, 17, 0.84), rgba(20, 23, 34, 0.96));
+    }
+
+    #page-analytics .chart-card:first-child .bar-fill {
+      background: linear-gradient(90deg, rgba(0, 212, 170, 0.9), rgba(0, 136, 255, 0.82));
+    }
+
+    #page-analytics .chart-card:last-child .bar-fill {
+      background: linear-gradient(90deg, rgba(245, 201, 106, 0.9), rgba(255, 107, 53, 0.82));
+    }
+
+    #page-analytics .analytics-cat-pills {
+      gap: 0.5rem;
+    }
+
+    #page-analytics .chart-row {
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    #page-analytics .chart-card {
+      padding: 1rem 1.05rem;
+    }
+
+    #page-analytics .chart-title {
+      margin-bottom: 0.78rem;
+    }
+
+    #page-analytics .bar-chart {
+      gap: 0.48rem;
+    }
+
+    #page-analytics .bar-row {
+      gap: 0.58rem;
+    }
+
+    #page-analytics .bar-name {
+      width: 108px;
+      font-size: 0.76rem;
+      color: #a4b0cb;
+    }
+
+    #page-analytics .bar-track {
+      height: 7px;
+    }
+
+    #page-analytics .bar-val {
+      width: 44px;
+      font-size: 0.74rem;
+      color: #edf2ff;
     }
 
     /* LOW STOCK ROW */

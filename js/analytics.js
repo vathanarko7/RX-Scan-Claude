@@ -5,6 +5,12 @@
       document.getElementById('an-total-units').innerHTML = '<div class="skeleton skeleton-stat" style="width:52%;"></div>';
       document.getElementById('an-expiring-soon').innerHTML = '<div class="skeleton skeleton-stat" style="width:36%;"></div>';
       document.getElementById('an-cats').innerHTML = '<div class="skeleton skeleton-stat" style="width:36%;"></div>';
+      document.getElementById('an-top-stock-name').innerHTML = '<div class="skeleton skeleton-stat" style="width:62%;"></div>';
+      document.getElementById('an-top-stock-meta').innerHTML = '<div class="skeleton skeleton-line" style="width:46%;"></div>';
+      document.getElementById('an-top-value-name').innerHTML = '<div class="skeleton skeleton-stat" style="width:58%;"></div>';
+      document.getElementById('an-top-value-meta').innerHTML = '<div class="skeleton skeleton-line" style="width:48%;"></div>';
+      document.getElementById('an-urgent-value').innerHTML = '<div class="skeleton skeleton-stat" style="width:54%;"></div>';
+      document.getElementById('an-urgent-meta').innerHTML = '<div class="skeleton skeleton-line" style="width:60%;"></div>';
       document.getElementById('an-stock-chart').innerHTML = dashboardSkeletonBars();
       document.getElementById('an-value-chart').innerHTML = dashboardSkeletonBars();
       document.getElementById('an-cat-pills').innerHTML = `
@@ -49,17 +55,38 @@
         <div class="bar-track"><div class="bar-fill" style="width:${maxV ? Math.round(med.price_box * med.stock / maxV * 100) : 0}%;background:linear-gradient(90deg,var(--warn),#ff6b35cc)"></div></div>
         <div class="bar-val">$${value}</div>
       </div>`;
-    }).join('');
+      }).join('');
 
     const catCounts = {};
     inventory.forEach(med => { catCounts[med.category] = (catCounts[med.category] || 0) + 1; });
     const catColors = ['#00d4aa', '#0088ff', '#ff3b5c', '#a855f7', '#f59e0b', '#06b6d4', '#ec4899', '#84cc16', '#ff6b35', '#e11d48', '#14b8a6', '#6366f1'];
-    document.getElementById('an-cat-pills').innerHTML = Object.entries(catCounts).map(([cat, cnt], i) =>
+    document.getElementById('an-cat-pills').innerHTML = Object.entries(catCounts).sort((a, b) => b[1] - a[1]).map(([cat, cnt], i) =>
       `<div class="cat-pill">
         <div class="cat-dot" style="background:${catColors[i % catColors.length]}"></div>
         ${esc(cat)} <span style="font-size:0.65rem;opacity:0.7">(${cnt})</span>
       </div>`
     ).join('');
+
+    const topStock = byStock[0];
+    const topValue = byValue[0];
+    const nearestExpiry = [...inventory]
+      .filter(med => med.expiry && new Date(med.expiry + 'T00:00:00') >= now)
+      .sort((a, b) => new Date(a.expiry + 'T00:00:00') - new Date(b.expiry + 'T00:00:00'))[0];
+
+    document.getElementById('an-top-stock-name').textContent = topStock ? topStock.name : 'No inventory yet';
+    document.getElementById('an-top-stock-meta').textContent = topStock ? `${topStock.stock} boxes in ${topStock.category}` : 'Add medicines to see leaders';
+
+    document.getElementById('an-top-value-name').textContent = topValue ? topValue.name : 'No inventory yet';
+    document.getElementById('an-top-value-meta').textContent = topValue ? `$${(topValue.price_box * topValue.stock).toFixed(0)} total value` : 'Value insights appear here';
+
+    if (nearestExpiry) {
+      const daysLeft = Math.ceil((new Date(nearestExpiry.expiry + 'T00:00:00') - now) / 86400000);
+      document.getElementById('an-urgent-value').textContent = `${Math.max(daysLeft, 0)}d left`;
+      document.getElementById('an-urgent-meta').textContent = `${nearestExpiry.name} expires on ${nearestExpiry.expiry}`;
+    } else {
+      document.getElementById('an-urgent-value').textContent = 'All clear';
+      document.getElementById('an-urgent-meta').textContent = 'No medicines expiring in 30 days';
+    }
   }
 
   globalThis.renderAnalytics = renderAnalytics;

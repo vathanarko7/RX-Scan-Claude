@@ -17,7 +17,7 @@
     /* -- TABLET (≤ 768px) ------------------------------------ */
     @media (max-width: 768px) {
       body {
-        padding-top: env(safe-area-inset-top, 0px);
+        padding-top: 0;
       }
 
       body {
@@ -159,17 +159,50 @@
         margin-top: 0.12rem;
       }
 
+      .dashboard-attention-strip {
+        margin-top: 0.24rem;
+        gap: 0.42rem;
+      }
+
+      .dashboard-attention-copy {
+        font-size: 0.63rem;
+        letter-spacing: 0.045em;
+      }
+
+      .dashboard-attention-text-desktop {
+        display: none;
+      }
+
+      .dashboard-attention-text-mobile {
+        display: inline;
+      }
+
+      .dashboard-attention-btn {
+        height: 26px;
+        padding: 0 0.62rem;
+        font-size: 0.6rem;
+      }
+
+      #dashboard-priority-line {
+        font-size: 0.62rem;
+        margin-top: 0.16rem;
+      }
+
+      #page-dashboard .page-header {
+        margin-bottom: 0.75rem;
+      }
+
       /* Stats 2-col */
       .stats-row {
         grid-template-columns: 1fr 1fr;
         gap: 0.75rem;
-        margin-bottom: 1.25rem;
+        margin-bottom: 0.95rem;
       }
 
       /* Dashboard */
       .dash-bottom {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 0.8rem;
       }
 
       .mobile-dashboard-actions {
@@ -231,12 +264,52 @@
       }
 
       #page-dashboard .stats-row {
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem;
+      }
+
+      #page-dashboard .stat-card,
+      #page-analytics .stat-card {
+        padding: 0.88rem 0.92rem;
+        border-radius: 12px;
+      }
+
+      #page-dashboard .stat-label,
+      #page-analytics .stat-label {
+        font-size: 0.66rem;
+        margin-bottom: 0.34rem;
+      }
+
+      #page-dashboard .stat-value,
+      #page-analytics .stat-value {
+        font-size: 1.74rem;
+      }
+
+      #page-dashboard .stat-sub,
+      #page-analytics .stat-sub {
+        font-size: 0.7rem;
       }
 
       #page-dashboard .chart-card,
       #page-dashboard .recent-scans {
         min-height: 0;
+      }
+
+      #page-dashboard .scan-history-item {
+        gap: 0.6rem;
+        padding: 0.65rem 0.9rem;
+      }
+
+      #page-dashboard .scan-hist-name {
+        font-size: 0.8rem;
+      }
+
+      #page-dashboard .scan-hist-meta {
+        gap: 0.32rem;
+        font-size: 0.66rem;
+      }
+
+      #page-dashboard .scan-hist-time {
+        font-size: 0.64rem;
       }
 
       /* Map */
@@ -358,6 +431,24 @@
         margin-top: 0.08rem;
       }
 
+      .dashboard-attention-copy {
+        font-size: 0.58rem;
+      }
+
+      .dashboard-attention-btn {
+        height: 24px;
+        font-size: 0.56rem;
+      }
+
+      #dashboard-priority-line {
+        font-size: 0.56rem;
+        margin-top: 0.14rem;
+      }
+
+      #page-dashboard .page-header {
+        margin-bottom: 0.55rem;
+      }
+
       .mobile-dashboard-actions {
         gap: 0.5rem;
         margin-bottom: 0.85rem;
@@ -377,7 +468,7 @@
       .stats-row {
         grid-template-columns: 1fr 1fr;
         gap: 0.5rem;
-        margin-bottom: 0.9rem;
+        margin-bottom: 0.7rem;
       }
 
       .stat-card {
@@ -397,7 +488,11 @@
       }
 
       .stat-icon {
-        display: none;
+        display: block;
+        right: 0.8rem;
+        top: 0.7rem;
+        font-size: 1rem;
+        opacity: 0.34;
       }
 
       /* Toolbar stacked */
@@ -859,21 +954,140 @@
 
       /* Analytics */
       .chart-card {
-        padding: 0.85rem;
+        padding: 0.78rem;
       }
 
       .chart-title {
         font-size: 0.82rem;
       }
 
+      .section-header {
+        padding: 0.84rem 0.92rem;
+        font-size: 0.88rem;
+      }
+
+      .section-meta-text {
+        font-size: 0.68rem;
+      }
+
       .bar-name {
         width: 80px;
-        font-size: 0.68rem;
+        font-size: 0.69rem;
+        color: #98a5c1;
       }
 
       .bar-val {
         font-size: 0.68rem;
         width: 32px;
+      }
+
+      #page-dashboard .chart-card {
+        padding: 0.72rem 0.78rem;
+      }
+
+      #page-dashboard .chart-title {
+        margin-bottom: 0.68rem;
+      }
+
+      #page-dashboard .chart-title span:last-child {
+        color: #9ca9cb;
+      }
+
+      #page-dashboard .bar-chart {
+        gap: 0.42rem;
+      }
+
+      #page-dashboard .bar-row {
+        gap: 0.48rem;
+      }
+
+      #page-dashboard .bar-name {
+        width: 96px;
+        font-size: 0.73rem;
+        color: #a7b4cf;
+      }
+
+      #page-dashboard .bar {
+        height: 0.72rem;
+      }
+
+      #page-dashboard .bar-val {
+        width: 36px;
+        font-size: 0.76rem;
+        color: #f2f6ff;
+      }
+
+      #page-analytics .page-header {
+        margin-bottom: 0.7rem;
+      }
+
+      .analytics-insights {
+        grid-template-columns: 1fr;
+        gap: 0.56rem;
+        margin-bottom: 0.72rem;
+      }
+
+      .analytics-insight-card {
+        padding: 0.72rem 0.78rem;
+        border-radius: 12px;
+      }
+
+      .analytics-insight-label {
+        font-size: 0.62rem;
+        margin-bottom: 0.24rem;
+      }
+
+      .analytics-insight-value {
+        font-size: 0.88rem;
+        margin-bottom: 0.18rem;
+      }
+
+      .analytics-insight-meta {
+        font-size: 0.72rem;
+      }
+
+      #page-analytics .stats-row {
+        margin-bottom: 0.72rem;
+      }
+
+      #page-analytics .chart-row {
+        gap: 0.7rem;
+        margin-bottom: 0.72rem;
+      }
+
+      #page-analytics .chart-card {
+        padding: 0.68rem 0.74rem;
+      }
+
+      #page-analytics .chart-title {
+        margin-bottom: 0.56rem;
+      }
+
+      #page-analytics .bar-chart {
+        gap: 0.36rem;
+      }
+
+      #page-analytics .bar-name {
+        width: 78px;
+        font-size: 0.67rem;
+        color: #aab5ce;
+      }
+
+      #page-analytics .bar-row {
+        gap: 0.42rem;
+      }
+
+      #page-analytics .bar-track {
+        height: 6px;
+      }
+
+      #page-analytics .bar-val {
+        width: 34px;
+        font-size: 0.66rem;
+      }
+
+      #page-analytics .analytics-cat-pills {
+        gap: 0.42rem;
       }
 
       /* Misc */
