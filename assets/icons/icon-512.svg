@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <clipPath id="card"><rect width="512" height="512" rx="110"/></clipPath>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="110" fill="#080c12"/>
+  <!-- Subtle border -->
+  <rect width="512" height="512" rx="110" fill="none" stroke="#1a2535" stroke-width="4"/>
+
+  <!-- Barcode strip at bottom -->
+  <g clip-path="url(#card)">
+    <rect x="40"  y="340" width="18" height="130" rx="3" fill="#00c49a" opacity="0.55"/>
+    <rect x="66"  y="320" width="10" height="150" rx="3" fill="#00c49a" opacity="0.80"/>
+    <rect x="82"  y="342" width="14" height="128" rx="3" fill="#00c49a" opacity="0.45"/>
+    <rect x="102" y="316" width="10" height="154" rx="3" fill="#00c49a" opacity="0.90"/>
+    <rect x="118" y="338" width="18" height="132" rx="3" fill="#00c49a" opacity="0.60"/>
+    <rect x="144" y="320" width="10" height="150" rx="3" fill="#00c49a" opacity="0.75"/>
+    <rect x="160" y="342" width="14" height="128" rx="3" fill="#00c49a" opacity="0.50"/>
+    <rect x="180" y="314" width="10" height="156" rx="3" fill="#00c49a" opacity="0.90"/>
+    <rect x="196" y="338" width="18" height="132" rx="3" fill="#00c49a" opacity="0.55"/>
+    <rect x="222" y="320" width="10" height="150" rx="3" fill="#00c49a" opacity="0.80"/>
+    <rect x="238" y="342" width="14" height="128" rx="3" fill="#00c49a" opacity="0.45"/>
+    <rect x="258" y="316" width="10" height="154" rx="3" fill="#00c49a" opacity="0.90"/>
+    <rect x="274" y="338" width="18" height="132" rx="3" fill="#00c49a" opacity="0.60"/>
+    <rect x="300" y="320" width="10" height="150" rx="3" fill="#00c49a" opacity="0.75"/>
+    <rect x="316" y="342" width="14" height="128" rx="3" fill="#00c49a" opacity="0.50"/>
+    <rect x="336" y="314" width="10" height="156" rx="3" fill="#00c49a" opacity="0.90"/>
+    <rect x="352" y="338" width="18" height="132" rx="3" fill="#00c49a" opacity="0.55"/>
+    <rect x="378" y="320" width="10" height="150" rx="3" fill="#00c49a" opacity="0.80"/>
+    <rect x="394" y="342" width="14" height="128" rx="3" fill="#00c49a" opacity="0.45"/>
+    <rect x="414" y="316" width="10" height="154" rx="3" fill="#00c49a" opacity="0.90"/>
+    <rect x="430" y="338" width="18" height="132" rx="3" fill="#00c49a" opacity="0.60"/>
+    <rect x="456" y="320" width="10" height="150" rx="3" fill="#00c49a" opacity="0.70"/>
+    <!-- Scan line -->
+    <rect x="0" y="372" width="512" height="6" rx="3" fill="#00e8b8" opacity="0.35"/>
+  </g>
+
+  <!-- Center pill container -->
+  <rect x="96" y="90" width="320" height="210" rx="44" fill="#00c49a" opacity="0.08"/>
+  <rect x="96" y="90" width="320" height="210" rx="44" fill="none" stroke="#00c49a" stroke-width="2.5" opacity="0.30"/>
+
+  <!-- Corner brackets -->
+  <path d="M96 156 L96 100 L152 100" fill="none" stroke="#00e8b8" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.65"/>
+  <path d="M360 100 L416 100 L416 156" fill="none" stroke="#00e8b8" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.65"/>
+  <path d="M96 244 L96 300 L152 300" fill="none" stroke="#00e8b8" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.65"/>
+  <path d="M360 300 L416 300 L416 244" fill="none" stroke="#00e8b8" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.65"/>
+
+  <!-- Rx text -->
+  <text x="256" y="228" font-family="system-ui,-apple-system,sans-serif" font-size="160" font-weight="700" fill="#00e8b8" text-anchor="middle" dominant-baseline="middle">Rx</text>
+</svg>

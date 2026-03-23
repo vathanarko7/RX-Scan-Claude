@@ -268,6 +268,19 @@
       element.classList.toggle('active', element.dataset.zone === activeZoneFilter);
     });
 
+    if (isMobileMap() && activeZoneFilter) {
+      const zoneList = document.getElementById('zone-list');
+      const activeChip = zoneList?.querySelector(`.zone-item[data-zone="${activeZoneFilter}"]`);
+      if (zoneList && activeChip) {
+        const targetLeft = activeChip.offsetLeft - ((zoneList.clientWidth - activeChip.clientWidth) / 2);
+        const maxLeft = Math.max(0, zoneList.scrollWidth - zoneList.clientWidth);
+        zoneList.scrollTo({
+          left: Math.max(0, Math.min(targetLeft, maxLeft)),
+          behavior: 'smooth',
+        });
+      }
+    }
+
     const filterBar = document.getElementById('map-filter-bar');
       if (filterBar) {
         if (activeZoneFilter) {

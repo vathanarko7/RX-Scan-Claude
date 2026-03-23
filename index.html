@@ -9,6 +9,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0a0e14">
   <title>RxScan - Pharmacy Intelligence</title>
+  <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/icon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap"
@@ -25,6 +31,20 @@
 <body class="booting">
 
   <section class="auth-screen" id="auth-screen">
+    <div class="auth-scene" aria-hidden="true">
+      <canvas class="auth-canvas" id="auth-canvas"></canvas>
+      <div class="auth-grid-overlay"></div>
+      <div class="auth-global-scan"></div>
+      <div class="auth-scene-beam"></div>
+      <div class="auth-hud-corner auth-hud-corner-tl"></div>
+      <div class="auth-hud-corner auth-hud-corner-tr"></div>
+      <div class="auth-hud-corner auth-hud-corner-bl"></div>
+      <div class="auth-hud-corner auth-hud-corner-br"></div>
+      <div class="auth-hud-label auth-hud-label-a">AI inventory mesh</div>
+      <div class="auth-hud-label auth-hud-label-b">Barcode recognition online</div>
+      <div class="auth-hud-label auth-hud-label-c">Molecule graph synced</div>
+      <div class="auth-hud-label auth-hud-label-d">Shelf intelligence active</div>
+    </div>
     <div class="auth-card">
       <div class="auth-hero auth-hero-login">
         <div class="auth-mini-brand">
@@ -55,6 +75,11 @@
         </div>
         <div class="auth-actions auth-actions-stack">
           <button class="btn btn-primary" id="auth-signin-btn" data-action="auth-signin">Sign In</button>
+          <div class="auth-action-divider" aria-hidden="true">
+            <span class="auth-action-divider-line"></span>
+            <span class="auth-action-divider-copy">OR</span>
+            <span class="auth-action-divider-line"></span>
+          </div>
           <button class="btn btn-ghost" id="auth-signup-btn" data-action="auth-signup">Create Staff Account</button>
         </div>
       </div>
@@ -827,6 +852,7 @@
   <script src="js/map.js"></script>
   <script src="js/alerts.js"></script>
   <script src="js/analytics.js"></script>
+  <script src="js/auth-scene.js"></script>
   <script src="js/app.js"></script>
 </body>
 

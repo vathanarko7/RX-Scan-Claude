@@ -1191,21 +1191,27 @@
     }
 
     .map-filter-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      padding: 0.42rem 0.78rem;
-      border-radius: 999px;
-      border: 1px solid rgba(0, 212, 170, 0.22);
-      background: rgba(0, 212, 170, 0.08);
-      color: var(--accent);
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      outline: none;
-    }
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        padding: 0.42rem 0.78rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.035);
+        color: var(--text);
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+        transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+      }
+
+    .map-filter-chip:hover {
+        border-color: rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.06);
+      }
 
     .legend-dot {
       width: 10px;
