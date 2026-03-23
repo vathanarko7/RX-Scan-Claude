@@ -272,11 +272,19 @@
           <div class="map-sidebar-header">
             <h3>&#11041; Zones</h3>
           </div>
+          <div class="map-sidebar-search">
+            <input type="text" class="map-search-input" id="map-shelf-search" placeholder="Find shelf e.g. A2-L1">
+            <button type="button" class="map-search-btn" id="map-shelf-search-btn">Jump</button>
+          </div>
           <div class="zone-list" id="zone-list"></div>
           <div class="map-sidebar-section">
             <h3>Selected Shelf</h3>
-            <div id="shelf-detail" class="shelf-detail-copy">Click
-              a shelf on the map to view its medicines.</div>
+            <div id="shelf-detail" class="shelf-detail-copy">
+              <div class="shelf-detail-empty">
+                <div class="shelf-detail-empty-title">Select a shelf</div>
+                <div class="shelf-detail-empty-copy">Inspect stock, expiry, and assigned medicines from the map.</div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="pharmacy-map">

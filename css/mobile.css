@@ -250,6 +250,10 @@
         margin-bottom: 0.4rem;
       }
 
+      .map-sidebar-search {
+        display: none;
+      }
+
       .pharmacy-map {
         overflow: hidden;
         min-height: 0;
@@ -511,9 +515,11 @@
         gap: 0.5rem;
         overflow-x: auto;
         margin-top: 0;
-        padding-bottom: 0.1rem;
+        padding-top: 0.12rem;
+        padding-bottom: 0.16rem;
         scroll-snap-type: x proximity;
       }
+
 
       .zone-item {
         min-width: 138px;
@@ -522,6 +528,10 @@
         scroll-snap-align: start;
         gap: 0.55rem;
         white-space: nowrap;
+      }
+
+      .zone-item.active {
+        transform: none;
       }
 
       .zone-pill {
@@ -576,6 +586,10 @@
         margin-bottom: 0.7rem;
       }
 
+      .map-section-stats {
+        display: none;
+      }
+
       .map-legend-inline {
         display: flex;
         width: 100%;
@@ -587,6 +601,10 @@
       .map-filter-bar {
         width: 100%;
         margin: -0.15rem 0 0.85rem;
+      }
+
+      .map-filter-summary {
+        display: none;
       }
 
       .map-filter-chip {
