@@ -131,6 +131,7 @@
 
       .page-subtitle {
         font-size: 0.82rem;
+        color: #95a3c0;
       }
 
       #page-map .page-header {
@@ -419,6 +420,7 @@
 
       .page-subtitle {
         font-size: 0.74rem;
+        color: #95a3c0;
       }
 
       #page-dashboard .dashboard-greeting {
@@ -655,9 +657,9 @@
       }
 
       .zone-name {
-        font-size: 0.74rem;
-        line-height: 1.15;
-        white-space: nowrap;
+          font-size: 0.8rem;
+          line-height: 1.15;
+          white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
@@ -671,9 +673,9 @@
       }
 
       .dispensing-counter {
-        padding: 0.62rem;
-        margin-bottom: 0.62rem;
-        font-size: 0.78rem;
+          padding: 0.62rem;
+          margin-bottom: 0.62rem;
+          font-size: 0.84rem;
         border-radius: 14px;
       }
 
@@ -848,16 +850,16 @@
       }
 
       .shelf-items-count {
-        font-size: 1rem;
-      }
+          font-size: 1.06rem;
+        }
 
       .shelf-label {
-        font-size: 0.62rem;
-      }
+          font-size: 0.68rem;
+        }
 
       .shelf-items-label {
-        font-size: 0.6rem;
-      }
+          font-size: 0.64rem;
+        }
 
       .shelf-detail-copy {
         font-size: 0.78rem;
@@ -968,12 +970,13 @@
 
       .section-meta-text {
         font-size: 0.68rem;
+        color: #9facc8;
       }
 
       .bar-name {
         width: 80px;
         font-size: 0.69rem;
-        color: #98a5c1;
+        color: #aab6cf;
       }
 
       .bar-val {
@@ -1004,7 +1007,7 @@
       #page-dashboard .bar-name {
         width: 96px;
         font-size: 0.73rem;
-        color: #a7b4cf;
+        color: #b0bdd6;
       }
 
       #page-dashboard .bar {
@@ -1022,32 +1025,59 @@
       }
 
       .analytics-insights {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0.56rem;
         margin-bottom: 0.72rem;
       }
 
       .analytics-insight-card {
-        padding: 0.72rem 0.78rem;
+        padding: 0.62rem 0.7rem;
         border-radius: 12px;
       }
 
       .analytics-insight-label {
         font-size: 0.62rem;
-        margin-bottom: 0.24rem;
+        margin-bottom: 0.2rem;
       }
 
       .analytics-insight-value {
-        font-size: 0.88rem;
-        margin-bottom: 0.18rem;
+        font-size: 0.82rem;
+        margin-bottom: 0.14rem;
       }
 
       .analytics-insight-meta {
-        font-size: 0.72rem;
+        font-size: 0.68rem;
+        color: #afbbd4;
+        line-height: 1.24;
       }
 
       #page-analytics .stats-row {
-        margin-bottom: 0.72rem;
+        margin-bottom: 0.6rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      #page-analytics .stat-card {
+        padding: 0.76rem 0.82rem;
+      }
+
+      #page-analytics .stat-label {
+        margin-bottom: 0.28rem;
+      }
+
+      #page-analytics .stat-value {
+        font-size: 1.58rem;
+        margin-bottom: 0.12rem;
+      }
+
+      #page-analytics .stat-sub {
+        font-size: 0.66rem;
+        line-height: 1.22;
+      }
+
+      #page-analytics .stat-icon {
+        right: 0.78rem;
+        top: 0.72rem;
+        font-size: 1.22rem;
       }
 
       #page-analytics .chart-row {
@@ -1070,7 +1100,7 @@
       #page-analytics .bar-name {
         width: 78px;
         font-size: 0.67rem;
-        color: #aab5ce;
+        color: #b5bfd6;
       }
 
       #page-analytics .bar-row {

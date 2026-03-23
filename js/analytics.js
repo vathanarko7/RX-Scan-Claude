@@ -3,14 +3,13 @@
     if (isLoadingData) {
       document.getElementById('an-avg-price').innerHTML = '<div class="skeleton skeleton-stat" style="width:58%;"></div>';
       document.getElementById('an-total-units').innerHTML = '<div class="skeleton skeleton-stat" style="width:52%;"></div>';
-      document.getElementById('an-expiring-soon').innerHTML = '<div class="skeleton skeleton-stat" style="width:36%;"></div>';
       document.getElementById('an-cats').innerHTML = '<div class="skeleton skeleton-stat" style="width:36%;"></div>';
       document.getElementById('an-top-stock-name').innerHTML = '<div class="skeleton skeleton-stat" style="width:62%;"></div>';
       document.getElementById('an-top-stock-meta').innerHTML = '<div class="skeleton skeleton-line" style="width:46%;"></div>';
-      document.getElementById('an-top-value-name').innerHTML = '<div class="skeleton skeleton-stat" style="width:58%;"></div>';
-      document.getElementById('an-top-value-meta').innerHTML = '<div class="skeleton skeleton-line" style="width:48%;"></div>';
-      document.getElementById('an-urgent-value').innerHTML = '<div class="skeleton skeleton-stat" style="width:54%;"></div>';
-      document.getElementById('an-urgent-meta').innerHTML = '<div class="skeleton skeleton-line" style="width:60%;"></div>';
+      document.getElementById('an-nearest-expiry-name').innerHTML = '<div class="skeleton skeleton-stat" style="width:58%;"></div>';
+      document.getElementById('an-nearest-expiry-meta').innerHTML = '<div class="skeleton skeleton-line" style="width:48%;"></div>';
+      document.getElementById('an-health-value').innerHTML = '<div class="skeleton skeleton-stat" style="width:54%;"></div>';
+      document.getElementById('an-health-meta').innerHTML = '<div class="skeleton skeleton-line" style="width:60%;"></div>';
       document.getElementById('an-stock-chart').innerHTML = dashboardSkeletonBars();
       document.getElementById('an-value-chart').innerHTML = dashboardSkeletonBars();
       document.getElementById('an-cat-pills').innerHTML = `
@@ -29,9 +28,6 @@
 
     const totalUnits = inventory.reduce((sum, med) => sum + med.stock * (med.units_per_box || 1), 0);
     document.getElementById('an-total-units').textContent = totalUnits.toLocaleString();
-
-    const exp30 = inventory.filter(med => new Date(med.expiry + 'T00:00:00') <= in30 && new Date(med.expiry + 'T00:00:00') >= now).length;
-    document.getElementById('an-expiring-soon').textContent = exp30;
 
     const cats = [...new Set(inventory.map(med => med.category))];
     document.getElementById('an-cats').textContent = cats.length;
@@ -69,23 +65,33 @@
 
     const topStock = byStock[0];
     const topValue = byValue[0];
+    const highestPriced = [...inventory].sort((a, b) => b.price_box - a.price_box)[0];
     const nearestExpiry = [...inventory]
       .filter(med => med.expiry && new Date(med.expiry + 'T00:00:00') >= now)
       .sort((a, b) => new Date(a.expiry + 'T00:00:00') - new Date(b.expiry + 'T00:00:00'))[0];
+    const healthyCount = inventory.filter(med => med.stock > med.reorder).length;
+    const inStockRate = inventory.length ? Math.round((healthyCount / inventory.length) * 100) : 0;
 
-    document.getElementById('an-top-stock-name').textContent = topStock ? topStock.name : 'No inventory yet';
-    document.getElementById('an-top-stock-meta').textContent = topStock ? `${topStock.stock} boxes in ${topStock.category}` : 'Add medicines to see leaders';
-
-    document.getElementById('an-top-value-name').textContent = topValue ? topValue.name : 'No inventory yet';
-    document.getElementById('an-top-value-meta').textContent = topValue ? `$${(topValue.price_box * topValue.stock).toFixed(0)} total value` : 'Value insights appear here';
+    document.getElementById('an-top-stock-name').textContent = highestPriced ? highestPriced.name : 'No inventory yet';
+    document.getElementById('an-top-stock-meta').textContent = highestPriced
+      ? `$${highestPriced.price_box.toFixed(2)} per box in ${highestPriced.category}`
+      : 'Add medicines to see leaders';
 
     if (nearestExpiry) {
       const daysLeft = Math.ceil((new Date(nearestExpiry.expiry + 'T00:00:00') - now) / 86400000);
-      document.getElementById('an-urgent-value').textContent = `${Math.max(daysLeft, 0)}d left`;
-      document.getElementById('an-urgent-meta').textContent = `${nearestExpiry.name} expires on ${nearestExpiry.expiry}`;
+      document.getElementById('an-nearest-expiry-name').textContent = nearestExpiry.name;
+      document.getElementById('an-nearest-expiry-meta').textContent = `${Math.max(daysLeft, 0)}d left · ${nearestExpiry.expiry}`;
     } else {
-      document.getElementById('an-urgent-value').textContent = 'All clear';
-      document.getElementById('an-urgent-meta').textContent = 'No medicines expiring in 30 days';
+      document.getElementById('an-nearest-expiry-name').textContent = 'All clear';
+      document.getElementById('an-nearest-expiry-meta').textContent = 'No upcoming expiry';
+    }
+
+    if (!inventory.length) {
+      document.getElementById('an-health-value').textContent = 'No data';
+      document.getElementById('an-health-meta').textContent = 'Add medicines to see stock coverage';
+    } else {
+      document.getElementById('an-health-value').textContent = `${inStockRate}%`;
+      document.getElementById('an-health-meta').textContent = `${healthyCount} of ${inventory.length} medicines above reorder point`;
     }
   }
 

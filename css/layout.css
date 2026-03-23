@@ -283,7 +283,7 @@
     .toolbar-meta {
       font-family: var(--font-mono);
       font-size: 0.72rem;
-      color: var(--muted);
+      color: #97a4c0;
       padding: 0.42rem 0.7rem;
       border: 1px solid var(--border);
       border-radius: 999px;
@@ -516,7 +516,7 @@
 
     .drug-generic {
       font-size: 0.71rem;
-      color: var(--muted);
+      color: #99a7c4;
       font-family: var(--font-mono);
       margin-left: 1.1rem;
     }
@@ -740,7 +740,7 @@
 
     .page-info {
       font-size: 0.8rem;
-      color: var(--muted);
+      color: #98a5c0;
       font-family: var(--font-mono);
     }
 

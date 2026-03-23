@@ -1,9 +1,39 @@
 (function() {
+  const SCAN_HISTORY_KEY = 'rxscan.scanHistory';
+
+  function loadPersistedScanHistory() {
+    try {
+      const raw = localStorage.getItem(SCAN_HISTORY_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed
+        .filter((entry) => entry && typeof entry === 'object')
+        .map((entry) => ({
+          name: String(entry.name || '').trim(),
+          barcode: String(entry.barcode || '').trim(),
+          time: String(entry.time || '').trim(),
+        }))
+        .filter((entry) => entry.name && entry.barcode)
+        .slice(0, 50);
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function persistScanHistory() {
+    try {
+      localStorage.setItem(SCAN_HISTORY_KEY, JSON.stringify((globalThis.scanHistory || []).slice(0, 50)));
+    } catch (_) {
+      // Ignore storage failures quietly so scan flow still works.
+    }
+  }
+
   const appState = {
     inventory: {
       items: [],
       editId: null,
-      scanHistory: [],
+      scanHistory: loadPersistedScanHistory(),
       highlightShelf: null,
       selectedMedicineId: null,
     },
@@ -73,4 +103,5 @@
 
   globalThis.appState = appState;
   globalThis.bindStateProperty = bindStateProperty;
+  globalThis.persistScanHistory = persistScanHistory;
 })();

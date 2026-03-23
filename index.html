@@ -339,29 +339,28 @@
         </div>
       </div>
       <div class="analytics-insights" id="analytics-insights">
+        <div class="analytics-insight-card analytics-insight-urgent">
+          <div class="analytics-insight-label">In stock rate</div>
+          <div class="analytics-insight-value" id="an-health-value">0%</div>
+          <div class="analytics-insight-meta" id="an-health-meta">Above reorder point</div>
+        </div>
         <div class="analytics-insight-card">
-          <div class="analytics-insight-label">Top stock</div>
+          <div class="analytics-insight-label">Nearest expiry</div>
+          <div class="analytics-insight-value" id="an-nearest-expiry-name">-</div>
+          <div class="analytics-insight-meta" id="an-nearest-expiry-meta">No upcoming expiry</div>
+        </div>
+        <div class="analytics-insight-card">
+          <div class="analytics-insight-label">Highest priced box</div>
           <div class="analytics-insight-value" id="an-top-stock-name">-</div>
           <div class="analytics-insight-meta" id="an-top-stock-meta">No inventory yet</div>
         </div>
         <div class="analytics-insight-card">
-          <div class="analytics-insight-label">Top value</div>
-          <div class="analytics-insight-value" id="an-top-value-name">-</div>
-          <div class="analytics-insight-meta" id="an-top-value-meta">No inventory yet</div>
-        </div>
-        <div class="analytics-insight-card analytics-insight-urgent">
-          <div class="analytics-insight-label">Urgency</div>
-          <div class="analytics-insight-value" id="an-urgent-value">All clear</div>
-          <div class="analytics-insight-meta" id="an-urgent-meta">No medicines expiring in 30 days</div>
+          <div class="analytics-insight-label">Categories</div>
+          <div class="analytics-insight-value" id="an-cats">0</div>
+          <div class="analytics-insight-meta">Drug categories</div>
         </div>
       </div>
       <div class="stats-row">
-        <div class="stat-card warn">
-          <div class="stat-label">Expiring &lt;30d</div>
-          <div class="stat-value" id="an-expiring-soon">0</div>
-          <div class="stat-sub">Urgent attention needed</div>
-          <div class="stat-icon">&#9200;</div>
-        </div>
         <div class="stat-card">
           <div class="stat-label">Total Units</div>
           <div class="stat-value" id="an-total-units">0</div>
@@ -373,12 +372,6 @@
           <div class="stat-value" id="an-avg-price">$0</div>
           <div class="stat-sub">Across all medicines</div>
           <div class="stat-icon">&#128178;</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Categories</div>
-          <div class="stat-value" id="an-cats">0</div>
-          <div class="stat-sub">Drug categories</div>
-          <div class="stat-icon">&#127991;</div>
         </div>
       </div>
       <div class="chart-row">
@@ -521,10 +514,10 @@
     <button id="scanner-close-btn" class="scanner-close-shell" data-action="close-scanner">&#10005;</button>
 
     <!-- Mobile header - shown on mobile only, hidden on desktop -->
-    <div id="scanner-mobile-header" class="scanner-mobile-header-shell">
-      <div class="scanner-mobile-title">&#11041; Scan Barcode</div>
-      <div class="scanner-mobile-subtitle">Point camera at barcode - or enter manually</div>
-    </div>
+      <div id="scanner-mobile-header" class="scanner-mobile-header-shell">
+        <div class="scanner-mobile-title">&#11041; Scan Medicine</div>
+        <div class="scanner-mobile-subtitle">Scan Data Matrix or barcode</div>
+      </div>
 
     <!-- DESKTOP: dialog card wraps everything. On mobile this is transparent/passthrough -->
     <div id="scanner-dialog" class="scanner-dialog-shell">

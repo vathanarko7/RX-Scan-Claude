@@ -46,8 +46,8 @@
         deskHdr.id = 'scanner-desk-header';
         deskHdr.style.cssText = 'padding:1.5rem 1.5rem 0;flex-shrink:0;';
         deskHdr.innerHTML = `
-      <div style="font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#e8edf5;text-align:center;margin-bottom:4px;">Scan Barcode</div>
-      <div style="font-size:0.78rem;color:#5a6680;text-align:center;">Point camera at barcode or enter manually</div>`;
+      <div style="font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#e8edf5;text-align:center;margin-bottom:4px;">Scan Medicine</div>
+      <div style="font-size:0.78rem;color:#5a6680;text-align:center;">Scan Data Matrix or barcode - or enter manually</div>`;
         dialog.insertBefore(deskHdr, dialog.firstChild);
       }
       deskHdr.style.display = 'block';
@@ -378,15 +378,21 @@
       const cameraWrap = document.getElementById('scanner-camera-wrap');
       if (cameraWrap) cameraWrap.style.display = 'none';
 
-      const med = inventory.find(m => m.barcode === input);
+      const dm = parseDataMatrix(input);
+      const lookupCandidates = [
+        input,
+        dm.cip13,
+        dm.gtin,
+        dm.gtin ? dm.gtin.replace(/^0+/, '') : '',
+        dm.gtin ? dm.gtin.slice(-13) : '',
+      ].filter(Boolean);
+      const med = inventory.find(m => lookupCandidates.includes(String(m.barcode || '').trim()));
       const statusEl = document.getElementById('scanner-status');
       const resultEl = document.getElementById('scan-result');
 
       if (!med) {
         // Smart new-barcode flow.
         // Step 1: parse locally first for an instant result.
-        const dm = parseDataMatrix(input);
-
         resultEl.style.display = 'none';
         document.getElementById('new-drug-card').style.display = 'none';
 
@@ -434,13 +440,16 @@
       document.getElementById('result-stock-badge').innerHTML = sb;
       resultEl.style.display = 'block';
 
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-      scanHistory.unshift({ name: med.name, barcode: med.barcode, time: timeStr });
-      if (scanHistory.length > 50) scanHistory.pop();
-      if (document.querySelector('.page.active')?.id === 'page-dashboard' && typeof globalThis.renderDashboard === 'function') {
-        globalThis.renderDashboard();
-      }
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        scanHistory.unshift({ name: med.name, barcode: med.barcode, time: timeStr });
+        if (scanHistory.length > 50) scanHistory.pop();
+        if (typeof globalThis.persistScanHistory === 'function') {
+          globalThis.persistScanHistory();
+        }
+        if (document.querySelector('.page.active')?.id === 'page-dashboard' && typeof globalThis.renderDashboard === 'function') {
+          globalThis.renderDashboard();
+        }
       window._lastScannedMed = med;
     }
 

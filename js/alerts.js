@@ -1,4 +1,5 @@
 (function() {
+  const EXPIRING_SOON_DAYS = 90;
   let activeAlertFilter = 'all';
 
   function buildAlertInfo(med) {
@@ -74,7 +75,7 @@
     const soonExp = inventory.filter((med) => {
       const date = new Date(med.expiry + 'T00:00:00');
       const diff = Math.round((date - now) / 86400000);
-      return diff >= 0 && diff < 30;
+      return diff >= 0 && diff <= EXPIRING_SOON_DAYS;
     });
 
     soonExp.forEach((med) => {
@@ -92,7 +93,17 @@
       });
     });
 
-    return alerts.sort(compareAlertPriority);
+    const sortedAlerts = alerts.sort(compareAlertPriority);
+    const dedupedAlerts = [];
+    const seenMedicineIds = new Set();
+
+    sortedAlerts.forEach((alert) => {
+      if (seenMedicineIds.has(alert.medId)) return;
+      seenMedicineIds.add(alert.medId);
+      dedupedAlerts.push(alert);
+    });
+
+    return dedupedAlerts;
   }
 
   function getFilteredAlerts(alerts) {
@@ -156,7 +167,7 @@
 
     if (alert.subtype === 'expiring') {
       const daysLeft = Math.max(Number(alert.daysLeft) || 0, 0);
-      const fill = Math.max(0, Math.min(100, (daysLeft / 30) * 100));
+      const fill = Math.max(0, Math.min(100, (daysLeft / EXPIRING_SOON_DAYS) * 100));
       return {
         left: `${daysLeft}d left`,
         right: '',

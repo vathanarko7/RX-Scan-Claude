@@ -592,6 +592,35 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
+    async function copyTextToClipboard(text) {
+      if (!text) return false;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (_) {
+        // fall through to manual copy fallback
+      }
+
+      try {
+        const helper = document.createElement('input');
+        helper.value = text;
+        helper.setAttribute('readonly', '');
+        helper.style.position = 'fixed';
+        helper.style.opacity = '0';
+        helper.style.pointerEvents = 'none';
+        document.body.appendChild(helper);
+        helper.select();
+        helper.setSelectionRange(0, helper.value.length);
+        const copied = document.execCommand('copy');
+        document.body.removeChild(helper);
+        return copied;
+      } catch (_) {
+        return false;
+      }
+    }
+
     function getActivePageName() {
       const activePage = document.querySelector('.page.active');
       return activePage?.id?.replace(/^page-/, '') || getSavedPage();
@@ -662,7 +691,16 @@
           openEditModal(Number(target.dataset.medId));
           break;
         case 'fill-scanner':
-          fillScannerWith(target.dataset.barcode || '');
+          {
+            const barcode = target.dataset.barcode || '';
+            if (window.innerWidth <= 768) {
+              fillScannerWith(barcode);
+            } else {
+              copyTextToClipboard(barcode).then((copied) => {
+                showToast(copied ? `Copied barcode ${barcode}` : 'Unable to copy barcode', !copied);
+              });
+            }
+          }
           break;
         case 'open-stock-modal':
           openInventoryStock(Number(target.dataset.medId));

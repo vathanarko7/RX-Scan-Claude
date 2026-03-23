@@ -2,8 +2,19 @@
   function renderDashboard() {
     const dashboardDate = document.getElementById('dashboard-date');
     const dashboardPriorityLine = document.getElementById('dashboard-priority-line');
+    const dashboardGreetingPrefix = document.getElementById('dashboard-greeting-prefix');
+    const now = new Date();
+
+    if (dashboardGreetingPrefix) {
+      const hour = now.getHours();
+      let greeting = 'Good morning';
+      if (hour >= 18) greeting = 'Good evening';
+      else if (hour >= 12) greeting = 'Good afternoon';
+      dashboardGreetingPrefix.textContent = greeting;
+    }
+
     if (dashboardDate) {
-      dashboardDate.textContent = new Date().toLocaleDateString('en-US', {
+      dashboardDate.textContent = now.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -45,13 +56,12 @@
     const statLow = document.getElementById('stat-low');
     if (statLow) statLow.textContent = lowCount;
 
-    const now = new Date();
     const in90 = new Date(now);
     in90.setDate(in90.getDate() + 90);
       const expiringCount = inventory.filter(med => {
         if (!med.expiry) return false;
         const expiryDate = new Date(med.expiry + 'T00:00:00');
-        return expiryDate <= in90;
+        return expiryDate >= now && expiryDate <= in90;
       }).length;
       const uniqueAttentionCount = new Set(
         inventory
@@ -59,7 +69,7 @@
             if (med.stock > 0 && med.stock <= med.reorder) return true;
             if (!med.expiry) return false;
             const expiryDate = new Date(med.expiry + 'T00:00:00');
-            return expiryDate <= in90;
+            return expiryDate >= now && expiryDate <= in90;
           })
           .map(med => med.id || med.barcode || med.name)
       ).size;
@@ -111,7 +121,7 @@
       scanHistoryList.innerHTML = '<div style="padding:1.5rem 1.25rem;color:var(--muted);font-size:0.82rem;">No scans yet — use the SCAN button to begin</div>';
       return;
     }
-    scanHistoryList.innerHTML = scanHistory.slice(0, 8).map(scan => `
+    scanHistoryList.innerHTML = scanHistory.slice(0, 5).map(scan => `
       <div class="scan-history-item">
         <div class="scan-dot"></div>
         <div class="scan-hist-name">${esc(scan.name)} <span class="tag tag-blue">${esc(scan.barcode)}</span></div>
@@ -851,7 +861,7 @@
     const scanHistoryList = document.getElementById('scan-history-list');
     if (!scanHistoryList || isLoadingData || !scanHistory.length) return;
 
-    scanHistoryList.innerHTML = scanHistory.slice(0, 8).map(scan => `
+    scanHistoryList.innerHTML = scanHistory.slice(0, 5).map(scan => `
       <div class="scan-history-item">
         <div class="scan-dot"></div>
         <div class="scan-history-main">
