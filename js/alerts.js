@@ -1,4 +1,5 @@
 (function() {
+  const tx = (key, params, fallback = '') => (typeof globalThis.t === 'function' ? globalThis.t(key, params, fallback) : (fallback || key));
   const EXPIRING_SOON_DAYS = 90;
   let activeAlertFilter = 'all';
 
@@ -7,7 +8,7 @@
       med.category,
       med.mfr,
       med.shelf,
-      med.expiry || 'No expiry',
+      med.expiry || tx('alerts.info.noExpiry', null, 'No expiry'),
     ].filter(Boolean).join(' · ');
   }
 
@@ -146,11 +147,11 @@
   }
 
   function getAlertKicker(alert) {
-    if (alert.subtype === 'expired') return 'Expired';
-    if (alert.subtype === 'out') return 'Out of stock';
-    if (alert.subtype === 'low') return 'Low stock';
-    if (alert.subtype === 'expiring') return 'Expiring soon';
-    return 'Alert';
+    if (alert.subtype === 'expired') return tx('alerts.kicker.expired', null, 'Expired');
+    if (alert.subtype === 'out') return tx('alerts.kicker.out', null, 'Out of stock');
+    if (alert.subtype === 'low') return tx('alerts.kicker.low', null, 'Low stock');
+    if (alert.subtype === 'expiring') return tx('alerts.kicker.expiring', null, 'Expiring soon');
+    return tx('alerts.kicker.default', null, 'Alert');
   }
 
   function getAlertMeter(alert) {
@@ -159,8 +160,8 @@
       const stock = Math.max(Number(alert.stock) || 0, 0);
       const fill = Math.max(0, Math.min(100, (stock / reorder) * 100));
       return {
-        left: `${stock} boxes`,
-        right: `Reorder ${reorder}`,
+        left: tx('alerts.meter.boxes', { count: stock }, `${stock} boxes`),
+        right: tx('alerts.meter.reorder', { count: reorder }, `Reorder ${reorder}`),
         fill,
       };
     }
@@ -169,7 +170,7 @@
       const daysLeft = Math.max(Number(alert.daysLeft) || 0, 0);
       const fill = Math.max(0, Math.min(100, (daysLeft / EXPIRING_SOON_DAYS) * 100));
       return {
-        left: `${daysLeft}d left`,
+        left: tx('alerts.meter.daysLeft', { count: daysLeft }, `${daysLeft}d left`),
         right: '',
         fill,
       };
@@ -235,9 +236,9 @@
 
   function getAlertGroupDefinitions() {
     return [
-      { id: 'critical', title: 'Critical', subtypes: ['expired', 'out'] },
-      { id: 'warning', title: 'Needs reorder', subtypes: ['low'] },
-      { id: 'expiring', title: 'Expiring soon', subtypes: ['expiring'] },
+      { id: 'critical', title: tx('alerts.group.critical', null, 'Critical'), subtypes: ['expired', 'out'] },
+      { id: 'warning', title: tx('alerts.group.warning', null, 'Needs reorder'), subtypes: ['low'] },
+      { id: 'expiring', title: tx('alerts.group.expiring', null, 'Expiring soon'), subtypes: ['expiring'] },
     ];
   }
 
@@ -258,10 +259,10 @@
   function renderAlertFilterChips(alerts) {
     const counts = getAlertFilterCounts(alerts);
     const filters = [
-      { id: 'all', label: 'All', count: counts.all, toneClass: 'filter-all' },
-      { id: 'low', label: 'Low', count: counts.low, toneClass: 'filter-low' },
-      { id: 'out', label: 'Out', count: counts.out, toneClass: 'filter-out' },
-      { id: 'expiring', label: 'Expiring', count: counts.expiring, toneClass: 'filter-expiring' },
+      { id: 'all', label: tx('alerts.filter.all', null, 'All'), count: counts.all, toneClass: 'filter-all' },
+      { id: 'low', label: tx('alerts.filter.low', null, 'Low'), count: counts.low, toneClass: 'filter-low' },
+      { id: 'out', label: tx('alerts.filter.out', null, 'Out'), count: counts.out, toneClass: 'filter-out' },
+      { id: 'expiring', label: tx('alerts.filter.expiring', null, 'Expiring'), count: counts.expiring, toneClass: 'filter-expiring' },
     ];
 
     return `
@@ -275,11 +276,11 @@
       </div>`;
   }
 
-  function renderAlertEmptyState(message = 'No alerts in this filter right now.') {
+  function renderAlertEmptyState(message = tx('alerts.empty.filter', null, 'No alerts in this filter right now.')) {
     return `
       <div class="empty-state alert-empty-state">
         <div class="icon">&#9989;</div>
-        <h3>All clear</h3>
+        <h3>${tx('alerts.empty.title', null, 'All clear')}</h3>
         <p>${esc(message)}</p>
       </div>`;
   }
@@ -305,7 +306,7 @@
     const alerts = syncAlertBadges(buildAlerts());
     const filteredAlerts = getFilteredAlerts(alerts);
     if (!alerts.length) {
-      alertsList.innerHTML = renderAlertEmptyState('No active alerts at this time.');
+      alertsList.innerHTML = renderAlertEmptyState(tx('alerts.empty.none', null, 'No active alerts at this time.'));
       return;
     }
 

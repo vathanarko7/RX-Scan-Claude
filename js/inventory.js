@@ -1,4 +1,12 @@
 (function() {
+  const tx = (key, params, fallback = '') => (typeof globalThis.t === 'function' ? globalThis.t(key, params, fallback) : (fallback || key));
+
+  function translateCategoryLabel(category) {
+    if (!category) return '';
+    const key = `category.${String(category).toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
+    return tx(key, null, category);
+  }
+
   function renderDashboard() {
     const dashboardDate = document.getElementById('dashboard-date');
     const dashboardPriorityLine = document.getElementById('dashboard-priority-line');
@@ -7,14 +15,15 @@
 
     if (dashboardGreetingPrefix) {
       const hour = now.getHours();
-      let greeting = 'Good morning';
-      if (hour >= 18) greeting = 'Good evening';
-      else if (hour >= 12) greeting = 'Good afternoon';
+      let greeting = tx('dashboard.greeting.morning', null, 'Good morning');
+      if (hour >= 18) greeting = tx('dashboard.greeting.evening', null, 'Good evening');
+      else if (hour >= 12) greeting = tx('dashboard.greeting.afternoon', null, 'Good afternoon');
       dashboardGreetingPrefix.textContent = greeting;
     }
 
     if (dashboardDate) {
-      dashboardDate.textContent = now.toLocaleDateString('en-US', {
+      const locale = typeof globalThis.i18n?.getLanguage === 'function' && globalThis.i18n.getLanguage() === 'km' ? 'km-KH' : 'en-US';
+      dashboardDate.textContent = now.toLocaleDateString(locale, {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -78,22 +87,23 @@
       if (dashboardPriorityLine) {
         if (lowCount || expiringCount) {
           const parts = [];
-          parts.push(`${uniqueAttentionCount} medicine${uniqueAttentionCount === 1 ? '' : 's'} need attention`);
-          if (lowCount) parts.push(`${lowCount} low stock`);
-          if (expiringCount) parts.push(`${expiringCount} expiring within 90 days`);
+          const noun = uniqueAttentionCount === 1 ? tx('dashboard.attention.noun.single', null, 'medicine') : tx('dashboard.attention.noun.plural', null, 'medicines');
+          parts.push(tx('dashboard.attention.summary', { count: uniqueAttentionCount, noun }, `${uniqueAttentionCount} ${noun} need attention`));
+          if (lowCount) parts.push(tx('dashboard.attention.low', { count: lowCount }, `${lowCount} low stock`));
+          if (expiringCount) parts.push(tx('dashboard.attention.expiring', { count: expiringCount }, `${expiringCount} expiring within 90 days`));
           dashboardPriorityLine.innerHTML = `
             <div class="dashboard-attention-copy">
               <span class="dashboard-attention-icon">&#9888;&#65039;</span>
               <span class="dashboard-attention-text dashboard-attention-text-desktop">${parts.join(' &#183; ')}</span>
-              <span class="dashboard-attention-text dashboard-attention-text-mobile">${uniqueAttentionCount} medicine${uniqueAttentionCount === 1 ? '' : 's'} need attention</span>
+              <span class="dashboard-attention-text dashboard-attention-text-mobile">${tx('dashboard.attention.summary', { count: uniqueAttentionCount, noun }, `${uniqueAttentionCount} ${noun} need attention`)}</span>
             </div>
-            <button class="dashboard-attention-btn" data-page="alerts">Review alerts</button>`;
+            <button class="dashboard-attention-btn" data-page="alerts">${tx('dashboard.attention.review', null, 'Review alerts')}</button>`;
           dashboardPriorityLine.classList.remove('is-clear');
         } else {
           dashboardPriorityLine.innerHTML = `
             <div class="dashboard-attention-copy">
               <span class="dashboard-attention-icon">&#10003;</span>
-              <span>All inventory signals look healthy today</span>
+              <span>${tx('dashboard.attention.clear', null, 'All inventory signals look healthy today')}</span>
             </div>`;
           dashboardPriorityLine.classList.add('is-clear');
         }
@@ -109,7 +119,7 @@
     if (categoryChart) {
       categoryChart.innerHTML = sortedCategories.map(([category, value]) => `
         <div class="bar-row">
-          <div class="bar-name" title="${esc(category)}">${esc(category)}</div>
+          <div class="bar-name" title="${esc(translateCategoryLabel(category))}">${esc(translateCategoryLabel(category))}</div>
           <div class="bar-track"><div class="bar-fill" style="width:${maxCategoryValue ? Math.round(value / maxCategoryValue * 100) : 0}%"></div></div>
           <div class="bar-val">${value}</div>
         </div>`).join('');
@@ -118,7 +128,7 @@
     const scanHistoryList = document.getElementById('scan-history-list');
     if (!scanHistoryList) return;
     if (!scanHistory.length) {
-      scanHistoryList.innerHTML = '<div style="padding:1.5rem 1.25rem;color:var(--muted);font-size:0.82rem;">No scans yet — use the SCAN button to begin</div>';
+      scanHistoryList.innerHTML = `<div style="padding:1.5rem 1.25rem;color:var(--muted);font-size:0.82rem;">${esc(tx('dashboard.recentScans.empty', null, 'No scans yet - use the SCAN button to begin'))}</div>`;
       return;
     }
     scanHistoryList.innerHTML = scanHistory.slice(0, 5).map(scan => `
@@ -134,8 +144,8 @@
     const expDate = hasExpiry ? new Date(m.expiry + 'T00:00:00') : null;
     const daysLeft = hasExpiry ? Math.round((expDate - now) / 86400000) : null;
     const expiryClass = !hasExpiry ? '' : daysLeft < 0 ? 'expiry-bad' : daysLeft < 30 ? 'expiry-bad' : daysLeft < 90 ? 'expiry-warn' : 'expiry-ok';
-    const expiryLabel = !hasExpiry ? 'No expiry' : daysLeft < 0 ? 'Expired' : daysLeft < 90 ? `${daysLeft}d` : m.expiry;
-    const expiryMobileLabel = !hasExpiry ? 'No expiry' : daysLeft < 0 ? 'Expired' : daysLeft < 90 ? `${daysLeft}d left` : `Exp ${m.expiry.slice(0, 7)}`;
+    const expiryLabel = !hasExpiry ? tx('inventory.expiry.none', null, 'No expiry') : daysLeft < 0 ? tx('inventory.expiry.expired', null, 'Expired') : daysLeft < 90 ? `${daysLeft}d` : m.expiry;
+    const expiryMobileLabel = !hasExpiry ? tx('inventory.expiry.none', null, 'No expiry') : daysLeft < 0 ? tx('inventory.expiry.expired', null, 'Expired') : daysLeft < 90 ? tx('inventory.expiry.daysLeft', { count: daysLeft }, `${daysLeft}d left`) : `Exp ${m.expiry.slice(0, 7)}`;
 
     let stockClass = 'stock-ok';
     let stockLabel = '&#10003; ' + m.stock;
@@ -153,18 +163,18 @@
   }
 
   function renderInventoryEmptyState() {
-    return `<div class="empty-state"><div class="icon">&#128269;</div><h3>No results</h3><p>Try adjusting your filters</p></div>`;
+    return `<div class="empty-state"><div class="icon">&#128269;</div><h3>${tx('inventory.empty.title', null, 'No results')}</h3><p>${tx('inventory.empty.copy', null, 'Try adjusting your filters')}</p></div>`;
   }
 
   function renderInventoryRow(m, now = new Date()) {
     const meta = getInventoryDisplayMeta(m, now);
     const locationBadge = meta.hasShelf
       ? `<span class="location-badge" data-action="go-shelf" data-shelf="${esc(m.shelf)}">&#128205; ${esc(m.shelf)}</span>`
-      : `<span class="location-badge unassigned" data-action="open-edit-modal" data-med-id="${m.id}">Unassigned</span>`;
+      : `<span class="location-badge unassigned" data-action="open-edit-modal" data-med-id="${m.id}">${esc(tx('modal.medication.status.unassigned', null, 'Unassigned'))}</span>`;
     const mapAction = meta.hasShelf
       ? `data-action="go-shelf" data-shelf="${esc(m.shelf)}"`
       : `data-action="open-edit-modal" data-med-id="${m.id}"`;
-    const mapLabel = meta.hasShelf ? 'Map' : 'Assign';
+    const mapLabel = meta.hasShelf ? tx('common.map', null, 'Map') : tx('common.assign', null, 'Assign');
 
     return `<tr>
       <td class="drug-name-cell">
@@ -173,15 +183,15 @@
       </td>
       <td class="barcode-cell"><span class="tag tag-blue inventory-barcode-tag" data-action="fill-scanner" data-barcode="${esc(m.barcode)}">${esc(m.barcode)}</span></td>
       <td>${locationBadge}</td>
-      <td><span class="stock-badge clickable ${meta.stockClass}" title="Update stock" data-action="open-stock-modal" data-med-id="${m.id}">${meta.stockLabel}</span></td>
+      <td><span class="stock-badge clickable ${meta.stockClass}" title="${esc(tx('modal.detail.action.updateStock', null, 'Update stock'))}" data-action="open-stock-modal" data-med-id="${m.id}">${meta.stockLabel}</span></td>
       <td><div class="price-box">$${m.price_box.toFixed(2)}</div></td>
       <td><div class="price-box">$${meta.unitPrice}</div></td>
       <td class="expiry-cell"><span class="${meta.expiryClass}">${meta.expiryLabel}</span></td>
       <td>
         <div class="action-btns">
-          <button class="table-action-btn" title="Edit medicine" data-action="open-edit-modal" data-med-id="${m.id}">Edit</button>
-          <button class="table-action-btn map" title="${meta.hasShelf ? 'Locate on map' : 'Assign shelf'}" ${mapAction}>${mapLabel}</button>
-          <button class="table-action-btn danger" title="Delete medicine" data-action="delete-med" data-med-id="${m.id}">Delete</button>
+          <button class="table-action-btn" title="${esc(tx('modal.detail.action.editMedicine', null, 'Edit medicine'))}" data-action="open-edit-modal" data-med-id="${m.id}">${esc(tx('common.edit', null, 'Edit'))}</button>
+          <button class="table-action-btn map" title="${esc(meta.hasShelf ? tx('modal.detail.action.locateOnMap', null, 'Locate on map') : tx('modal.detail.action.assignShelf', null, 'Assign shelf'))}" ${mapAction}>${esc(mapLabel)}</button>
+          <button class="table-action-btn danger" title="${esc(tx('modal.detail.action.deleteMedicine', null, 'Delete medicine'))}" data-action="delete-med" data-med-id="${m.id}">${esc(tx('common.delete', null, 'Delete'))}</button>
         </div>
       </td>
     </tr>`;
@@ -189,7 +199,7 @@
 
   function renderInventoryCard(m, now = new Date()) {
     const meta = getInventoryDisplayMeta(m, now);
-    const mobileLocationMarkup = meta.hasShelf ? `<strong>${esc(m.shelf)}</strong>` : `<strong>Unassigned</strong>`;
+    const mobileLocationMarkup = meta.hasShelf ? `<strong>${esc(m.shelf)}</strong>` : `<strong>${esc(tx('modal.medication.status.unassigned', null, 'Unassigned'))}</strong>`;
     const mobileLocationAction = meta.hasShelf
       ? `data-action="go-shelf" data-shelf="${esc(m.shelf)}"`
       : `data-action="open-edit-modal" data-med-id="${m.id}"`;
@@ -204,8 +214,8 @@
       </div>
       <div class="med-card-meta">
         <span class="med-card-meta-item meta-location" ${mobileLocationAction}>${mobileLocationMarkup}</span>
-        <span class="med-card-meta-item meta-box">&middot; <strong>$${m.price_box.toFixed(2)}</strong> box</span>
-        <span class="med-card-meta-item meta-unit">&middot; <strong>$${meta.unitPrice}</strong> unit</span>
+        <span class="med-card-meta-item meta-box">&middot; <strong>$${m.price_box.toFixed(2)}</strong> ${esc(tx('inventory.unit.box', null, 'box'))}</span>
+        <span class="med-card-meta-item meta-unit">&middot; <strong>$${meta.unitPrice}</strong> ${esc(tx('inventory.unit.unit', null, 'unit'))}</span>
         <span class="med-card-meta-item ${meta.expiryClass}">&middot; ${meta.expiryMobileLabel}</span>
       </div>
     </div>`;
@@ -230,6 +240,11 @@
       if (zone && med.zone !== zone) return false;
       if (currentQuickFilter === 'low' && !(med.stock > 0 && med.stock <= med.reorder)) return false;
       if (currentQuickFilter === 'out' && med.stock !== 0) return false;
+      if (currentQuickFilter === 'expired') {
+        if (!med.expiry) return false;
+        const expiryDate = new Date(med.expiry + 'T00:00:00');
+        if (expiryDate >= now) return false;
+      }
       if (currentQuickFilter === 'expiring') {
         if (!med.expiry) return false;
         const expiryDate = new Date(med.expiry + 'T00:00:00');
@@ -327,25 +342,31 @@
 
     const slice = filtered.slice((currentPage - 1) * perPage, currentPage * perPage);
     const now = new Date();
-    const lowItems = inventory.filter(m => m.stock > 0 && m.stock <= m.reorder);
-    const outItems = inventory.filter(m => m.stock === 0);
-    const expiringItems = inventory.filter(m => {
-      if (!m.expiry) return false;
-      const expiryDate = new Date(m.expiry + 'T00:00:00');
-      const in90 = new Date();
-      in90.setDate(in90.getDate() + 90);
-      return expiryDate <= in90;
-    });
+      const lowItems = inventory.filter(m => m.stock > 0 && m.stock <= m.reorder);
+      const outItems = inventory.filter(m => m.stock === 0);
+      const expiredItems = inventory.filter(m => {
+        if (!m.expiry) return false;
+        const expiryDate = new Date(m.expiry + 'T00:00:00');
+        return expiryDate < now;
+      });
+      const expiringItems = inventory.filter(m => {
+        if (!m.expiry) return false;
+        const expiryDate = new Date(m.expiry + 'T00:00:00');
+        const in90 = new Date();
+        in90.setDate(in90.getDate() + 90);
+        return expiryDate >= now && expiryDate <= in90;
+      });
 
     const summaryEl = document.getElementById('inventory-summary-strip');
-    if (summaryEl) {
-      summaryEl.innerHTML = [
-        { key: 'all', label: 'All inventory', value: inventory.length, note: filtered.length !== inventory.length ? `${filtered.length} shown` : '', extraClass: '' },
-        { key: 'low', label: 'Low stock', value: lowItems.length, note: 'Needs reorder attention', extraClass: 'low' },
-        { key: 'out', label: 'Out of stock', value: outItems.length, note: 'Unavailable now', extraClass: 'out' },
-        { key: 'expiring', label: 'Expiring soon', value: expiringItems.length, note: 'Within 90 days', extraClass: 'expiring' },
-      ].map(renderInventorySummaryPill).join('');
-    }
+      if (summaryEl) {
+        summaryEl.innerHTML = [
+          { key: 'all', label: tx('inventory.summary.all', null, 'All inventory'), value: inventory.length, note: filtered.length !== inventory.length ? tx('inventory.summary.shown', { count: filtered.length }, `${filtered.length} shown`) : '', extraClass: '' },
+          { key: 'low', label: tx('inventory.summary.low', null, 'Low stock'), value: lowItems.length, note: tx('inventory.summary.lowNote', null, 'Needs reorder attention'), extraClass: 'low' },
+          { key: 'out', label: tx('inventory.summary.out', null, 'Out of stock'), value: outItems.length, note: tx('inventory.summary.outNote', null, 'Unavailable now'), extraClass: 'out' },
+          { key: 'expired', label: tx('inventory.summary.expired', null, 'Expired'), value: expiredItems.length, note: tx('inventory.summary.expiredNote', null, 'Remove from shelf'), extraClass: 'expired' },
+          { key: 'expiring', label: tx('inventory.summary.expiring', null, 'Expiring soon'), value: expiringItems.length, note: tx('inventory.summary.expiringNote', null, 'Within 90 days'), extraClass: 'expiring' },
+        ].map(renderInventorySummaryPill).join('');
+      }
 
     const tbody = document.getElementById('inventory-tbody');
     if (!slice.length) {
@@ -362,14 +383,14 @@
       document.getElementById('filter-cat')?.value || '',
       document.getElementById('filter-zone')?.value || '',
       inventorySortPreset ? `sort:${inventorySortPreset}` : '',
-    ].filter(Boolean).join(' · ');
+    ].filter(Boolean).join(' - ');
     saveInventoryUiState();
-    document.getElementById('page-info').textContent = `${total} results — page ${currentPage} of ${Math.max(1, pages)}${filterSummary ? ` — ${filterSummary}` : ''}`;
+    document.getElementById("page-info").textContent = tx("inventory.pageInfo", { total, current: currentPage, pages: Math.max(1, pages), filter: filterSummary ? " - " + filterSummary : "" }, `${total} results - page ${currentPage} of ${Math.max(1, pages)}${filterSummary ? ` - ${filterSummary}` : ""}`);
     const pageButtons = document.getElementById('page-btns');
     const button = (i) => `<button class="page-btn${i === currentPage ? ' active' : ''}" data-action="go-page" data-page-number="${i}">${i}</button>`;
-    const ellipsis = '<span class="page-ellipsis">…</span>';
-    const prevBtn = `<button class="page-btn" data-action="go-page" data-page-number="${currentPage - 1}" ${currentPage <= 1 ? 'disabled' : ''}>‹</button>`;
-    const nextBtn = `<button class="page-btn" data-action="go-page" data-page-number="${currentPage + 1}" ${currentPage >= pages ? 'disabled' : ''}>›</button>`;
+    const ellipsis = '<span class="page-ellipsis">...</span>';
+    const prevBtn = `<button class="page-btn" data-action="go-page" data-page-number="${currentPage - 1}" ${currentPage <= 1 ? "disabled" : ""}>&lsaquo;</button>`;
+    const nextBtn = `<button class="page-btn" data-action="go-page" data-page-number="${currentPage + 1}" ${currentPage >= pages ? "disabled" : ""}>&rsaquo;</button>`;
 
     if (pages <= 7) {
       let html = prevBtn;
@@ -424,15 +445,15 @@
     const catVal = catSel.value;
     const zoneVal = zoneSel.value;
 
-    catSel.innerHTML = '<option value="">All Categories</option>' + categories.map(cat => `<option value="${esc(cat)}"${cat === catVal ? ' selected' : ''}>${esc(cat)}</option>`).join('');
-    zoneSel.innerHTML = '<option value="">All Zones</option>' + zones.map(zone => `<option value="${esc(zone)}"${zone === zoneVal ? ' selected' : ''}>${esc(zone)}</option>`).join('');
+    catSel.innerHTML = `<option value="">${esc(tx('inventory.filter.allCategories', null, 'All Categories'))}</option>` + categories.map(cat => `<option value="${esc(cat)}"${cat === catVal ? ' selected' : ''}>${esc(translateCategoryLabel(cat))}</option>`).join('');
+    zoneSel.innerHTML = `<option value="">${esc(tx('inventory.filter.allZones', null, 'All Zones'))}</option>` + zones.map(zone => `<option value="${esc(zone)}"${zone === zoneVal ? ' selected' : ''}>${esc(zone)}</option>`).join('');
 
     if (sheetCat) {
-      sheetCat.innerHTML = '<option value="">All Categories</option>' + categories.map(cat => `<option value="${esc(cat)}">${esc(cat)}</option>`).join('');
+      sheetCat.innerHTML = `<option value="">${esc(tx('inventory.filter.allCategories', null, 'All Categories'))}</option>` + categories.map(cat => `<option value="${esc(cat)}">${esc(translateCategoryLabel(cat))}</option>`).join('');
       sheetCat.value = catVal;
     }
     if (sheetZone) {
-      sheetZone.innerHTML = '<option value="">All Zones</option>' + zones.map(zone => `<option value="${esc(zone)}">${esc(zone)}</option>`).join('');
+      sheetZone.innerHTML = `<option value="">${esc(tx('inventory.filter.allZones', null, 'All Zones'))}</option>` + zones.map(zone => `<option value="${esc(zone)}">${esc(zone)}</option>`).join('');
       sheetZone.value = zoneVal;
     }
     if (sheetSort) sheetSort.value = inventorySortPreset || '';
@@ -465,13 +486,13 @@
       stockTag.className = 'modal-status-tag';
       if (stock === 0) {
         stockTag.classList.add('stock-out');
-        stockTag.textContent = 'Out of stock';
+        stockTag.textContent = tx('inventory.status.out', null, 'Out of stock');
       } else if (stock <= reorder) {
         stockTag.classList.add('stock-low');
-        stockTag.textContent = 'Low stock';
+        stockTag.textContent = tx('inventory.status.low', null, 'Low stock');
       } else {
         stockTag.classList.add('stock-ok');
-        stockTag.textContent = 'Stock OK';
+        stockTag.textContent = tx('inventory.status.ok', null, 'Stock OK');
       }
     }
 
@@ -482,7 +503,7 @@
         locationTag.textContent = shelf;
       } else {
         locationTag.classList.add('location-missing');
-        locationTag.textContent = 'Unassigned';
+        locationTag.textContent = tx('modal.medication.status.unassigned', null, 'Unassigned');
       }
     }
 
@@ -490,7 +511,7 @@
       expiryTag.className = 'modal-status-tag';
       if (!expiry) {
         expiryTag.classList.add('expiry-ok');
-        expiryTag.textContent = 'No expiry';
+        expiryTag.textContent = tx('modal.medication.status.noExpiry', null, 'No expiry');
       } else {
         const diffDays = Math.round((new Date(expiry + 'T00:00:00') - new Date()) / 86400000);
         if (diffDays < 0) {
@@ -524,7 +545,7 @@
     editId = null;
     resetMedicationForm();
     const title = document.getElementById('modal-title');
-    if (title) title.textContent = 'Add Medicine';
+    if (title) title.textContent = tx('modal.medication.title', null, 'Add Medicine');
     updateMedicationModalTags();
     openOverlay('modal-overlay');
   }
@@ -534,7 +555,7 @@
     const med = inventory.find(item => item.id === id);
     if (!med) return;
     const title = document.getElementById('modal-title');
-    if (title) title.textContent = 'Edit Medicine';
+    if (title) title.textContent = tx('modal.medication.editTitle', null, 'Edit Medicine');
     document.getElementById('f-name').value = med.name;
     document.getElementById('f-generic').value = med.generic || '';
     document.getElementById('f-barcode').value = med.barcode;
@@ -564,7 +585,7 @@
     const barcode = document.getElementById('f-barcode').value.trim();
     const priceBox = parseFloat(document.getElementById('f-price-box').value);
     if (!name || !barcode || Number.isNaN(priceBox)) {
-      showToast('Please fill in all required fields', true);
+      showToast(tx('modal.medication.validation.required', null, 'Please fill in all required fields'), true);
       return;
     }
 
@@ -586,21 +607,21 @@
     try {
       if (editId) {
         await runWithSessionRetry(() => supabaseService.updateMedicine(editId, medicationPayload(data)));
-        showToast('Medicine updated');
+        showToast(tx('modal.medication.toast.updated', null, 'Medicine updated'));
       } else {
         await runWithSessionRetry(() => supabaseService.createMedicine(medicationPayload(data)));
-        showToast('Medicine added');
+        showToast(tx('modal.medication.toast.added', null, 'Medicine added'));
       }
       closeModal();
       await refreshInventory();
     } catch (error) {
       console.error(error);
-      showToast(error.message || 'Unable to save medicine', true);
+      showToast(error.message || tx('modal.medication.toast.unableSave', null, 'Unable to save medicine'), true);
     }
   }
 
   function openConfirmModal(options) {
-    const { title, message, sub = '', confirmLabel = 'Delete', onConfirm } = options;
+    const { title, message, sub = '', confirmLabel = tx('common.delete', null, 'Delete'), onConfirm } = options;
     const overlay = openOverlay('confirm-overlay');
     if (!overlay) return;
     document.getElementById('confirm-title').textContent = title;
@@ -622,18 +643,18 @@
     const med = inventory.find(item => item.id === id);
     if (!med) return;
     openConfirmModal({
-      title: 'Delete medicine?',
+      title: tx('modal.confirm.deleteTitle', null, 'Delete medicine?'),
       sub: med.barcode || '',
-      message: `Remove ${med.name} from inventory? This cannot be undone.`,
-      confirmLabel: 'Delete',
+      message: tx('modal.confirm.deleteMessage', { name: med.name }, `Remove ${med.name} from inventory? This cannot be undone.`),
+      confirmLabel: tx('common.delete', null, 'Delete'),
       onConfirm: async () => {
         try {
           await runWithSessionRetry(() => supabaseService.deleteMedicine(id));
-          showToast('Medicine removed');
+          showToast(tx('modal.confirm.deleted', null, 'Medicine removed'));
           await refreshInventory();
         } catch (error) {
           console.error(error);
-          showToast(error.message || 'Unable to delete medicine', true);
+          showToast(error.message || tx('modal.confirm.unableDelete', null, 'Unable to delete medicine'), true);
         }
       },
     });
@@ -643,7 +664,7 @@
     selectedInventoryMedId = id;
     const med = inventory.find(item => item.id === id);
     if (!med) return;
-    document.getElementById('stock-modal-title').textContent = 'Update stock';
+    document.getElementById('stock-modal-title').textContent = tx('modal.stock.title', null, 'Update stock');
     document.getElementById('stock-modal-sub').textContent = med.name;
     document.getElementById('stock-input').value = med.stock;
     document.getElementById('stock-input-error').textContent = '';
@@ -661,11 +682,11 @@
     const errorEl = document.getElementById('stock-input-error');
     if (!errorEl) return true;
     if (value === '') {
-      errorEl.textContent = 'Enter a stock value.';
+      errorEl.textContent = tx('modal.stock.error.enterValue', null, 'Enter a stock value.');
       return false;
     }
     if (!/^\d+$/.test(value)) {
-      errorEl.textContent = 'Stock must be a whole number.';
+      errorEl.textContent = tx('modal.stock.error.wholeNumber', null, 'Stock must be a whole number.');
       return false;
     }
     errorEl.textContent = '';
@@ -679,12 +700,12 @@
     const nextStock = parseInt(document.getElementById('stock-input').value, 10);
     try {
       await runWithSessionRetry(() => supabaseService.updateMedicine(selectedInventoryMedId, { stock: nextStock }));
-      showToast(`Stock updated for ${med.name}`);
+      showToast(tx('modal.stock.toast.updatedFor', { name: med.name }, `Stock updated for ${med.name}`));
       closeStockModal();
       await refreshInventory();
     } catch (error) {
       console.error(error);
-      showToast(error.message || 'Unable to update stock', true);
+      showToast(error.message || tx('modal.stock.toast.unableUpdate', null, 'Unable to update stock'), true);
     }
   }
 
@@ -724,30 +745,30 @@
     const expiryDate = med.expiry ? new Date(med.expiry + 'T00:00:00') : null;
     const diffDays = expiryDate ? Math.round((expiryDate - new Date()) / 86400000) : null;
     const expiryMain = !med.expiry
-      ? 'No expiry'
+      ? tx('inventory.expiry.none', null, 'No expiry')
       : diffDays < 0
-        ? 'Expired'
+        ? tx('inventory.expiry.expired', null, 'Expired')
         : diffDays < 90
           ? `${diffDays}d left`
           : med.expiry;
-    const expirySub = !med.expiry ? 'No expiry date recorded' : med.expiry;
-    const unitPrice = med.units_per_box ? `$${(med.price_box / med.units_per_box).toFixed(2)} / unit` : '—';
+    const expirySub = !med.expiry ? tx('modal.detail.expiry.noDate', null, 'No expiry date recorded') : med.expiry;
+    const unitPrice = med.units_per_box ? `$${(med.price_box / med.units_per_box).toFixed(2)} / unit` : '-';
 
     document.getElementById('inventory-action-title').textContent = med.name;
     document.getElementById('inventory-action-sub').textContent = med.generic || med.category || '';
-    document.getElementById('inventory-action-barcode').textContent = med.barcode || '—';
-    document.getElementById('inventory-action-location').textContent = med.shelf || 'Unassigned';
+    document.getElementById('inventory-action-barcode').textContent = med.barcode || '-';
+    document.getElementById('inventory-action-location').textContent = med.shelf || tx('modal.medication.status.unassigned', null, 'Unassigned');
     document.getElementById('inventory-action-price').textContent = `$${med.price_box.toFixed(2)} box`;
-    document.getElementById('inventory-action-expiry').textContent = med.expiry || 'No expiry';
+    document.getElementById('inventory-action-expiry').textContent = med.expiry || tx('inventory.expiry.none', null, 'No expiry');
 
-    document.getElementById('inventory-action-current-stock').textContent = `${med.stock} ${med.stock === 1 ? 'box' : 'boxes'}`;
-    document.getElementById('inventory-action-stock-sub').textContent = `Reorder at ${med.reorder} ${med.reorder === 1 ? 'box' : 'boxes'}`;
+    document.getElementById('inventory-action-current-stock').textContent = tx('modal.detail.stockBoxes', { count: med.stock, unit: tx(med.stock === 1 ? 'inventory.unit.box' : 'inventory.unit.boxes', null, med.stock === 1 ? 'box' : 'boxes') }, `${med.stock} ${med.stock === 1 ? 'box' : 'boxes'}`);
+    document.getElementById('inventory-action-stock-sub').textContent = tx('modal.detail.reorderAt', { count: med.reorder, unit: tx(med.reorder === 1 ? 'inventory.unit.box' : 'inventory.unit.boxes', null, med.reorder === 1 ? 'box' : 'boxes') }, `Reorder at ${med.reorder} ${med.reorder === 1 ? 'box' : 'boxes'}`);
     document.getElementById('inventory-action-expiry-main').textContent = expiryMain;
     document.getElementById('inventory-action-expiry-sub').textContent = expirySub;
     document.getElementById('inventory-action-price-box').textContent = `$${med.price_box.toFixed(2)} / box`;
     document.getElementById('inventory-action-price-unit').textContent = unitPrice;
-    document.getElementById('inventory-action-supplier').textContent = med.mfr || 'Unknown';
-    document.getElementById('inventory-action-category').textContent = med.category || 'Uncategorized';
+    document.getElementById('inventory-action-supplier').textContent = med.mfr || tx('modal.detail.status.unknown', null, 'Unknown');
+    document.getElementById('inventory-action-category').textContent = med.category || tx('modal.detail.status.uncategorized', null, 'Uncategorized');
 
     const stockTag = document.getElementById('inventory-action-stock-tag');
     const expiryTag = document.getElementById('inventory-action-expiry-tag');
@@ -757,17 +778,23 @@
 
     if (stockTag) {
       stockTag.className = `modal-status-tag ${meta?.stockClass || 'stock-ok'}`;
-      stockTag.textContent = med.stock === 0 ? 'Out of stock' : med.stock <= med.reorder ? 'Low stock' : 'In stock';
+        stockTag.textContent = med.stock === 0 ? tx('inventory.status.out', null, 'Out of stock') : med.stock <= med.reorder ? tx('inventory.status.low', null, 'Low stock') : tx('inventory.status.in', null, 'In stock');
     }
     if (expiryTag) {
       expiryTag.className = `modal-status-tag ${meta?.expiryClass || 'expiry-ok'}`;
-      expiryTag.textContent = med.expiry || 'No expiry';
+      expiryTag.textContent = med.expiry || tx('inventory.expiry.none', null, 'No expiry');
     }
       if (locationTag) {
         locationTag.className = `modal-status-tag ${med.shelf ? 'location-set' : 'location-missing'}`;
-        locationTag.textContent = med.shelf ? 'Assigned' : 'Unassigned';
+        locationTag.textContent = med.shelf
+          ? tx('modal.detail.status.assigned', null, 'Assigned')
+          : tx('modal.medication.status.unassigned', null, 'Unassigned');
       }
-      if (locateText) locateText.textContent = med.shelf ? 'Locate on map' : 'Assign shelf';
+      if (locateText) {
+        locateText.textContent = med.shelf
+          ? tx('modal.detail.action.locateOnMap', null, 'Locate on map')
+          : tx('modal.detail.action.assignShelf', null, 'Assign shelf');
+      }
 
       setVisibleInventoryActionButtons(Array.isArray(options.visibleActions) ? options.visibleActions : []);
       reorderInventoryActionButtons(Array.isArray(options.preferredActions) && options.preferredActions.length
@@ -844,13 +871,15 @@
 
     const scanHistoryList = document.getElementById('scan-history-list');
     if (!scanHistoryList || isLoadingData || scanHistory.length) return;
+    const emptyCopy = tx('dashboard.recentScans.empty', null, 'No scans yet - use the SCAN button to begin');
+    const emptyAction = tx('dashboard.recentScans.emptyAction', null, 'Scan');
 
     scanHistoryList.innerHTML = `
       <div class="dashboard-empty-state">
-        <div class="dashboard-empty-copy">No scans yet — use the SCAN button to begin.</div>
+        <div class="dashboard-empty-copy">${esc(emptyCopy)}</div>
         <button class="dashboard-empty-action" data-action="open-scanner">
           <span class="dashboard-empty-action-icon">&#128247;</span>
-          <span>Scan</span>
+          <span>${esc(emptyAction)}</span>
         </button>
       </div>`;
   }
@@ -905,5 +934,7 @@
   globalThis.applyFilterSheet = applyFilterSheet;
   globalThis.clearAllInventoryFilters = clearAllInventoryFilters;
 })();
+
+
 
 

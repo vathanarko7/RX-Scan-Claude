@@ -1,4 +1,5 @@
 (function() {
+  const tx = (key, params, fallback = '') => (typeof globalThis.t === 'function' ? globalThis.t(key, params, fallback) : (fallback || key));
   const ZONES = [
     { id: 'A', label: 'Antibiotics', color: '#79d6b2', shelves: ['A1-L1', 'A1-L2', 'A2-L1', 'A2-L2'] },
     { id: 'B', label: 'Pain Relief / GI', color: '#5b8cff', shelves: ['B1-L1', 'B2-L1', 'B3-L1', 'B4-L3'] },
@@ -75,16 +76,18 @@
     if (!items.length) {
       return `
         <div class="shelf-detail-card selected" style="${detailStyle}">
-          <div class="shelf-detail-topline">Selected shelf</div>
+          <div class="shelf-detail-topline">${tx('map.detail.selectedShelf', null, 'Selected shelf')}</div>
           <div class="shelf-detail-title">${esc(shelf)}</div>
-          <div class="shelf-detail-sub">No medicines assigned yet.</div>
+          <div class="shelf-detail-sub">${tx('map.detail.noMedicines', null, 'No medicines assigned yet.')}</div>
         </div>`;
     }
 
-    const summary = items.length === 1 ? '1 medicine' : `${items.length} medicines`;
+    const summary = items.length === 1
+      ? tx('map.detail.medicine.single', null, '1 medicine')
+      : tx('map.detail.medicine.plural', { count: items.length }, `${items.length} medicines`);
     return `
       <div class="shelf-detail-card selected" style="${detailStyle}">
-        <div class="shelf-detail-topline">Selected shelf</div>
+        <div class="shelf-detail-topline">${tx('map.detail.selectedShelf', null, 'Selected shelf')}</div>
         <div class="shelf-detail-title">${esc(shelf)}</div>
         <div class="shelf-detail-sub">${summary}</div>
         <div class="shelf-detail-list">
@@ -98,10 +101,10 @@
             return `<div class="shelf-detail-item" onclick="openMapMedicine(${medicine.id})">
               <div class="shelf-detail-item-main">
                 <div class="shelf-detail-item-name">${esc(medicine.name)}</div>
-                <div class="shelf-detail-item-meta">${esc(medicine.generic) || 'No generic name'}</div>
-                <div class="shelf-detail-item-prices">$${Number(medicine.price_box || 0).toFixed(2)} box - $${unitPrice} unit</div>
+                <div class="shelf-detail-item-meta">${esc(medicine.generic) || tx('map.detail.noGeneric', null, 'No generic name')}</div>
+                <div class="shelf-detail-item-prices">${tx('map.detail.priceLine', { box: Number(medicine.price_box || 0).toFixed(2), unit: unitPrice }, `$${Number(medicine.price_box || 0).toFixed(2)} box - $${unitPrice} unit`)}</div>
               </div>
-              <div class="shelf-detail-stock ${stockClass}">${medicine.stock} box${medicine.stock === 1 ? '' : 'es'}</div>
+              <div class="shelf-detail-stock ${stockClass}">${tx('map.detail.stockBoxes', { count: medicine.stock, suffix: medicine.stock === 1 ? '' : 'es' }, `${medicine.stock} box${medicine.stock === 1 ? '' : 'es'}`)}</div>
             </div>`;
           }).join('')}
         </div>
@@ -114,8 +117,8 @@
     return `
       <div class="map-inline-detail-empty">
         <div class="map-inline-detail-topline">${esc(zoneLabel)}</div>
-        <div class="map-inline-detail-title">Select a shelf</div>
-        <div class="map-inline-detail-copy">Choose a shelf in ${esc(zoneLabel)} to inspect stock, prices, expiry, and assigned medicines.</div>
+        <div class="map-inline-detail-title">${tx('map.detail.prompt.title', null, 'Select a shelf')}</div>
+        <div class="map-inline-detail-copy">${tx('map.detail.prompt.copy', { zone: zoneLabel }, `Choose a shelf in ${zoneLabel} to inspect stock, prices, expiry, and assigned medicines.`)}</div>
       </div>`;
   }
 
@@ -126,13 +129,13 @@
       <span class="zone-pill" style="background:${zone.color}22;border-color:${zone.color}55;color:${zone.color}">${zone.id}</span>
       <span class="zone-info">
         <span class="zone-name">${zone.label}</span>
-        <span class="zone-count">${count} medicines</span>
+        <span class="zone-count">${tx('map.section.medicines', { count }, `${count} medicines`)}</span>
       </span>
     </button>`;
   }
 
   function renderGroupSection(zoneIds) {
-    const title = `Zone ${zoneIds.join(' / ')}`;
+    const title = tx('map.section.zone', { zones: zoneIds.join(' / ') }, `Zone ${zoneIds.join(' / ')}`);
     const stats = getSectionStats(zoneIds);
     const zones = zoneIds.map((id) => ZONES.find((zone) => zone.id === id)).filter(Boolean);
     const shelvesMarkup = zones.map((zone) => zone.shelves.map((shelf) => renderShelfUnit(shelf, zone.id)).join('')).join('');
@@ -144,9 +147,9 @@
           <div class="map-room-label">${title}</div>
         </div>
         <div class="map-section-meta">
-          <span class="map-stat-pill">${stats.total} medicines</span>
-          ${stats.warning ? `<span class="map-stat-pill warning">${stats.warning} low</span>` : ''}
-          ${stats.critical ? `<span class="map-stat-pill critical">${stats.critical} problem</span>` : ''}
+          <span class="map-stat-pill">${tx('map.section.medicines', { count: stats.total }, `${stats.total} medicines`)}</span>
+          ${stats.warning ? `<span class="map-stat-pill warning">${tx('map.section.low', { count: stats.warning }, `${stats.warning} low`)}</span>` : ''}
+          ${stats.critical ? `<span class="map-stat-pill critical">${tx('map.section.problem', { count: stats.critical }, `${stats.critical} problem`)}</span>` : ''}
         </div>
       </div>
       <div class="shelf-grid">
@@ -173,17 +176,17 @@
       const sectionGroups = getMapSectionGroups();
       mapCanvas.innerHTML = `
         <div class="map-sticky-controls">
-          <div class="dispensing-counter">Dispensing Counter</div>
+          <div class="dispensing-counter">${tx('map.counter', null, 'Dispensing Counter')}</div>
           <div class="map-legend map-legend-inline">
-            <button class="legend-item legend-filter-btn ${activeLegendFilter === 'all' ? 'active' : ''}" onclick="filterLegend('all')"><div class="legend-dot healthy"></div>All</button>
-            <button class="legend-item legend-filter-btn ${activeLegendFilter === 'healthy' ? 'active' : ''}" onclick="filterLegend('healthy')"><div class="legend-dot healthy"></div>Healthy</button>
-            <button class="legend-item legend-filter-btn ${activeLegendFilter === 'warning' ? 'active' : ''}" onclick="filterLegend('warning')"><div class="legend-dot warning"></div>Low stock</button>
-            <button class="legend-item legend-filter-btn ${activeLegendFilter === 'critical' ? 'active' : ''}" onclick="filterLegend('critical')"><div class="legend-dot critical"></div>Problem</button>
+            <button class="legend-item legend-filter-btn ${activeLegendFilter === 'all' ? 'active' : ''}" onclick="filterLegend('all')"><div class="legend-dot healthy"></div>${tx('map.legend.all', null, 'All')}</button>
+            <button class="legend-item legend-filter-btn ${activeLegendFilter === 'healthy' ? 'active' : ''}" onclick="filterLegend('healthy')"><div class="legend-dot healthy"></div>${tx('map.legend.healthy', null, 'Healthy')}</button>
+            <button class="legend-item legend-filter-btn ${activeLegendFilter === 'warning' ? 'active' : ''}" onclick="filterLegend('warning')"><div class="legend-dot warning"></div>${tx('map.legend.warning', null, 'Low stock')}</button>
+            <button class="legend-item legend-filter-btn ${activeLegendFilter === 'critical' ? 'active' : ''}" onclick="filterLegend('critical')"><div class="legend-dot critical"></div>${tx('map.legend.critical', null, 'Problem')}</button>
           </div>
           <div id="map-filter-bar" class="map-filter-bar"></div>
         </div>
         ${sectionGroups.map(renderGroupSection).join('')}
-        <div id="map-mobile-detail" class="map-mobile-detail shelf-detail-copy">Tap a shelf to view its medicines.</div>
+        <div id="map-mobile-detail" class="map-mobile-detail shelf-detail-copy">${tx('map.mobile.tapShelf', null, 'Tap a shelf to view its medicines.')}</div>
       `;
     }
 
@@ -229,7 +232,11 @@
       <div class="shelf-label" style="color:${color}">${esc(shelf)}</div>
       <div class="shelf-items-inline">
         <span class="shelf-items-count" style="color:${color}">${count}</span>
-        <span class="shelf-items-label">${count === 1 && status !== 'empty' ? 'item' : status === 'empty' ? 'empty' : 'items'}</span>
+        <span class="shelf-items-label">${count === 1 && status !== 'empty'
+          ? tx('map.shelf.item', null, 'item')
+          : status === 'empty'
+            ? tx('map.shelf.empty', null, 'empty')
+            : tx('map.shelf.items', null, 'items')}</span>
       </div>
     </button>`;
   }
@@ -286,8 +293,8 @@
         if (activeZoneFilter) {
           const activeZone = getZoneById(activeZoneFilter);
           filterBar.innerHTML = `
-          <div class="map-filter-summary" style="--zone-accent:${activeZone?.color || '#f5c96a'}">Zone ${activeZoneFilter}${activeZone ? ` - ${esc(activeZone.label)}` : ''}</div>
-          <button class="map-filter-chip" onclick="filterZoneMap('${activeZoneFilter}')">Back to all zones</button>`;
+          <div class="map-filter-summary" style="--zone-accent:${activeZone?.color || '#f5c96a'}">${tx('map.filter.summary', { id: activeZoneFilter, label: activeZone?.label || '' }, `Zone ${activeZoneFilter}${activeZone ? ` - ${activeZone.label}` : ''}`)}</div>
+          <button class="map-filter-chip" onclick="filterZoneMap('${activeZoneFilter}')">${tx('map.filter.back', null, 'Back to all zones')}</button>`;
         } else {
           filterBar.innerHTML = '';
         }
@@ -392,7 +399,7 @@
     if (!shelf) return;
     const foundZone = getZoneForShelf(shelf);
     if (!foundZone) {
-      if (typeof showToast === 'function') showToast(`Shelf ${shelf} not found`, true);
+      if (typeof showToast === 'function') showToast(tx('map.search.notFound', { shelf }, `Shelf ${shelf} not found`), true);
       return;
     }
     activeZoneFilter = foundZone.id;
@@ -418,12 +425,12 @@
     const mobileDetail = document.getElementById('map-mobile-detail');
     const emptyMarkup = `
       <div class="shelf-detail-empty">
-        <div class="shelf-detail-empty-title">Select a shelf</div>
-        <div class="shelf-detail-empty-copy">Inspect stock, expiry, and assigned medicines from the map.</div>
+        <div class="shelf-detail-empty-title">${tx('map.detail.prompt.title', null, 'Select a shelf')}</div>
+        <div class="shelf-detail-empty-copy">${tx('map.empty.copy', null, 'Inspect stock, expiry, and assigned medicines from the map.')}</div>
       </div>`;
     if (detail) detail.innerHTML = emptyMarkup;
     if (mobileDetail) {
-      mobileDetail.textContent = 'Tap a shelf to view its medicines.';
+      mobileDetail.textContent = tx('map.mobile.tapShelf', null, 'Tap a shelf to view its medicines.');
       mobileDetail.classList.remove('is-active');
     }
     renderDesktopInlineDetail();

@@ -967,6 +967,81 @@
       gap: 0.5rem;
     }
 
+    header > #connection-pill {
+      margin-left: 0.45rem;
+      flex-shrink: 0;
+    }
+
+    .mobile-lang-btn {
+      display: none;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.18rem;
+      padding: 0.22rem;
+      border-radius: 999px;
+      border: 1px solid rgba(87, 101, 131, 0.18);
+      background: rgba(15, 20, 32, 0.72);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    }
+
+    .lang-btn {
+      border: 0;
+      min-width: 38px;
+      height: 32px;
+      padding: 0 0.75rem;
+      border-radius: 999px;
+      background: transparent;
+      color: #98a6c5;
+      font: 600 0.78rem/1 Inter, sans-serif;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .lang-btn:hover {
+      color: #e8edf5;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .lang-btn.active {
+      color: #061017;
+      background: #00d4aa;
+      box-shadow: 0 0 0 1px rgba(0, 212, 170, 0.18), 0 8px 18px rgba(0, 212, 170, 0.14);
+    }
+
+    .lang-btn:active {
+      transform: translateY(1px);
+    }
+
+    .auth-lang-switch {
+      margin-top: 0.9rem;
+      width: fit-content;
+    }
+
+    .header-lang-switch {
+      flex-shrink: 0;
+    }
+
+    html[lang="km"] body,
+    html[lang="km"] body * {
+      font-family: "Noto Sans Khmer", Inter, sans-serif !important;
+      letter-spacing: 0.01em !important;
+      text-transform: none !important;
+      font-variant-ligatures: normal;
+    }
+
+    html[lang="km"] .logo-wordmark,
+    html[lang="km"] .logo-wordmark span,
+    html[lang="km"] .auth-mini-brand-name {
+      font-family: 'Syne', "Noto Sans Khmer", sans-serif !important;
+      letter-spacing: -0.02em !important;
+      text-transform: none !important;
+    }
+
     .desktop-session-bar {
       display: none;
     }

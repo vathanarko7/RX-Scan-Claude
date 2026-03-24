@@ -1,4 +1,5 @@
 (function() {
+  const tx = (key, params, fallback = '') => (typeof globalThis.t === 'function' ? globalThis.t(key, params, fallback) : (fallback || key));
   function renderAnalytics() {
     if (isLoadingData) {
       document.getElementById('an-avg-price').innerHTML = '<div class="skeleton skeleton-stat" style="width:58%;"></div>';
@@ -72,26 +73,26 @@
     const healthyCount = inventory.filter(med => med.stock > med.reorder).length;
     const inStockRate = inventory.length ? Math.round((healthyCount / inventory.length) * 100) : 0;
 
-    document.getElementById('an-top-stock-name').textContent = highestPriced ? highestPriced.name : 'No inventory yet';
+    document.getElementById('an-top-stock-name').textContent = highestPriced ? highestPriced.name : tx('analytics.value.noInventory', null, 'No inventory yet');
     document.getElementById('an-top-stock-meta').textContent = highestPriced
       ? `$${highestPriced.price_box.toFixed(2)} per box in ${highestPriced.category}`
-      : 'Add medicines to see leaders';
+      : tx('analytics.value.addMedicines', null, 'Add medicines to see leaders');
 
     if (nearestExpiry) {
       const daysLeft = Math.ceil((new Date(nearestExpiry.expiry + 'T00:00:00') - now) / 86400000);
       document.getElementById('an-nearest-expiry-name').textContent = nearestExpiry.name;
-      document.getElementById('an-nearest-expiry-meta').textContent = `${Math.max(daysLeft, 0)}d left · ${nearestExpiry.expiry}`;
+      document.getElementById('an-nearest-expiry-meta').textContent = tx('analytics.daysLeft', { count: Math.max(daysLeft, 0), date: nearestExpiry.expiry }, `${Math.max(daysLeft, 0)}d left - ${nearestExpiry.expiry}`);
     } else {
-      document.getElementById('an-nearest-expiry-name').textContent = 'All clear';
-      document.getElementById('an-nearest-expiry-meta').textContent = 'No upcoming expiry';
+      document.getElementById('an-nearest-expiry-name').textContent = tx('analytics.expiry.allClear', null, 'All clear');
+      document.getElementById('an-nearest-expiry-meta').textContent = tx('analytics.expiry.none', null, 'No upcoming expiry');
     }
 
     if (!inventory.length) {
-      document.getElementById('an-health-value').textContent = 'No data';
-      document.getElementById('an-health-meta').textContent = 'Add medicines to see stock coverage';
+      document.getElementById('an-health-value').textContent = tx('analytics.health.noData', null, 'No data');
+      document.getElementById('an-health-meta').textContent = tx('analytics.health.noDataMeta', null, 'Add medicines to see stock coverage');
     } else {
       document.getElementById('an-health-value').textContent = `${inStockRate}%`;
-      document.getElementById('an-health-meta').textContent = `${healthyCount} of ${inventory.length} medicines above reorder point`;
+      document.getElementById('an-health-meta').textContent = tx('analytics.health.meta', { healthy: healthyCount, total: inventory.length }, `${healthyCount} of ${inventory.length} medicines above reorder point`);
     }
   }
 

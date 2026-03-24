@@ -1,4 +1,5 @@
 ﻿(function() {
+    const tx = (key, params, fallback = '') => (typeof globalThis.t === 'function' ? globalThis.t(key, params, fallback) : (fallback || key));
     function applyScannerLayout() {
       const overlay = document.getElementById('scanner-overlay');
       const dialog = document.getElementById('scanner-dialog');
@@ -46,8 +47,8 @@
         deskHdr.id = 'scanner-desk-header';
         deskHdr.style.cssText = 'padding:1.5rem 1.5rem 0;flex-shrink:0;';
         deskHdr.innerHTML = `
-      <div style="font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#e8edf5;text-align:center;margin-bottom:4px;">Scan Medicine</div>
-      <div style="font-size:0.78rem;color:#5a6680;text-align:center;">Scan Data Matrix or barcode - or enter manually</div>`;
+      <div style="font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#e8edf5;text-align:center;margin-bottom:4px;">${tx('scanner.title', null, 'Scan Medicine')}</div>
+      <div style="font-size:0.78rem;color:#5a6680;text-align:center;">${tx('scanner.desktopSubtitle', null, 'Scan Data Matrix or barcode - or enter manually')}</div>`;
         dialog.insertBefore(deskHdr, dialog.firstChild);
       }
       deskHdr.style.display = 'block';
@@ -98,7 +99,7 @@
       if (sr) sr.style.display = 'none';
       if (nd) nd.style.display = 'none';
       document.getElementById('manual-barcode').value = '';
-      document.getElementById('scanner-status').textContent = 'Ready - point camera at barcode';
+      document.getElementById('scanner-status').textContent = tx('scanner.status.ready', null, 'Ready - point camera at barcode');
       document.getElementById('scanner-status').style.color = '#5a6680';
       startCamera();
     }
@@ -114,7 +115,7 @@
       document.getElementById('scan-result').style.display = 'none';
       document.getElementById('new-drug-card').style.display = 'none';
       document.getElementById('manual-barcode').value = '';
-      document.getElementById('scanner-status').textContent = 'Ready - point camera at barcode';
+      document.getElementById('scanner-status').textContent = tx('scanner.status.ready', null, 'Ready - point camera at barcode');
       document.getElementById('scanner-status').style.color = '#5a6680';
       scanCounts = {}; // FIX: reset stale counts so previous barcode can't trigger instantly
       const scrollArea = document.querySelector('#scanner-dialog > div:last-child');
@@ -168,11 +169,11 @@
         const cameraWrap = document.getElementById('scanner-camera-wrap');
         if (cameraWrap) cameraWrap.style.display = 'none';
         document.getElementById('manual-barcode').value = code;
-        document.getElementById('scanner-status').textContent = 'Captured: ' + code;
+        document.getElementById('scanner-status').textContent = tx('scanner.status.captured', { code }, `Captured: ${code}`);
         document.getElementById('scanner-status').style.color = '#00c97b';
         lookupBarcode(code);
       } else {
-        document.getElementById('scanner-status').textContent = 'Confirming...';
+        document.getElementById('scanner-status').textContent = tx('scanner.status.confirming', null, 'Confirming...');
         document.getElementById('scanner-status').style.color = '#00d4aa';
       }
     }
@@ -227,7 +228,7 @@
                 cancelAnimationFrame(barcodeDetectorFrame);
                 barcodeDetectorFrame = null;
               }
-              document.getElementById('scanner-status').textContent = 'Trying compatibility scan...';
+              document.getElementById('scanner-status').textContent = tx('scanner.status.compatibility', null, 'Trying compatibility scan...');
               document.getElementById('scanner-status').style.color = '#f5c96a';
               if (onFallback) onFallback();
               return;
@@ -240,7 +241,7 @@
             cancelAnimationFrame(barcodeDetectorFrame);
             barcodeDetectorFrame = null;
           }
-          document.getElementById('scanner-status').textContent = 'Trying compatibility scan...';
+          document.getElementById('scanner-status').textContent = tx('scanner.status.compatibility', null, 'Trying compatibility scan...');
           document.getElementById('scanner-status').style.color = '#f5c96a';
           if (onFallback) onFallback();
           return;
@@ -255,7 +256,7 @@
     function startCamera() {
       if (zxingActive) return;
       document.getElementById('scanner-box').classList.add('scanning');
-      document.getElementById('scanner-status').textContent = 'Starting camera...';
+      document.getElementById('scanner-status').textContent = tx('scanner.status.startingCamera', null, 'Starting camera...');
       document.getElementById('scanner-status').style.color = '#5a6680';
       scanCounts = {};
 
@@ -275,7 +276,7 @@
         await video.play();
 
         zxingActive = true;
-        document.getElementById('scanner-status').textContent = 'Point camera at barcode';
+        document.getElementById('scanner-status').textContent = tx('scanner.status.pointCamera', null, 'Point camera at barcode');
         document.getElementById('scanner-status').style.color = '#00d4aa';
 
         // FIX: use decodeFromStream, NOT decodeFromVideoElement.
@@ -300,7 +301,7 @@
             ]);
             hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
             zxingReader = new ZXing.BrowserMultiFormatReader(hints, 300);
-            document.getElementById('scanner-status').textContent = 'Compatibility scan active';
+            document.getElementById('scanner-status').textContent = tx('scanner.status.compatibilityActive', null, 'Compatibility scan active');
             document.getElementById('scanner-status').style.color = '#00d4aa';
             zxingReader.decodeFromStream(stream, video, (result) => {
               if (!result) return;
@@ -323,7 +324,7 @@
             });
           } catch (e) {
             console.error('ZXing error', e);
-            document.getElementById('scanner-status').textContent = 'Scanner error -- use manual input';
+            document.getElementById('scanner-status').textContent = tx('scanner.status.errorManual', null, 'Scanner error -- use manual input');
             document.getElementById('scanner-status').style.color = '#ff6b35';
             document.getElementById('scanner-box').classList.remove('scanning');
           }
@@ -339,10 +340,10 @@
 
       }).catch(err => {
         const msg = err.name === 'NotAllowedError'
-          ? 'Camera permission denied - type barcode below'
+          ? tx('scanner.status.permissionDenied', null, 'Camera permission denied - type barcode below')
           : err.name === 'NotFoundError'
-            ? 'No camera found - type barcode below'
-            : 'Camera unavailable -- use manual input below';
+            ? tx('scanner.status.noCamera', null, 'No camera found - type barcode below')
+            : tx('scanner.status.cameraUnavailable', null, 'Camera unavailable -- use manual input below');
         document.getElementById('scanner-status').textContent = msg;
         document.getElementById('scanner-status').style.color = '#ff6b35';
         document.getElementById('scanner-box').classList.remove('scanning');
@@ -399,7 +400,7 @@
         if (dm.isFMD) {
           // DataMatrix already contains structured data, then enrich in background.
           // then enrich with name from BDPM in background
-          statusEl.textContent = 'DataMatrix decoded - loading name...';
+          statusEl.textContent = tx('scanner.status.dataMatrixLoading', null, 'DataMatrix decoded - loading name...');
           statusEl.style.color = '#00d4aa';
           showNewDrugCard(input, {
             name: '', generic: dm.cip13 ? `CIP: ${dm.cip13}` : '',
@@ -411,7 +412,7 @@
         } else {
           // EAN-13 and other 1D barcodes open the add form immediately.
           // run online lookup in background, update card when done
-          statusEl.textContent = 'New barcode - opening form...';
+          statusEl.textContent = tx('scanner.status.newBarcode', null, 'New barcode - opening form...');
           statusEl.style.color = '#00d4aa';
           showNewDrugCard(input, { name: '', generic: '', mfr: '', expiry: '', source: '' }, dm);
           // Background lookup updates the card silently without blocking UX.
@@ -420,7 +421,7 @@
         return;
       }
 
-      statusEl.textContent = `Found: ${med.name}`;
+      statusEl.textContent = tx('scanner.status.found', { name: med.name }, `Found: ${med.name}`);
       statusEl.style.color = '#00c97b';
 
       document.getElementById('result-name').textContent = med.name + (med.generic ? ` (${med.generic})` : '');
@@ -428,15 +429,15 @@
       document.getElementById('result-box-price').textContent = '$' + med.price_box.toFixed(2);
       const up = med.units_per_box ? (med.price_box / med.units_per_box).toFixed(2) : '-';
       document.getElementById('result-unit-price').textContent = '$' + up;
-      document.getElementById('result-stock').textContent = med.stock + ' boxes';
+      document.getElementById('result-stock').textContent = tx('scanner.result.stockBoxes', { count: med.stock }, `${med.stock} boxes`);
       document.getElementById('result-expiry').textContent = med.expiry;
-      document.getElementById('result-location').textContent = med.shelf || 'Unknown';
+      document.getElementById('result-location').textContent = med.shelf || tx('scanner.result.unknown', null, 'Unknown');
       document.getElementById('result-zone').textContent = med.zone;
 
       let sb = '';
-      if (med.stock === 0) sb = '<span class="stock-badge stock-out">Out of Stock</span>';
-      else if (med.stock <= med.reorder) sb = '<span class="stock-badge stock-low">Low</span>';
-      else sb = '<span class="stock-badge stock-ok">In Stock</span>';
+      if (med.stock === 0) sb = `<span class="stock-badge stock-out">${tx('inventory.status.out', null, 'Out of Stock')}</span>`;
+      else if (med.stock <= med.reorder) sb = `<span class="stock-badge stock-low">${tx('inventory.status.low', null, 'Low')}</span>`;
+      else sb = `<span class="stock-badge stock-ok">${tx('inventory.status.in', null, 'In Stock')}</span>`;
       document.getElementById('result-stock-badge').innerHTML = sb;
       resultEl.style.display = 'block';
 
@@ -472,7 +473,7 @@
       nameEl.style.color = drug.name ? '#e8edf5' : '#5a6680';
       genericEl.textContent = drug.generic || (dm.isFMD ? `CIP: ${dm.cip13 || '-'}` : '-');
       mfrEl.textContent = drug.mfr || '-';
-      barcodeEl.textContent = barcode + (dm.isFMD ? ' - DataMatrix/FMD' : '');
+      barcodeEl.textContent = barcode + (dm.isFMD ? ` - ${tx('scanner.result.dataMatrixFmd', null, 'DataMatrix/FMD')}` : '');
 
       if (drug.expiry || dm.expiry) {
         expiryRow.style.display = 'block';
@@ -529,7 +530,9 @@
       const statusEl = document.getElementById('scanner-status');
 
       if (!navigator.onLine) {
-        statusEl.textContent = dm.isFMD ? 'DataMatrix decoded - offline' : 'Offline - fill manually';
+        statusEl.textContent = dm.isFMD
+          ? tx('scanner.status.dataMatrixOffline', null, 'DataMatrix decoded - offline')
+          : tx('scanner.status.offlineManual', null, 'Offline - fill manually');
         statusEl.style.color = dm.isFMD ? '#00d4aa' : '#ff6b35';
         return;
       }
@@ -599,16 +602,22 @@
             if (found.mfr) mfrEl.textContent = found.mfr;
           }
           const flag = { france: '[FR]', cambodia: '[KH]', thailand: '[TH]', vietnam: '[VN]', usa: '[US]', india: '[IN]', china: '[CN]', japan: '[JP]', korea: '[KR]', eu: '[EU]', global: '[Global]' };
-          statusEl.textContent = `${flag[region] || '[Global]'} Found: ${found.name} - ${found.source}`;
+          statusEl.textContent = tx(
+            'scanner.status.foundSource',
+            { region: flag[region] || '[Global]', name: found.name, source: found.source },
+            `${flag[region] || '[Global]'} Found: ${found.name} - ${found.source}`
+          );
           statusEl.style.color = '#00c97b';
         } else {
           statusEl.textContent = dm.isFMD
-            ? 'DataMatrix decoded - name not found'
-            : 'Not found globally - add manually';
+            ? tx('scanner.status.dataMatrixNoName', null, 'DataMatrix decoded - name not found')
+            : tx('scanner.status.notFoundGlobal', null, 'Not found globally - add manually');
           statusEl.style.color = dm.isFMD ? '#00d4aa' : '#ff6b35';
         }
       } catch (e) {
-        statusEl.textContent = dm.isFMD ? 'DataMatrix decoded' : 'Lookup failed - add manually';
+        statusEl.textContent = dm.isFMD
+          ? tx('scanner.status.dataMatrixDecoded', null, 'DataMatrix decoded')
+          : tx('scanner.status.lookupFailed', null, 'Lookup failed - add manually');
         statusEl.style.color = dm.isFMD ? '#00d4aa' : '#ff6b35';
       }
     }
@@ -865,7 +874,7 @@
       closeScanner();
 
       editId = null;
-      document.getElementById('modal-title').textContent = 'Add New Medicine';
+      document.getElementById('modal-title').textContent = tx('scanner.addNewMedicine', null, 'Add New Medicine');
       document.getElementById('f-name').value = drug.name || '';
       document.getElementById('f-generic').value = drug.generic || '';
       document.getElementById('f-barcode').value = barcode;
@@ -908,10 +917,10 @@
           // lookupBarcode() would restart the camera while the scanner is still open.
           const updated = inventory.find(m => m.id === med.id);
           if (updated) { window._lastScannedMed = updated; lookupBarcode(updated.barcode); }
-          showToast(`Stock updated to ${n} boxes`);
+          showToast(tx('scanner.toast.stockUpdated', { count: n }, `Stock updated to ${n} boxes`));
         } catch (error) {
           console.error(error);
-          showToast(error.message || 'Unable to update stock', true);
+          showToast(error.message || tx('scanner.toast.unableUpdateStock', null, 'Unable to update stock'), true);
         }
       });
     }

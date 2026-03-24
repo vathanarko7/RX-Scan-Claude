@@ -14,6 +14,18 @@
         .replace(/'/g, '&#39;');
     }
 
+    const tx = (...args) => {
+      if (typeof globalThis.t === 'function') return globalThis.t(...args);
+      const [key, params, fallback] = args;
+      let text = fallback || key || '';
+      if (params && typeof params === 'object') {
+        Object.entries(params).forEach(([name, value]) => {
+          text = text.replace(new RegExp(`{{${name}}}`, 'g'), value);
+        });
+      }
+      return text;
+    };
+
     // ============================
     // DATA STORE
     // ============================
@@ -136,9 +148,16 @@
         logoDot.style.boxShadow = `0 0 10px ${dotColor}`;
         logoDot.style.animation = state === 'connecting' ? 'pulse-connection 1.1s infinite ease-in-out' : 'none';
       }
-      if (state === 'online') label.textContent = 'Online';
-      else if (state === 'offline') label.textContent = 'Offline';
-      else label.textContent = 'Connecting...';
+      if (state === 'online') {
+        label.setAttribute('data-i18n', 'connection.online');
+        label.textContent = tx('connection.online', null, 'Online');
+      } else if (state === 'offline') {
+        label.setAttribute('data-i18n', 'connection.offline');
+        label.textContent = tx('connection.offline', null, 'Offline');
+      } else {
+        label.setAttribute('data-i18n', 'connection.connecting');
+        label.textContent = tx('connection.connecting', null, 'Connecting...');
+      }
     }
 
     function refreshConnectionIndicator() {
@@ -291,11 +310,11 @@
       const passwordInput = document.getElementById('auth-password');
       if (signInBtn) {
         signInBtn.disabled = isLoading;
-        signInBtn.textContent = isLoading && mode === 'signin' ? 'Signing in...' : 'Sign In';
+        signInBtn.textContent = isLoading && mode === 'signin' ? tx('auth.signingIn', null, 'Signing in...') : tx('auth.signin', null, 'Sign In');
       }
       if (signUpBtn) {
         signUpBtn.disabled = isLoading;
-        signUpBtn.textContent = isLoading && mode === 'signup' ? 'Creating...' : 'Create Staff Account';
+        signUpBtn.textContent = isLoading && mode === 'signup' ? tx('auth.creating', null, 'Creating...') : tx('auth.createStaff', null, 'Create Staff Account');
       }
       if (toggleBtn) toggleBtn.disabled = isLoading;
       if (emailInput) emailInput.disabled = isLoading;
@@ -638,6 +657,12 @@
     function refreshGlobalUi() {
       if (typeof syncAlertBadges === 'function') syncAlertBadges();
     }
+
+    window.addEventListener('rxscan:languagechange', () => {
+      renderActivePage();
+      if (globalThis.i18n?.apply) globalThis.i18n.apply(document);
+      refreshGlobalUi();
+    });
 
     function handleDeclarativeClick(event) {
       const target = event.target.closest('[data-page],[data-action],[data-sort-col],[data-quick-filter]');

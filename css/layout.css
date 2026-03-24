@@ -113,12 +113,12 @@
     }
 
     .inventory-quick-filters {
-      display: none;
-      gap: 0.45rem;
-      margin: -0.2rem 0 0.75rem;
-      overflow-x: auto;
-      padding-bottom: 0.1rem;
-      scrollbar-width: none;
+        display: none;
+        gap: 0.45rem;
+        margin: -0.2rem 0 0.75rem;
+        overflow-x: auto;
+        padding-bottom: 0.1rem;
+        scrollbar-width: none;
     }
 
     .inventory-quick-filters::-webkit-scrollbar {
@@ -177,16 +177,28 @@
     }
 
     .quick-filter-chip.filter-out.active {
-      color: #ff9bb0;
-      background: rgba(255, 127, 152, 0.1);
-      border-color: rgba(255, 127, 152, 0.34);
-      font-weight: 700;
-    }
+        color: #ff9bb0;
+        background: rgba(255, 127, 152, 0.1);
+        border-color: rgba(255, 127, 152, 0.34);
+        font-weight: 700;
+      }
+
+    .quick-filter-chip.filter-expired {
+        border-color: rgba(255, 107, 53, 0.18);
+        background: rgba(255, 107, 53, 0.03);
+      }
+
+    .quick-filter-chip.filter-expired.active {
+        color: #ff9a78;
+        background: rgba(255, 107, 53, 0.1);
+        border-color: rgba(255, 107, 53, 0.34);
+        font-weight: 700;
+      }
 
     .quick-filter-chip.filter-expiring {
-      border-color: rgba(245, 201, 106, 0.16);
-      background: rgba(245, 201, 106, 0.03);
-    }
+        border-color: rgba(245, 201, 106, 0.16);
+        background: rgba(245, 201, 106, 0.03);
+      }
 
     .quick-filter-chip.filter-expiring.active {
       color: #f5c96a;
@@ -211,8 +223,8 @@
     }
 
     .inventory-toolbar-row .inventory-export-btn {
-      display: none;
-    }
+        display: none;
+      }
 
     .inventory-export-btn {
       width: auto !important;
@@ -421,12 +433,16 @@
     }
 
     .inventory-summary-pill.out .inventory-summary-value {
-      color: var(--danger);
-    }
+        color: var(--danger);
+      }
+
+    .inventory-summary-pill.expired .inventory-summary-value {
+        color: #ff9a78;
+      }
 
     .inventory-summary-pill.expiring .inventory-summary-value {
-      color: #ffb347;
-    }
+        color: #ffb347;
+      }
 
     .desktop-table {
       max-height: none;

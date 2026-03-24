@@ -17,7 +17,7 @@
   <link rel="manifest" href="site.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="css/base.css">
@@ -40,10 +40,10 @@
       <div class="auth-hud-corner auth-hud-corner-tr"></div>
       <div class="auth-hud-corner auth-hud-corner-bl"></div>
       <div class="auth-hud-corner auth-hud-corner-br"></div>
-      <div class="auth-hud-label auth-hud-label-a">AI inventory mesh</div>
-      <div class="auth-hud-label auth-hud-label-b">Barcode recognition online</div>
-      <div class="auth-hud-label auth-hud-label-c">Molecule graph synced</div>
-      <div class="auth-hud-label auth-hud-label-d">Shelf intelligence active</div>
+      <div class="auth-hud-label auth-hud-label-a" data-i18n="auth.hud.mesh">AI inventory mesh</div>
+      <div class="auth-hud-label auth-hud-label-b" data-i18n="auth.hud.barcode">Barcode recognition online</div>
+      <div class="auth-hud-label auth-hud-label-c" data-i18n="auth.hud.molecule">Molecule graph synced</div>
+      <div class="auth-hud-label auth-hud-label-d" data-i18n="auth.hud.shelf">Shelf intelligence active</div>
     </div>
     <div class="auth-card">
       <div class="auth-hero auth-hero-login">
@@ -51,11 +51,15 @@
           <div class="auth-mini-brand-icon">&#128138;</div>
           <div class="auth-mini-brand-text">
             <div class="auth-mini-brand-name">RxScan</div>
-            <div class="auth-mini-brand-tag">Pharmacy Inventory</div>
+            <div class="auth-mini-brand-tag" data-i18n="auth.brand.tag">Pharmacy Inventory</div>
           </div>
         </div>
-        <div class="auth-kicker">Shared Inventory Cloud</div>
-        <div class="auth-subtitle">Sign in to access shared inventory.</div>
+        <div class="auth-kicker" data-i18n="auth.kicker">Shared Inventory Cloud</div>
+        <div class="auth-subtitle" data-i18n="auth.subtitle">Sign in to access shared inventory.</div>
+        <div class="lang-switch auth-lang-switch" data-lang-switch aria-label="Language switcher">
+          <button type="button" class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" class="lang-btn" data-lang="km" aria-pressed="false">KM</button>
+        </div>
       </div>
       <div class="auth-body">
         <div class="auth-note" id="auth-note">
@@ -63,23 +67,23 @@
         </div>
         <div class="auth-error" id="auth-error"></div>
         <div class="form-group">
-          <label class="auth-label">Email</label>
-          <input type="email" class="form-input" id="auth-email" placeholder="staff@yourpharmacy.com"
+          <label class="auth-label" data-i18n="auth.email">Email</label>
+          <input type="email" class="form-input" id="auth-email" placeholder="staff@yourpharmacy.com" data-i18n-placeholder="auth.email.placeholder"
             autocomplete="email">
         </div>
         <div class="form-group">
-          <label class="auth-label">Password</label>
-          <input type="password" class="form-input" id="auth-password" placeholder="Enter password"
+          <label class="auth-label" data-i18n="auth.password">Password</label>
+          <input type="password" class="form-input" id="auth-password" placeholder="Enter password" data-i18n-placeholder="auth.password.placeholder"
             autocomplete="current-password">
         </div>
         <div class="auth-actions auth-actions-stack">
-          <button class="btn btn-primary" id="auth-signin-btn" data-action="auth-signin">Sign In</button>
+          <button class="btn btn-primary" id="auth-signin-btn" data-action="auth-signin" data-i18n="auth.signin">Sign In</button>
           <div class="auth-action-divider" aria-hidden="true">
             <span class="auth-action-divider-line"></span>
-            <span class="auth-action-divider-copy">OR</span>
+            <span class="auth-action-divider-copy" data-i18n="common.or">OR</span>
             <span class="auth-action-divider-line"></span>
           </div>
-          <button class="btn btn-ghost" id="auth-signup-btn" data-action="auth-signup">Create Staff Account</button>
+          <button class="btn btn-ghost" id="auth-signup-btn" data-action="auth-signup" data-i18n="auth.createStaff">Create Staff Account</button>
         </div>
       </div>
     </div>
@@ -90,31 +94,36 @@
       <div class="logo-wordmark">Rx<span>Scan</span></div>
       <span class="logo-connection-dot" id="logo-connection-dot"></span>
     </div>
+    <div class="connection-pill connecting" id="connection-pill">
+      <span class="connection-dot"></span>
+      <span id="connection-label" data-i18n="connection.connecting">Connecting...</span>
+    </div>
     <nav>
-      <button class="nav-btn active" data-page="dashboard">&#11041; Dashboard</button>
-      <button class="nav-btn" data-page="inventory">&#128230; Inventory</button>
-      <button class="nav-btn" data-page="map">&#128506; Store Map</button>
-      <button class="nav-btn" data-page="alerts">&#128276; Alerts <span id="alert-badge"
+      <button class="nav-btn active" data-page="dashboard">&#11041; <span data-i18n="nav.dashboard">Dashboard</span></button>
+      <button class="nav-btn" data-page="inventory">&#128230; <span data-i18n="nav.inventory">Inventory</span></button>
+      <button class="nav-btn" data-page="map">&#128506; <span data-i18n="nav.map">Store Map</span></button>
+      <button class="nav-btn" data-page="alerts">&#128276; <span data-i18n="nav.alerts">Alerts</span> <span id="alert-badge"
           class="nav-alert-badge">5</span></button>
-      <button class="nav-btn" data-page="analytics">&#128202; Analytics</button>
+      <button class="nav-btn" data-page="analytics">&#128202; <span data-i18n="nav.analytics">Analytics</span></button>
     </nav>
-    <button class="header-scan-btn" data-action="open-scanner">&#11041; SCAN BARCODE</button>
+    <button class="header-scan-btn" data-action="open-scanner">&#11041; <span data-i18n="nav.scan">SCAN BARCODE</span></button>
     <div class="header-actions">
-      <div class="connection-pill connecting" id="connection-pill">
-        <span class="connection-dot"></span>
-        <span id="connection-label">Connecting...</span>
+      <div class="lang-switch header-lang-switch" data-lang-switch aria-label="Language switcher">
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="lang-btn" data-lang="km" aria-pressed="false">KM</button>
       </div>
+      <button type="button" class="mobile-lang-btn" id="mobile-lang-btn" aria-label="Toggle language">EN</button>
       <div class="session-pill is-hidden" id="session-pill-header">
-        <small>Staff</small>
-        <span id="session-email-header">Signed out</span>
+        <small data-i18n="common.staff">Staff</small>
+        <span id="session-email-header" data-i18n="common.signedOut">Signed out</span>
       </div>
       <button class="btn btn-ghost logout-btn-header is-hidden" id="logout-btn-header" data-action="sign-out">
-        <span class="logout-icon">&#8645;</span>
-        <span class="logout-label">Sign out</span>
+        <span class="logout-icon">&#x23FB;</span>
+        <span class="logout-label" data-i18n="common.signout">Sign out</span>
       </button>
       <button class="header-alert-btn" id="mobile-header-alert" data-page="alerts">
         <span class="header-alert-icon">&#128276;</span>
-        <span class="header-alert-label">Alerts</span>
+        <span class="header-alert-label" data-i18n="nav.alerts">Alerts</span>
         <span class="header-alert-badge" id="header-alert-badge">5</span>
       </button>
     </div>
@@ -123,19 +132,19 @@
   <!-- MOBILE BOTTOM NAV -->
   <nav class="mobile-nav" id="mobile-nav">
     <button class="mobile-nav-btn active" id="mn-dashboard" data-page="dashboard">
-      <span class="mn-icon">&#11041;</span>Dash
+      <span class="mn-icon">&#11041;</span><span data-i18n="nav.dashboard.short">Dash</span>
     </button>
     <button class="mobile-nav-btn" id="mn-inventory" data-page="inventory">
-      <span class="mn-icon">&#128230;</span>Stock
+      <span class="mn-icon">&#128230;</span><span data-i18n="nav.inventory.short">Stock</span>
     </button>
     <button class="mobile-nav-btn mobile-nav-scan" data-action="open-scanner">
-      <span class="mn-icon">&#128247;</span>Scan
+      <span class="mn-icon">&#128247;</span><span data-i18n="nav.scan.short">Scan</span>
     </button>
     <button class="mobile-nav-btn" id="mn-map" data-page="map">
-      <span class="mn-icon">&#128506;</span>Map
+      <span class="mn-icon">&#128506;</span><span data-i18n="nav.map.short">Map</span>
     </button>
     <button class="mobile-nav-btn" id="mn-analytics" data-page="analytics">
-      <span class="mn-icon">&#128202;</span>Stats
+      <span class="mn-icon">&#128202;</span><span data-i18n="nav.analytics.short">Stats</span>
     </button>
   </nav>
 
@@ -145,10 +154,10 @@
     <div class="page active" id="page-dashboard">
       <div class="desktop-session-bar" id="desktop-session-bar">
         <div class="session-pill is-hidden" id="session-pill">
-          <small>Staff</small>
-          <span id="session-email">Signed out</span>
+          <small data-i18n="common.staff">Staff</small>
+          <span id="session-email" data-i18n="common.signedOut">Signed out</span>
         </div>
-        <button class="btn btn-ghost is-hidden" id="logout-btn" data-action="sign-out">Sign Out</button>
+        <button class="btn btn-ghost is-hidden" id="logout-btn" data-action="sign-out" data-i18n="common.signout">Sign Out</button>
       </div>
       <div class="page-header">
         <div>
@@ -156,47 +165,47 @@
           <div class="page-subtitle" id="dashboard-date"></div>
             <div class="dashboard-attention-strip" id="dashboard-priority-line"></div>
         </div>
-        <button class="btn btn-primary" data-action="inventory-add">+ Add Medicine</button>
+        <button class="btn btn-primary" data-action="inventory-add">+ <span data-i18n="inventory.add">Add Medicine</span></button>
       </div>
 
       <div class="mobile-dashboard-actions">
         <button class="mobile-dashboard-action primary" data-action="open-scanner">
           <span class="mobile-dashboard-action-icon">&#128247;</span>
-          <span>Scan</span>
+          <span data-i18n="nav.scan.short">Scan</span>
         </button>
         <button class="mobile-dashboard-action" data-action="inventory-add">
           <span class="mobile-dashboard-action-icon">+</span>
-          <span>Add</span>
+          <span data-i18n="common.add">Add</span>
         </button>
         <button class="mobile-dashboard-action" data-page="alerts">
           <span class="mobile-dashboard-action-icon">&#128276;</span>
-          <span>Alerts</span>
+          <span data-i18n="nav.alerts">Alerts</span>
         </button>
       </div>
 
       <div class="stats-row">
         <div class="stat-card dashboard-stat-card dashboard-stat-total">
-          <div class="stat-label">Total SKUs</div>
+          <div class="stat-label" data-i18n="dashboard.stat.totalSkus">Total SKUs</div>
           <div class="stat-value" id="stat-total">0</div>
-          <div class="stat-sub">Unique medicines</div>
+          <div class="stat-sub" data-i18n="dashboard.stat.totalSkus.sub">Unique medicines</div>
           <div class="stat-icon">&#128230;</div>
         </div>
         <div class="stat-card dashboard-stat-card dashboard-stat-value">
-          <div class="stat-label">Total Value</div>
+          <div class="stat-label" data-i18n="dashboard.stat.totalValue">Total Value</div>
           <div class="stat-value" id="stat-value">$0</div>
-          <div class="stat-sub">Inventory valuation</div>
+          <div class="stat-sub" data-i18n="dashboard.stat.totalValue.sub">Inventory valuation</div>
           <div class="stat-icon">&#128176;</div>
         </div>
         <div class="stat-card warn dashboard-stat-card dashboard-stat-low" data-action="inventory-filter" data-filter="low">
-          <div class="stat-label">Low Stock</div>
+          <div class="stat-label" data-i18n="dashboard.stat.lowStock">Low Stock</div>
           <div class="stat-value" id="stat-low">0</div>
-          <div class="stat-sub">Below reorder point</div>
+          <div class="stat-sub" data-i18n="dashboard.stat.lowStock.sub">Below reorder point</div>
           <div class="stat-icon">&#9888;&#65039;</div>
         </div>
         <div class="stat-card danger dashboard-stat-card dashboard-stat-expiry" data-action="inventory-filter" data-filter="expiring">
-          <div class="stat-label">Expiring Soon</div>
+          <div class="stat-label" data-i18n="dashboard.stat.expiringSoon">Expiring Soon</div>
           <div class="stat-value" id="stat-expiry">0</div>
-          <div class="stat-sub">Within 90 days</div>
+          <div class="stat-sub" data-i18n="dashboard.stat.expiringSoon.sub">Within 90 days</div>
           <div class="stat-icon">&#128467;</div>
         </div>
       </div>
@@ -204,16 +213,16 @@
       <div class="dash-bottom">
         <div>
           <div class="recent-scans">
-            <div class="section-header">Recent Scans <span
-                class="section-meta-text">Last
+            <div class="section-header"><span data-i18n="dashboard.recentScans">Recent Scans</span> <span
+                class="section-meta-text" data-i18n="dashboard.last24h">Last
                 24h</span></div>
             <div id="scan-history-list"></div>
           </div>
         </div>
         <div>
           <div class="chart-card">
-            <div class="chart-title">Stock by Category <span
-                class="section-meta-text">items</span>
+            <div class="chart-title"><span data-i18n="dashboard.stockByCategory">Stock by Category</span> <span
+                class="section-meta-text" data-i18n="common.items">items</span>
             </div>
             <div class="bar-chart" id="category-chart"></div>
           </div>
@@ -225,35 +234,36 @@
     <div class="page" id="page-inventory">
       <div class="page-header">
         <div>
-          <div class="page-title">Inventory <span>Management</span></div>
-          <div class="page-subtitle">Full medicine stock control</div>
+          <div class="page-title"><span data-i18n="inventory.title">Inventory</span> <span data-i18n="inventory.titleAccent">Management</span></div>
+          <div class="page-subtitle" data-i18n="inventory.subtitle">Full medicine stock control</div>
         </div>
-        <button class="btn btn-primary" data-action="open-add-modal">+ Add Medicine</button>
+        <button class="btn btn-primary" data-action="open-add-modal">+ <span data-i18n="inventory.add">Add Medicine</span></button>
       </div>
 
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon">&#128269;</span>
-          <input type="text" class="search-input" id="search-inv" placeholder="Search name, barcode, shelf, manufacturer...">
+          <input type="text" class="search-input" id="search-inv" placeholder="Search name, barcode, shelf, manufacturer..." data-i18n-placeholder="inventory.search.placeholder">
           <button class="search-clear" id="search-clear-btn" data-action="clear-search">&times;</button>
         </div>
         <select class="filter-select" id="filter-cat">
-          <option value="">All Categories</option>
+          <option value="" data-i18n="inventory.filter.allCategories">All Categories</option>
         </select>
         <select class="filter-select" id="filter-zone">
-          <option value="">All Zones</option>
+          <option value="" data-i18n="inventory.filter.allZones">All Zones</option>
         </select>
-        <button class="btn btn-ghost inventory-export-btn-desktop" data-action="export-filtered">&#11015; Export CSV</button>
+        <button class="btn btn-ghost inventory-export-btn-desktop" data-action="export-filtered">&#11015; <span data-i18n="inventory.export">Export CSV</span></button>
       </div>
 
       <div class="inventory-toolbar-row">
         <div class="inventory-quick-filters">
-            <button class="quick-filter-chip filter-all active" id="chip-all" data-quick-filter="all">All</button>
-            <button class="quick-filter-chip filter-low" id="chip-low" data-quick-filter="low">Low</button>
-            <button class="quick-filter-chip filter-out" id="chip-out" data-quick-filter="out">Out</button>
-            <button class="quick-filter-chip filter-expiring" id="chip-expiring" data-quick-filter="expiring">Expiring</button>
+            <button class="quick-filter-chip filter-all active" id="chip-all" data-quick-filter="all" data-i18n="inventory.quick.all">All</button>
+            <button class="quick-filter-chip filter-low" id="chip-low" data-quick-filter="low" data-i18n="inventory.quick.low">Low</button>
+            <button class="quick-filter-chip filter-out" id="chip-out" data-quick-filter="out" data-i18n="inventory.quick.out">Out</button>
+            <button class="quick-filter-chip filter-expired" id="chip-expired" data-quick-filter="expired" data-i18n="inventory.quick.expired">Expired</button>
+            <button class="quick-filter-chip filter-expiring" id="chip-expiring" data-quick-filter="expiring" data-i18n="inventory.quick.expiring">Expiring</button>
           </div>
-        <button class="btn btn-ghost inventory-export-btn" data-action="export-filtered">&#11015; Export CSV</button>
+        <button class="btn btn-ghost inventory-export-btn" data-action="export-filtered">&#11015; <span data-i18n="inventory.export">Export CSV</span></button>
       </div>
 
       <div class="inventory-summary-strip" id="inventory-summary-strip"></div>
@@ -263,14 +273,14 @@
           <table>
             <thead>
               <tr>
-                <th data-sort-col="name">Medicine &#8597;</th>
-                <th data-sort-col="barcode">Barcode &#8597;</th>
-                <th data-sort-col="location">Location &#8597;</th>
-                <th data-sort-col="stock">Stock &#8597;</th>
-                <th data-sort-col="price_box">Box Price &#8597;</th>
-                <th data-sort-col="price_unit">Unit Price &#8597;</th>
-                <th data-sort-col="expiry">Expiry &#8597;</th>
-                <th>Actions</th>
+                <th data-sort-col="name" data-i18n="inventory.table.medicine">Medicine &#8597;</th>
+                <th data-sort-col="barcode" data-i18n="inventory.table.barcode">Barcode &#8597;</th>
+                <th data-sort-col="location" data-i18n="inventory.table.location">Location &#8597;</th>
+                <th data-sort-col="stock" data-i18n="inventory.table.stock">Stock &#8597;</th>
+                <th data-sort-col="price_box" data-i18n="inventory.table.boxPrice">Box Price &#8597;</th>
+                <th data-sort-col="price_unit" data-i18n="inventory.table.unitPrice">Unit Price &#8597;</th>
+                <th data-sort-col="expiry" data-i18n="inventory.table.expiry">Expiry &#8597;</th>
+                <th data-i18n="inventory.table.actions">Actions</th>
               </tr>
             </thead>
             <tbody id="inventory-tbody"></tbody>
@@ -288,26 +298,26 @@
     <div class="page" id="page-map">
       <div class="page-header">
         <div>
-          <div class="page-title">Store <span>Map</span></div>
-          <div class="page-subtitle">Visual layout - click a shelf to see its contents</div>
+          <div class="page-title"><span data-i18n="map.title">Store</span> <span data-i18n="map.titleAccent">Map</span></div>
+          <div class="page-subtitle" data-i18n="map.subtitle">Visual layout - click a shelf to see its contents</div>
         </div>
       </div>
       <div class="map-grid">
         <div class="map-sidebar">
           <div class="map-sidebar-header">
-            <h3>&#11041; Zones</h3>
+            <h3>&#11041; <span data-i18n="map.zones">Zones</span></h3>
           </div>
           <div class="map-sidebar-search">
-            <input type="text" class="map-search-input" id="map-shelf-search" placeholder="Find shelf e.g. A2-L1">
-            <button type="button" class="map-search-btn" id="map-shelf-search-btn">Jump</button>
+            <input type="text" class="map-search-input" id="map-shelf-search" placeholder="Find shelf e.g. A2-L1" data-i18n-placeholder="map.search.placeholder">
+            <button type="button" class="map-search-btn" id="map-shelf-search-btn" data-i18n="map.search.jump">Jump</button>
           </div>
           <div class="zone-list" id="zone-list"></div>
           <div class="map-sidebar-section">
-            <h3>Selected Shelf</h3>
+            <h3 data-i18n="map.selectedShelf">Selected Shelf</h3>
             <div id="shelf-detail" class="shelf-detail-copy">
               <div class="shelf-detail-empty">
-                <div class="shelf-detail-empty-title">Select a shelf</div>
-                <div class="shelf-detail-empty-copy">Inspect stock, expiry, and assigned medicines from the map.</div>
+                <div class="shelf-detail-empty-title" data-i18n="map.empty.title">Select a shelf</div>
+                <div class="shelf-detail-empty-copy" data-i18n="map.empty.copy">Inspect stock, expiry, and assigned medicines from the map.</div>
               </div>
             </div>
           </div>
@@ -323,8 +333,8 @@
     <div class="page" id="page-alerts">
       <div class="page-header">
         <div>
-          <div class="page-title">Smart <span>Alerts</span></div>
-          <div class="page-subtitle">Automated inventory intelligence</div>
+          <div class="page-title"><span data-i18n="alerts.title">Smart</span> <span data-i18n="alerts.titleAccent">Alerts</span></div>
+          <div class="page-subtitle" data-i18n="alerts.subtitle">Automated inventory intelligence</div>
         </div>
       </div>
       <div class="alerts-list" id="alerts-list"></div>
@@ -334,58 +344,58 @@
     <div class="page" id="page-analytics">
       <div class="page-header">
         <div>
-          <div class="page-title">Analytics <span>&amp; Reports</span></div>
-          <div class="page-subtitle">Inventory trends and financial overview</div>
+          <div class="page-title"><span data-i18n="analytics.title">Analytics</span> <span data-i18n="analytics.titleAccent">&amp; Reports</span></div>
+          <div class="page-subtitle" data-i18n="analytics.subtitle">Inventory trends and financial overview</div>
         </div>
       </div>
       <div class="analytics-insights" id="analytics-insights">
         <div class="analytics-insight-card analytics-insight-urgent">
-          <div class="analytics-insight-label">In stock rate</div>
+          <div class="analytics-insight-label" data-i18n="analytics.insight.inStockRate">In stock rate</div>
           <div class="analytics-insight-value" id="an-health-value">0%</div>
-          <div class="analytics-insight-meta" id="an-health-meta">Above reorder point</div>
+          <div class="analytics-insight-meta" id="an-health-meta" data-i18n="analytics.insight.inStockRate.meta">Above reorder point</div>
         </div>
         <div class="analytics-insight-card">
-          <div class="analytics-insight-label">Nearest expiry</div>
+          <div class="analytics-insight-label" data-i18n="analytics.insight.nearestExpiry">Nearest expiry</div>
           <div class="analytics-insight-value" id="an-nearest-expiry-name">-</div>
-          <div class="analytics-insight-meta" id="an-nearest-expiry-meta">No upcoming expiry</div>
+          <div class="analytics-insight-meta" id="an-nearest-expiry-meta" data-i18n="analytics.insight.nearestExpiry.meta">No upcoming expiry</div>
         </div>
         <div class="analytics-insight-card">
-          <div class="analytics-insight-label">Highest priced box</div>
+          <div class="analytics-insight-label" data-i18n="analytics.insight.highestPricedBox">Highest priced box</div>
           <div class="analytics-insight-value" id="an-top-stock-name">-</div>
-          <div class="analytics-insight-meta" id="an-top-stock-meta">No inventory yet</div>
+          <div class="analytics-insight-meta" id="an-top-stock-meta" data-i18n="analytics.insight.highestPricedBox.meta">No inventory yet</div>
         </div>
         <div class="analytics-insight-card">
-          <div class="analytics-insight-label">Categories</div>
+          <div class="analytics-insight-label" data-i18n="analytics.insight.categories">Categories</div>
           <div class="analytics-insight-value" id="an-cats">0</div>
-          <div class="analytics-insight-meta">Drug categories</div>
+          <div class="analytics-insight-meta" data-i18n="analytics.insight.categories.meta">Drug categories</div>
         </div>
       </div>
       <div class="stats-row">
         <div class="stat-card">
-          <div class="stat-label">Total Units</div>
+          <div class="stat-label" data-i18n="analytics.stats.totalUnits">Total Units</div>
           <div class="stat-value" id="an-total-units">0</div>
-          <div class="stat-sub">Across all products</div>
+          <div class="stat-sub" data-i18n="analytics.stats.totalUnits.sub">Across all products</div>
           <div class="stat-icon">&#128290;</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Avg Box Price</div>
+          <div class="stat-label" data-i18n="analytics.stats.avgBoxPrice">Avg Box Price</div>
           <div class="stat-value" id="an-avg-price">$0</div>
-          <div class="stat-sub">Across all medicines</div>
+          <div class="stat-sub" data-i18n="analytics.stats.avgBoxPrice.sub">Across all medicines</div>
           <div class="stat-icon">&#128178;</div>
         </div>
       </div>
       <div class="chart-row">
         <div class="chart-card">
-          <div class="chart-title">Top stock <span class="section-meta-text">highest quantity</span></div>
+          <div class="chart-title"><span data-i18n="analytics.chart.topStock">Top stock</span> <span class="section-meta-text" data-i18n="analytics.chart.topStock.meta">highest quantity</span></div>
           <div class="bar-chart" id="an-stock-chart"></div>
         </div>
         <div class="chart-card">
-          <div class="chart-title">Top value <span class="section-meta-text">inventory worth</span></div>
+          <div class="chart-title"><span data-i18n="analytics.chart.topValue">Top value</span> <span class="section-meta-text" data-i18n="analytics.chart.topValue.meta">inventory worth</span></div>
           <div class="bar-chart" id="an-value-chart"></div>
         </div>
       </div>
       <div class="chart-card">
-        <div class="chart-title">Category mix <span class="section-meta-text">medicine count</span></div>
+        <div class="chart-title"><span data-i18n="analytics.chart.categoryMix">Category mix</span> <span class="section-meta-text" data-i18n="analytics.chart.categoryMix.meta">medicine count</span></div>
         <div class="cat-pills analytics-cat-pills" id="an-cat-pills"></div>
       </div>
     </div>
@@ -401,33 +411,33 @@
       </div>
       <div class="modal-header">
         <div class="modal-title-block">
-          <div class="modal-title" id="modal-title">Add Medicine</div>
-          <div class="modal-status-tags" id="modal-status-tags">
-            <span class="modal-status-tag stock-ok" id="modal-stock-tag">Stock OK</span>
-            <span class="modal-status-tag expiry-ok" id="modal-expiry-tag">No expiry</span>
-            <span class="modal-status-tag location-missing" id="modal-location-tag">Unassigned</span>
-          </div>
+            <div class="modal-title" id="modal-title" data-i18n="modal.medication.title">Add Medicine</div>
+            <div class="modal-status-tags" id="modal-status-tags">
+              <span class="modal-status-tag stock-ok" id="modal-stock-tag" data-i18n="modal.medication.status.stockOk">Stock OK</span>
+              <span class="modal-status-tag expiry-ok" id="modal-expiry-tag" data-i18n="modal.medication.status.noExpiry">No expiry</span>
+              <span class="modal-status-tag location-missing" id="modal-location-tag" data-i18n="modal.medication.status.unassigned">Unassigned</span>
+            </div>
         </div>
         <button class="icon-btn modal-close-btn" data-action="close-modal">&#10005;</button>
       </div>
       <div class="modal-body">
         <div class="form-row">
           <div class="form-group">
-            <label>Brand Name *</label>
-            <input type="text" class="form-input" id="f-name" placeholder="e.g. Amoxil">
+              <label data-i18n="modal.medication.field.brand">Brand Name *</label>
+              <input type="text" class="form-input" id="f-name" placeholder="e.g. Amoxil" data-i18n-placeholder="modal.medication.placeholder.brand">
           </div>
           <div class="form-group">
-            <label>Generic Name</label>
-            <input type="text" class="form-input" id="f-generic" placeholder="e.g. Amoxicillin">
+              <label data-i18n="modal.medication.field.generic">Generic Name</label>
+              <input type="text" class="form-input" id="f-generic" placeholder="e.g. Amoxicillin" data-i18n-placeholder="modal.medication.placeholder.generic">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Barcode *</label>
-            <input type="text" class="form-input" id="f-barcode" placeholder="e.g. 3400936345507">
+              <label data-i18n="modal.medication.field.barcode">Barcode *</label>
+              <input type="text" class="form-input" id="f-barcode" placeholder="e.g. 3400936345507" data-i18n-placeholder="modal.medication.placeholder.barcode">
           </div>
           <div class="form-group">
-            <label>Category *</label>
+              <label data-i18n="modal.medication.field.category">Category *</label>
             <select class="form-select" id="f-category">
               <option>Antibiotics</option>
               <option>Analgesics</option>
@@ -446,27 +456,27 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Box Price ($) *</label>
+              <label data-i18n="modal.medication.field.boxPrice">Box Price ($) *</label>
             <input type="number" class="form-input" id="f-price-box" step="0.01" placeholder="12.50">
           </div>
           <div class="form-group">
-            <label>Units per Box</label>
+              <label data-i18n="modal.medication.field.unitsPerBox">Units per Box</label>
             <input type="number" class="form-input" id="f-units" placeholder="30">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Current Stock (boxes)</label>
+              <label data-i18n="modal.medication.field.currentStock">Current Stock (boxes)</label>
             <input type="number" class="form-input" id="f-stock" placeholder="50">
           </div>
           <div class="form-group">
-            <label>Reorder Point</label>
+              <label data-i18n="modal.medication.field.reorderPoint">Reorder Point</label>
             <input type="number" class="form-input" id="f-reorder" placeholder="10">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Zone *</label>
+              <label data-i18n="modal.medication.field.zone">Zone *</label>
             <select class="form-select" id="f-zone">
               <option>A - Antibiotics</option>
               <option>B - Pain Relief</option>
@@ -479,24 +489,24 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Shelf</label>
-            <input type="text" class="form-input" id="f-shelf" placeholder="e.g. A2-L3">
+              <label data-i18n="modal.medication.field.shelf">Shelf</label>
+              <input type="text" class="form-input" id="f-shelf" placeholder="e.g. A2-L3" data-i18n-placeholder="modal.medication.placeholder.shelf">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Expiry Date</label>
+              <label data-i18n="modal.medication.field.expiryDate">Expiry Date</label>
             <input type="date" class="form-input" id="f-expiry">
           </div>
           <div class="form-group">
-            <label>Manufacturer</label>
-            <input type="text" class="form-input" id="f-mfr" placeholder="e.g. Pfizer">
+              <label data-i18n="modal.medication.field.manufacturer">Manufacturer</label>
+              <input type="text" class="form-input" id="f-mfr" placeholder="e.g. Pfizer" data-i18n-placeholder="modal.medication.placeholder.manufacturer">
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-ghost" data-action="close-modal">Cancel</button>
-        <button class="btn btn-primary" data-action="save-medication">&#128190; Save</button>
+        <button class="btn btn-ghost" data-action="close-modal" data-i18n="common.cancel">Cancel</button>
+        <button class="btn btn-primary" data-action="save-medication">&#128190; <span data-i18n="common.save">Save</span></button>
       </div>
     </div>
   </div>
@@ -504,7 +514,7 @@
   <!-- TOAST -->
   <div class="toast" id="toast">
     <span id="toast-icon">&#10003;</span>
-    <span id="toast-msg">Saved!</span>
+    <span id="toast-msg" data-i18n="common.saved">Saved!</span>
   </div>
 
   
@@ -515,8 +525,8 @@
 
     <!-- Mobile header - shown on mobile only, hidden on desktop -->
       <div id="scanner-mobile-header" class="scanner-mobile-header-shell">
-        <div class="scanner-mobile-title">&#11041; Scan Medicine</div>
-        <div class="scanner-mobile-subtitle">Scan Data Matrix or barcode</div>
+        <div class="scanner-mobile-title">&#11041; <span data-i18n="scanner.title">Scan Medicine</span></div>
+        <div class="scanner-mobile-subtitle" data-i18n="scanner.subtitle">Scan Data Matrix or barcode</div>
       </div>
 
     <!-- DESKTOP: dialog card wraps everything. On mobile this is transparent/passthrough -->
@@ -683,7 +693,7 @@
       <div class="mini-modal-header">
         <div class="mini-modal-icon danger" id="confirm-icon">&#128465;</div>
         <div class="mini-modal-titles">
-          <div class="mini-modal-title" id="confirm-title">Delete medicine?</div>
+            <div class="mini-modal-title" id="confirm-title" data-i18n="modal.confirm.deleteTitle">Delete medicine?</div>
           <div class="mini-modal-sub" id="confirm-sub"></div>
         </div>
       </div>
@@ -691,8 +701,8 @@
         <div class="mini-modal-warning" id="confirm-message"></div>
       </div>
       <div class="mini-modal-footer">
-        <button class="btn btn-ghost" data-action="close-confirm">Cancel</button>
-        <button class="btn btn-danger" id="confirm-ok-btn" data-action="confirm-ok">Delete</button>
+          <button class="btn btn-ghost" data-action="close-confirm" data-i18n="common.cancel">Cancel</button>
+          <button class="btn btn-danger" id="confirm-ok-btn" data-action="confirm-ok" data-i18n="common.delete">Delete</button>
       </div>
     </div>
   </div>
@@ -704,21 +714,21 @@
       <div class="mini-modal-header">
         <div class="mini-modal-icon accent">&#128230;</div>
         <div class="mini-modal-titles">
-          <div class="mini-modal-title" id="stock-modal-title">Update stock</div>
+            <div class="mini-modal-title" id="stock-modal-title" data-i18n="modal.stock.title">Update stock</div>
           <div class="mini-modal-sub" id="stock-modal-sub"></div>
         </div>
       </div>
       <div class="mini-modal-body">
         <div class="mini-modal-input-wrap">
-          <div class="mini-modal-input-label">New stock</div>
+            <div class="mini-modal-input-label" data-i18n="modal.stock.newStock">New stock</div>
           <input type="number" id="stock-input" min="0" step="1">
-          <div class="mini-modal-input-unit">boxes</div>
+            <div class="mini-modal-input-unit" data-i18n="modal.stock.unitBoxes">boxes</div>
         </div>
         <div class="mini-modal-input-error" id="stock-input-error"></div>
       </div>
       <div class="mini-modal-footer">
-        <button class="btn btn-ghost" data-action="close-stock">Cancel</button>
-        <button class="btn btn-primary" id="stock-ok-btn" data-action="submit-stock">&#128190; Save</button>
+          <button class="btn btn-ghost" data-action="close-stock" data-i18n="common.cancel">Cancel</button>
+          <button class="btn btn-primary" id="stock-ok-btn" data-action="submit-stock">&#128190; <span data-i18n="common.save">Save</span></button>
       </div>
     </div>
   </div>
@@ -729,14 +739,14 @@
       <div class="mini-modal-header">
         <div class="mini-modal-icon accent">&#128230;</div>
         <div class="mini-modal-titles">
-          <div class="mini-modal-title" id="inventory-action-title">Medicine</div>
+            <div class="mini-modal-title" id="inventory-action-title" data-i18n="modal.detail.title">Medicine</div>
           <div class="mini-modal-sub" id="inventory-action-sub"></div>
         </div>
       </div>
       <div class="inventory-action-tags">
-        <span class="modal-status-tag stock-ok" id="inventory-action-stock-tag">In stock</span>
-        <span class="modal-status-tag expiry-ok" id="inventory-action-expiry-tag">No expiry</span>
-        <span class="modal-status-tag location-set" id="inventory-action-location-tag">Assigned</span>
+          <span class="modal-status-tag stock-ok" id="inventory-action-stock-tag" data-i18n="modal.detail.status.inStock">In stock</span>
+          <span class="modal-status-tag expiry-ok" id="inventory-action-expiry-tag" data-i18n="modal.detail.status.noExpiry">No expiry</span>
+          <span class="modal-status-tag location-set" id="inventory-action-location-tag" data-i18n="modal.detail.status.assigned">Assigned</span>
       </div>
         <div class="inventory-action-detail">
           <div class="is-hidden" aria-hidden="true">
@@ -744,50 +754,50 @@
             <div id="inventory-action-expiry"></div>
           </div>
         <div class="inventory-action-detail-section">
-          <div class="inventory-action-section-title">Status</div>
+            <div class="inventory-action-section-title" data-i18n="modal.detail.section.status">Status</div>
           <div class="inventory-action-detail-grid">
             <div class="inventory-action-detail-item inventory-action-detail-item-hero">
-              <div class="inventory-action-detail-label">Current stock</div>
+                <div class="inventory-action-detail-label" data-i18n="modal.detail.field.currentStock">Current stock</div>
               <div class="inventory-action-detail-value inventory-action-detail-value-hero" id="inventory-action-current-stock">-</div>
               <div class="inventory-action-detail-subvalue" id="inventory-action-stock-sub">-</div>
             </div>
             <div class="inventory-action-detail-item inventory-action-detail-item-hero">
-              <div class="inventory-action-detail-label">Expiry</div>
+                <div class="inventory-action-detail-label" data-i18n="modal.detail.field.expiry">Expiry</div>
               <div class="inventory-action-detail-value inventory-action-detail-value-hero" id="inventory-action-expiry-main">-</div>
               <div class="inventory-action-detail-subvalue" id="inventory-action-expiry-sub">-</div>
             </div>
           </div>
         </div>
         <div class="inventory-action-detail-section">
-          <div class="inventory-action-section-title">Pricing</div>
+            <div class="inventory-action-section-title" data-i18n="modal.detail.section.pricing">Pricing</div>
           <div class="inventory-action-detail-grid">
             <div class="inventory-action-detail-item">
-              <div class="inventory-action-detail-label">Box price</div>
+                <div class="inventory-action-detail-label" data-i18n="modal.detail.field.boxPrice">Box price</div>
               <div class="inventory-action-detail-value inventory-action-detail-value-price" id="inventory-action-price-box">-</div>
             </div>
             <div class="inventory-action-detail-item">
-              <div class="inventory-action-detail-label">Unit price</div>
+                <div class="inventory-action-detail-label" data-i18n="modal.detail.field.unitPrice">Unit price</div>
               <div class="inventory-action-detail-value inventory-action-detail-value-price" id="inventory-action-price-unit">-</div>
             </div>
           </div>
         </div>
         <div class="inventory-action-detail-section">
-          <div class="inventory-action-section-title">Product info</div>
+            <div class="inventory-action-section-title" data-i18n="modal.detail.section.productInfo">Product info</div>
           <div class="inventory-action-detail-grid">
             <div class="inventory-action-detail-item">
-              <div class="inventory-action-detail-label">Barcode</div>
+                <div class="inventory-action-detail-label" data-i18n="modal.detail.field.barcode">Barcode</div>
               <div class="inventory-action-detail-value" id="inventory-action-barcode">-</div>
             </div>
             <div class="inventory-action-detail-item">
-              <div class="inventory-action-detail-label">Supplier</div>
+                <div class="inventory-action-detail-label" data-i18n="modal.detail.field.supplier">Supplier</div>
               <div class="inventory-action-detail-value" id="inventory-action-supplier">-</div>
             </div>
             <div class="inventory-action-detail-item">
-              <div class="inventory-action-detail-label">Category</div>
+                <div class="inventory-action-detail-label" data-i18n="modal.detail.field.category">Category</div>
               <div class="inventory-action-detail-value" id="inventory-action-category">-</div>
             </div>
             <div class="inventory-action-detail-item">
-              <div class="inventory-action-detail-label">Shelf</div>
+                <div class="inventory-action-detail-label" data-i18n="modal.detail.field.shelf">Shelf</div>
               <div class="inventory-action-detail-value" id="inventory-action-location">-</div>
             </div>
           </div>
@@ -795,24 +805,24 @@
       </div>
       <div class="inventory-action-list">
         <button class="inventory-action-btn" data-action="inventory-action" data-inventory-action="stock">
-          <span class="inventory-action-label"><span>&#128290;</span><span>Update stock</span></span>
+            <span class="inventory-action-label"><span>&#128290;</span><span data-i18n="modal.detail.action.updateStock">Update stock</span></span>
           <span>&#8250;</span>
         </button>
         <button class="inventory-action-btn" data-action="inventory-action" data-inventory-action="edit">
-          <span class="inventory-action-label"><span>&#9998;</span><span>Edit medicine</span></span>
+            <span class="inventory-action-label"><span>&#9998;</span><span data-i18n="modal.detail.action.editMedicine">Edit medicine</span></span>
           <span>&#8250;</span>
         </button>
         <button class="inventory-action-btn" id="inventory-action-locate-btn" data-action="inventory-action" data-inventory-action="locate">
-          <span class="inventory-action-label"><span>&#128205;</span><span class="inventory-action-text">Locate on map</span></span>
+            <span class="inventory-action-label"><span>&#128205;</span><span class="inventory-action-text" data-i18n="modal.detail.action.locateOnMap">Locate on map</span></span>
           <span>&#8250;</span>
         </button>
         <button class="inventory-action-btn danger" data-action="inventory-action" data-inventory-action="delete">
-          <span class="inventory-action-label"><span>&#128465;</span><span>Delete medicine</span></span>
+            <span class="inventory-action-label"><span>&#128465;</span><span data-i18n="modal.detail.action.deleteMedicine">Delete medicine</span></span>
           <span>&#8250;</span>
         </button>
       </div>
       <div class="mini-modal-footer">
-        <button class="btn btn-ghost" data-action="close-inventory-actions">Close</button>
+          <button class="btn btn-ghost" data-action="close-inventory-actions" data-i18n="common.close">Close</button>
       </div>
     </div>
   </div>
@@ -823,36 +833,37 @@
       <div class="mini-modal-header">
         <div class="mini-modal-icon accent">&#9881;&#65039;</div>
         <div class="mini-modal-titles">
-          <div class="mini-modal-title">Filter & Export</div>
-          <div class="mini-modal-sub">Refine the list or export what you need</div>
+            <div class="mini-modal-title" data-i18n="modal.filterExport.title">Filter & Export</div>
+            <div class="mini-modal-sub" data-i18n="modal.filterExport.subtitle">Refine the list or export what you need</div>
         </div>
       </div>
       <div class="filter-sheet-section">
         <select class="filter-select" id="sheet-sort-preset">
-          <option value="">Current sort</option>
-          <option value="low">Low stock first</option>
-          <option value="expiry">Nearest expiry</option>
-          <option value="name">A-Z</option>
-          <option value="value">Highest value</option>
+          <option value="" data-i18n="modal.filterExport.sort.current">Current sort</option>
+          <option value="low" data-i18n="modal.filterExport.sort.low">Low stock first</option>
+          <option value="expiry" data-i18n="modal.filterExport.sort.expiry">Nearest expiry</option>
+          <option value="name" data-i18n="modal.filterExport.sort.name">A-Z</option>
+          <option value="value" data-i18n="modal.filterExport.sort.value">Highest value</option>
         </select>
         <select class="filter-select" id="sheet-filter-cat">
-          <option value="">All Categories</option>
+          <option value="" data-i18n="inventory.filter.allCategories">All Categories</option>
         </select>
         <select class="filter-select" id="sheet-filter-zone">
-          <option value="">All Zones</option>
+          <option value="" data-i18n="inventory.filter.allZones">All Zones</option>
         </select>
       </div>
       <div class="filter-sheet-actions">
-        <button class="btn btn-primary filter-sheet-btn" data-action="apply-filter-sheet">Apply filters</button>
-        <button class="btn btn-ghost filter-sheet-btn" data-action="export-filtered">Export filtered results</button>
-        <button class="btn btn-ghost filter-sheet-btn" data-action="export-all">Export all inventory</button>
-        <button class="btn btn-ghost filter-sheet-btn" data-action="clear-all-filters">Clear all filters</button>
+        <button class="btn btn-primary filter-sheet-btn" data-action="apply-filter-sheet" data-i18n="modal.filterExport.apply">Apply filters</button>
+        <button class="btn btn-ghost filter-sheet-btn" data-action="export-filtered" data-i18n="modal.filterExport.exportFiltered">Export filtered results</button>
+        <button class="btn btn-ghost filter-sheet-btn" data-action="export-all" data-i18n="modal.filterExport.exportAll">Export all inventory</button>
+          <button class="btn btn-ghost filter-sheet-btn" data-action="clear-all-filters" data-i18n="modal.filterExport.clearAll">Clear all filters</button>
       </div>
       <div class="mini-modal-footer">
-        <button class="btn btn-ghost" data-action="close-filter-sheet">Close</button>
+          <button class="btn btn-ghost" data-action="close-filter-sheet" data-i18n="common.close">Close</button>
       </div>
     </div>
   </div>
+  <script src="js/i18n.js"></script>
   <script src="js/state.js"></script>
   <script src="js/overlays.js"></script>
   <script src="js/supabase.js"></script>

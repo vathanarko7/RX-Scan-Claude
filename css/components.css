@@ -390,10 +390,18 @@
     }
 
     .dash-bottom {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+      }
+
+    #page-dashboard .dash-bottom > div:first-child {
+        order: 2;
+      }
+
+    #page-dashboard .dash-bottom > div:last-child {
+        order: 1;
+      }
 
 
     @media (max-width: 768px) {
