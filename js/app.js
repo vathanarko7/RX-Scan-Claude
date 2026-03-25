@@ -459,6 +459,18 @@
       return bootstrapPromise;
     }
 
+    async function safeRefreshAuthenticatedInventory() {
+      if (!supabaseClient || !currentUser || document.visibilityState !== 'visible') return;
+      try {
+        await ensureActiveSession();
+        if (!inventoryChannel) subscribeToInventory();
+        await refreshInventory();
+      } catch (error) {
+        console.error('Background inventory sync failed', error);
+        refreshConnectionIndicator();
+      }
+    }
+
     function scheduleAuthStateWork(work) {
       window.setTimeout(() => {
         Promise.resolve()
@@ -897,7 +909,10 @@
     // ============================
     // INIT
     // ============================
-    window.addEventListener('online', () => refreshConnectionIndicator());
+    window.addEventListener('online', async () => {
+      refreshConnectionIndicator();
+      await safeRefreshAuthenticatedInventory();
+    });
     window.addEventListener('offline', () => refreshConnectionIndicator());
     document.addEventListener('visibilitychange', async () => {
       if (document.visibilityState !== 'visible' || !supabaseClient || !currentUser) return;
@@ -910,6 +925,9 @@
         refreshConnectionIndicator();
       }
     });
+    window.setInterval(() => {
+      safeRefreshAuthenticatedInventory();
+    }, 15000);
     initDeclarativeUi();
     restoreInventoryUiState();
     initSupabase();
