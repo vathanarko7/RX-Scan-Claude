@@ -1756,6 +1756,7 @@
       font-size: 0.68rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      cursor: pointer;
       transition: border-color 0.2s, background 0.2s, transform 0.2s;
     }
 

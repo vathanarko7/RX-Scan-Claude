@@ -964,7 +964,7 @@
       display: flex;
       margin-left: auto;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.46rem;
     }
 
     header > #connection-pill {
@@ -980,7 +980,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.18rem;
-      padding: 0.22rem;
+      padding: 0.2rem;
       border-radius: 999px;
       border: 1px solid rgba(87, 101, 131, 0.18);
       background: rgba(15, 20, 32, 0.72);
@@ -989,13 +989,13 @@
 
     .lang-btn {
       border: 0;
-      min-width: 38px;
-      height: 32px;
-      padding: 0 0.75rem;
+      min-width: 36px;
+      height: 31px;
+      padding: 0 0.72rem;
       border-radius: 999px;
       background: transparent;
       color: #98a6c5;
-      font: 600 0.78rem/1 Inter, sans-serif;
+      font: 600 0.76rem/1 Inter, sans-serif;
       letter-spacing: 0.08em;
       cursor: pointer;
       transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
@@ -1546,9 +1546,10 @@
       border: 1px solid var(--border);
       color: var(--text);
       font-family: var(--font-body);
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 600;
-      padding: 0.45rem 0.75rem;
+      min-height: 36px;
+      padding: 0.4rem 0.74rem;
       border-radius: 999px;
       cursor: pointer;
       transition: all 0.2s;
@@ -1572,12 +1573,32 @@
     #logout-btn-header {
       order: 2;
       margin-left: auto;
+      min-height: 36px;
+      padding: 0.4rem 0.78rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      gap: 0.42rem;
     }
 
     #logout-btn-header .logout-icon {
-      display: none;
-      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 0.96rem;
+      height: 0.96rem;
+      margin-right: 0.02rem;
       line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    #logout-btn-header .logout-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     #logout-btn-header .logout-label {

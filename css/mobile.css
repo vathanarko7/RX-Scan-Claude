@@ -1,4 +1,4 @@
-    @media (max-width: 1024px) {
+﻿    @media (max-width: 1024px) {
       .chart-row {
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -14,7 +14,7 @@
       }
     }
 
-    /* -- TABLET (≤ 768px) ------------------------------------ */
+    /* -- TABLET (â‰¤ 768px) ------------------------------------ */
     @media (max-width: 768px) {
       body {
         padding-top: 0;
@@ -57,15 +57,15 @@
         align-items: center;
         justify-content: center;
         order: 2;
-        min-width: 30px;
-        height: 30px;
+        min-width: 31px;
+        height: 31px;
         padding: 0;
-        border-radius: 9px;
-        border: 1px solid rgba(106, 121, 155, 0.28);
+        border-radius: 10px;
+        border: 1px solid rgba(106, 121, 155, 0.24);
         background: rgba(18, 24, 38, 0.82);
         color: #00d4aa;
         font-family: var(--font-body);
-        font-size: 0.76rem;
+        font-size: 0.74rem;
         font-weight: 700;
         letter-spacing: 0.03em;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -76,8 +76,9 @@
       .header-alert-btn {
         display: inline-flex;
         order: 1;
-        padding: 0.38rem 0.72rem;
-        font-size: 0.75rem;
+        min-height: 31px;
+        padding: 0.34rem 0.7rem;
+        font-size: 0.74rem;
         gap: 0.3rem;
       }
 
@@ -114,12 +115,13 @@
 
       #logout-btn-header {
         order: 3;
-        min-width: 30px;
-        width: 30px;
-        height: 30px;
+        min-width: 31px;
+        width: 31px;
+        height: 31px;
         padding: 0;
-        border-radius: 9px;
-        font-size: 0.82rem;
+        border-radius: 10px;
+        border-color: rgba(106, 121, 155, 0.24);
+        font-size: 0.8rem;
         justify-content: center;
       }
 
@@ -128,6 +130,14 @@
         align-items: center;
         justify-content: center;
         line-height: 1;
+        margin-right: 0;
+        width: 0.92rem;
+        height: 0.92rem;
+      }
+
+      #logout-btn-header .logout-icon svg {
+        width: 100%;
+        height: 100%;
       }
 
       #logout-btn-header .logout-label {
@@ -426,7 +436,7 @@
       }
     }
 
-    /* -- PHONE (≤ 480px) ------------------------------------- */
+    /* -- PHONE (â‰¤ 480px) ------------------------------------- */
     @media (max-width: 480px) {
       body {
         padding-bottom: 72px;
@@ -648,7 +658,7 @@
         font-size: 0.9rem;
       }
 
-      /* Table → cards */
+      /* Table â†’ cards */
       .desktop-table {
         display: none !important;
       }
@@ -1185,7 +1195,7 @@
       }
     }
 
-    /* -- VERY SMALL PHONES (≤ 360px — Samsung Galaxy S22 base) -- */
+    /* -- VERY SMALL PHONES (â‰¤ 360px â€” Samsung Galaxy S22 base) -- */
     @media (max-width: 360px) {
       main {
         padding: 0.6rem;
@@ -1210,3 +1220,101 @@
       .mobile-nav-btn {
         min-width: 44px !important;
         padding: 6px 6px !important;
+      }
+
+      html[lang="km"] .dashboard-attention-copy {
+        font-size: 0.68rem;
+        letter-spacing: 0.01em;
+        line-height: 1.28;
+      }
+
+      html[lang="km"] .dashboard-attention-btn {
+        height: 28px;
+        padding: 0 0.72rem;
+        font-size: 0.64rem;
+      }
+
+      html[lang="km"] .stat-label,
+      html[lang="km"] .chart-title,
+      html[lang="km"] .section-header {
+        font-size: 0.92rem;
+        letter-spacing: 0.01em;
+        line-height: 1.22;
+      }
+
+      html[lang="km"] .mobile-nav-btn {
+        font-size: 0.68rem;
+        line-height: 1.14;
+      }
+
+      html[lang="km"] .mobile-nav-scan {
+        font-size: 0.72rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      html[lang="km"] .dashboard-attention-copy {
+        font-size: 0.72rem;
+        letter-spacing: 0.01em;
+        line-height: 1.28;
+      }
+
+      html[lang="km"] .dashboard-attention-btn {
+        height: 28px;
+        padding: 0 0.74rem;
+        font-size: 0.68rem;
+      }
+
+      html[lang="km"] .stat-label,
+      html[lang="km"] .chart-title,
+      html[lang="km"] .section-header {
+        font-size: 0.98rem;
+        letter-spacing: 0.01em;
+        line-height: 1.22;
+      }
+
+      html[lang="km"] .mobile-nav-btn {
+        font-size: 0.74rem;
+        line-height: 1.16;
+      }
+
+      html[lang="km"] .mobile-nav-scan {
+        font-size: 0.76rem;
+      }
+
+      html[lang="km"] .page-subtitle,
+      html[lang="km"] .toolbar .search-input,
+      html[lang="km"] .filter-select,
+      html[lang="km"] .quick-filter-chip,
+      html[lang="km"] .inventory-empty,
+      html[lang="km"] .table-footer,
+      html[lang="km"] .alert-filter-chip,
+      html[lang="km"] .alert-group-title,
+      html[lang="km"] .alert-meta,
+      html[lang="km"] .map-zone-name,
+      html[lang="km"] .map-zone-count,
+      html[lang="km"] .map-search-input,
+      html[lang="km"] .map-search-jump,
+      html[lang="km"] .map-legend button,
+      html[lang="km"] .map-section-meta,
+      html[lang="km"] .shelf-tile-meta,
+      html[lang="km"] .scanner-status-shell,
+      html[lang="km"] .scanner-manual-input,
+      html[lang="km"] .scanner-lookup-btn,
+      html[lang="km"] .inventory-action-meta,
+      html[lang="km"] .inventory-action-section-title {
+        font-size: 0.88rem;
+        letter-spacing: 0.01em;
+        line-height: 1.24;
+      }
+
+      html[lang="km"] .btn,
+      html[lang="km"] .ghost-btn,
+      html[lang="km"] .inventory-action-btn,
+      html[lang="km"] .header-alert-btn,
+      html[lang="km"] .mobile-lang-btn,
+      html[lang="km"] #logout-btn-header {
+        font-size: 0.84rem;
+        letter-spacing: 0.01em;
+      }
+    }

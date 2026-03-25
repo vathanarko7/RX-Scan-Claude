@@ -8,6 +8,10 @@
       const viewport = document.getElementById('scanner-viewport');
       const box = document.getElementById('scanner-box');
 
+      if (!overlay || !dialog || !mobileHdr || !closeBtn || !viewport || !box) {
+        return;
+      }
+
       // Same dialog style on all screen sizes.
       // Full-screen blurred backdrop, centered floating card
       overlay.style.background = 'rgba(10,14,20,0.92)';
@@ -46,11 +50,11 @@
         deskHdr = document.createElement('div');
         deskHdr.id = 'scanner-desk-header';
         deskHdr.style.cssText = 'padding:1.5rem 1.5rem 0;flex-shrink:0;';
-        deskHdr.innerHTML = `
-      <div style="font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#e8edf5;text-align:center;margin-bottom:4px;">${tx('scanner.title', null, 'Scan Medicine')}</div>
-      <div style="font-size:0.78rem;color:#5a6680;text-align:center;">${tx('scanner.desktopSubtitle', null, 'Scan Data Matrix or barcode - or enter manually')}</div>`;
         dialog.insertBefore(deskHdr, dialog.firstChild);
       }
+      deskHdr.innerHTML = `
+      <div style="font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#e8edf5;text-align:center;margin-bottom:4px;">${tx('scanner.title', null, 'Scan Medicine')}</div>
+      <div style="font-size:0.78rem;color:#5a6680;text-align:center;">${tx('scanner.desktopSubtitle', null, 'Scan Data Matrix or barcode - or enter manually')}</div>`;
       deskHdr.style.display = 'block';
 
       // Close button in the top-right corner of the dialog card.
@@ -90,6 +94,7 @@
 
     function openScanner() {
       const overlay = document.getElementById('scanner-overlay');
+      if (!overlay) return;
       overlay.style.display = 'flex';
       applyScannerLayout();
       const cameraWrap = document.getElementById('scanner-camera-wrap');

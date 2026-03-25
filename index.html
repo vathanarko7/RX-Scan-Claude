@@ -118,7 +118,13 @@
         <span id="session-email-header" data-i18n="common.signedOut">Signed out</span>
       </div>
       <button class="btn btn-ghost logout-btn-header is-hidden" id="logout-btn-header" data-action="sign-out">
-        <span class="logout-icon">&#x23FB;</span>
+        <span class="logout-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M10 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4" />
+            <path d="M13 16l5-4-5-4" />
+            <path d="M18 12H9" />
+          </svg>
+        </span>
         <span class="logout-label" data-i18n="common.signout">Sign out</span>
       </button>
       <button class="header-alert-btn" id="mobile-header-alert" data-page="alerts">
@@ -548,8 +554,8 @@
           <!-- Manual input row -->
           <div class="scanner-manual-panel">
             <div class="scanner-manual-row">
-              <input type="text" id="manual-barcode" placeholder="Enter barcode manually..." class="scanner-manual-input">
-              <button class="scanner-lookup-btn" data-action="lookup-barcode">
+              <input type="text" id="manual-barcode" placeholder="Enter barcode manually..." data-i18n-placeholder="scanner.manualPlaceholder" class="scanner-manual-input">
+              <button class="scanner-lookup-btn" data-action="lookup-barcode" data-i18n="scanner.lookup">
                 Look up
               </button>
             </div>

@@ -656,6 +656,7 @@
 
     function refreshGlobalUi() {
       if (typeof syncAlertBadges === 'function') syncAlertBadges();
+      refreshConnectionIndicator();
     }
 
     window.addEventListener('rxscan:languagechange', () => {
