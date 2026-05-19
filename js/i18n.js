@@ -305,7 +305,7 @@
       'analytics.expiry.none': 'No upcoming expiry',
       'analytics.health.noData': 'No data',
       'analytics.health.noDataMeta': 'Add medicines to see stock coverage',
-      'analytics.health.meta': '{{healthy}} of {{total}} medicines above reorder point',
+      'analytics.health.meta': '{{healthy}} / {{total}} above reorder point',
       'analytics.daysLeft': '{{count}}d left - {{date}}',
     },
     km: {
@@ -581,7 +581,7 @@
       'analytics.expiry.none': 'មិនមានការផុតកំណត់ជិតមកដល់',
       'analytics.health.noData': 'គ្មានទិន្នន័យ',
       'analytics.health.noDataMeta': 'បន្ថែមថ្នាំដើម្បីមើលភាពគ្រប់គ្រងស្តុក',
-      'analytics.health.meta': '{{healthy}} / {{total}} មុខលើសចំណុចបញ្ជាទិញបន្ថែម',
+      'analytics.health.meta': '{{healthy}} / {{total}} លើសចំណុចបញ្ជាទិញបន្ថែម',
       'analytics.daysLeft': 'នៅសល់ {{count}} ថ្ងៃ - {{date}}',
     },
   };

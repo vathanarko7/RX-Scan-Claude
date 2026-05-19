@@ -92,7 +92,14 @@
       document.getElementById('an-health-meta').textContent = tx('analytics.health.noDataMeta', null, 'Add medicines to see stock coverage');
     } else {
       document.getElementById('an-health-value').textContent = `${inStockRate}%`;
-      document.getElementById('an-health-meta').textContent = tx('analytics.health.meta', { healthy: healthyCount, total: inventory.length }, `${healthyCount} of ${inventory.length} medicines above reorder point`);
+      const isKhmer = globalThis.i18n?.getLanguage?.() === 'km';
+      document.getElementById('an-health-meta').textContent = isKhmer
+        ? `${healthyCount} / ${inventory.length} ${tx('analytics.insight.inStockRate.meta', null, 'Above reorder point')}`
+        : tx(
+            'analytics.health.meta',
+            { healthy: healthyCount, total: inventory.length },
+            `${healthyCount} of ${inventory.length} medicines above reorder point`
+          );
     }
   }
 

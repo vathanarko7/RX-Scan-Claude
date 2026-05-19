@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -67,12 +67,12 @@
         </div>
         <div class="auth-error" id="auth-error"></div>
         <div class="form-group">
-          <label class="auth-label" data-i18n="auth.email">Email</label>
+          <label class="auth-label" for="auth-email" data-i18n="auth.email">Email</label>
           <input type="email" class="form-input" id="auth-email" placeholder="staff@yourpharmacy.com" data-i18n-placeholder="auth.email.placeholder"
             autocomplete="email">
         </div>
         <div class="form-group">
-          <label class="auth-label" data-i18n="auth.password">Password</label>
+          <label class="auth-label" for="auth-password" data-i18n="auth.password">Password</label>
           <input type="password" class="form-input" id="auth-password" placeholder="Enter password" data-i18n-placeholder="auth.password.placeholder"
             autocomplete="current-password">
         </div>
@@ -98,7 +98,7 @@
       <span class="connection-dot"></span>
       <span id="connection-label" data-i18n="connection.connecting">Connecting...</span>
     </div>
-    <nav>
+    <nav aria-label="Primary navigation">
       <button class="nav-btn active" data-page="dashboard">&#11041; <span data-i18n="nav.dashboard">Dashboard</span></button>
       <button class="nav-btn" data-page="inventory">&#128230; <span data-i18n="nav.inventory">Inventory</span></button>
       <button class="nav-btn" data-page="map">&#128506; <span data-i18n="nav.map">Store Map</span></button>
@@ -117,7 +117,7 @@
         <small data-i18n="common.staff">Staff</small>
         <span id="session-email-header" data-i18n="common.signedOut">Signed out</span>
       </div>
-      <button class="btn btn-ghost logout-btn-header is-hidden" id="logout-btn-header" data-action="sign-out">
+      <button class="btn btn-ghost logout-btn-header is-hidden" id="logout-btn-header" data-action="sign-out" aria-label="Sign out">
         <span class="logout-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false">
             <path d="M10 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4" />
@@ -127,7 +127,7 @@
         </span>
         <span class="logout-label" data-i18n="common.signout">Sign out</span>
       </button>
-      <button class="header-alert-btn" id="mobile-header-alert" data-page="alerts">
+      <button class="header-alert-btn" id="mobile-header-alert" data-page="alerts" aria-label="Open alerts">
         <span class="header-alert-icon">&#128276;</span>
         <span class="header-alert-label" data-i18n="nav.alerts">Alerts</span>
         <span class="header-alert-badge" id="header-alert-badge">5</span>
@@ -136,7 +136,7 @@
   </header>
 
   <!-- MOBILE BOTTOM NAV -->
-  <nav class="mobile-nav" id="mobile-nav">
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
     <button class="mobile-nav-btn active" id="mn-dashboard" data-page="dashboard">
       <span class="mn-icon">&#11041;</span><span data-i18n="nav.dashboard.short">Dash</span>
     </button>
@@ -250,7 +250,7 @@
         <div class="search-wrap">
           <span class="search-icon">&#128269;</span>
           <input type="text" class="search-input" id="search-inv" placeholder="Search name, barcode, shelf, manufacturer..." data-i18n-placeholder="inventory.search.placeholder">
-          <button class="search-clear" id="search-clear-btn" data-action="clear-search">&times;</button>
+          <button class="search-clear" id="search-clear-btn" data-action="clear-search" aria-label="Clear search">&times;</button>
         </div>
         <select class="filter-select" id="filter-cat">
           <option value="" data-i18n="inventory.filter.allCategories">All Categories</option>
@@ -424,26 +424,26 @@
               <span class="modal-status-tag location-missing" id="modal-location-tag" data-i18n="modal.medication.status.unassigned">Unassigned</span>
             </div>
         </div>
-        <button class="icon-btn modal-close-btn" data-action="close-modal">&#10005;</button>
+        <button class="icon-btn modal-close-btn" data-action="close-modal" aria-label="Close medicine form">&#10005;</button>
       </div>
       <div class="modal-body">
         <div class="form-row">
           <div class="form-group">
-              <label data-i18n="modal.medication.field.brand">Brand Name *</label>
+              <label for="f-name" data-i18n="modal.medication.field.brand">Brand Name *</label>
               <input type="text" class="form-input" id="f-name" placeholder="e.g. Amoxil" data-i18n-placeholder="modal.medication.placeholder.brand">
           </div>
           <div class="form-group">
-              <label data-i18n="modal.medication.field.generic">Generic Name</label>
+              <label for="f-generic" data-i18n="modal.medication.field.generic">Generic Name</label>
               <input type="text" class="form-input" id="f-generic" placeholder="e.g. Amoxicillin" data-i18n-placeholder="modal.medication.placeholder.generic">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-              <label data-i18n="modal.medication.field.barcode">Barcode *</label>
+              <label for="f-barcode" data-i18n="modal.medication.field.barcode">Barcode *</label>
               <input type="text" class="form-input" id="f-barcode" placeholder="e.g. 3400936345507" data-i18n-placeholder="modal.medication.placeholder.barcode">
           </div>
           <div class="form-group">
-              <label data-i18n="modal.medication.field.category">Category *</label>
+              <label for="f-category" data-i18n="modal.medication.field.category">Category *</label>
             <select class="form-select" id="f-category">
               <option>Antibiotics</option>
               <option>Analgesics</option>
@@ -462,27 +462,27 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-              <label data-i18n="modal.medication.field.boxPrice">Box Price ($) *</label>
+              <label for="f-price-box" data-i18n="modal.medication.field.boxPrice">Box Price ($) *</label>
             <input type="number" class="form-input" id="f-price-box" step="0.01" placeholder="12.50">
           </div>
           <div class="form-group">
-              <label data-i18n="modal.medication.field.unitsPerBox">Units per Box</label>
+              <label for="f-units" data-i18n="modal.medication.field.unitsPerBox">Units per Box</label>
             <input type="number" class="form-input" id="f-units" placeholder="30">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-              <label data-i18n="modal.medication.field.currentStock">Current Stock (boxes)</label>
+              <label for="f-stock" data-i18n="modal.medication.field.currentStock">Current Stock (boxes)</label>
             <input type="number" class="form-input" id="f-stock" placeholder="50">
           </div>
           <div class="form-group">
-              <label data-i18n="modal.medication.field.reorderPoint">Reorder Point</label>
+              <label for="f-reorder" data-i18n="modal.medication.field.reorderPoint">Reorder Point</label>
             <input type="number" class="form-input" id="f-reorder" placeholder="10">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-              <label data-i18n="modal.medication.field.zone">Zone *</label>
+              <label for="f-zone" data-i18n="modal.medication.field.zone">Zone *</label>
             <select class="form-select" id="f-zone">
               <option>A - Antibiotics</option>
               <option>B - Pain Relief</option>
@@ -495,17 +495,17 @@
             </select>
           </div>
           <div class="form-group">
-              <label data-i18n="modal.medication.field.shelf">Shelf</label>
+              <label for="f-shelf" data-i18n="modal.medication.field.shelf">Shelf</label>
               <input type="text" class="form-input" id="f-shelf" placeholder="e.g. A2-L3" data-i18n-placeholder="modal.medication.placeholder.shelf">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-              <label data-i18n="modal.medication.field.expiryDate">Expiry Date</label>
+              <label for="f-expiry" data-i18n="modal.medication.field.expiryDate">Expiry Date</label>
             <input type="date" class="form-input" id="f-expiry">
           </div>
           <div class="form-group">
-              <label data-i18n="modal.medication.field.manufacturer">Manufacturer</label>
+              <label for="f-mfr" data-i18n="modal.medication.field.manufacturer">Manufacturer</label>
               <input type="text" class="form-input" id="f-mfr" placeholder="e.g. Pfizer" data-i18n-placeholder="modal.medication.placeholder.manufacturer">
           </div>
         </div>
@@ -527,7 +527,7 @@
   <div id="scanner-overlay" class="scanner-overlay-shell">
 
     <!-- Close button (repositioned by JS for desktop/mobile) -->
-    <button id="scanner-close-btn" class="scanner-close-shell" data-action="close-scanner">&#10005;</button>
+    <button id="scanner-close-btn" class="scanner-close-shell" data-action="close-scanner" aria-label="Close scanner">&#10005;</button>
 
     <!-- Mobile header - shown on mobile only, hidden on desktop -->
       <div id="scanner-mobile-header" class="scanner-mobile-header-shell">
@@ -555,7 +555,7 @@
           <div class="scanner-manual-panel">
             <div class="scanner-manual-row">
               <input type="text" id="manual-barcode" placeholder="Enter barcode manually..." data-i18n-placeholder="scanner.manualPlaceholder" class="scanner-manual-input">
-              <button class="scanner-lookup-btn" data-action="lookup-barcode" data-i18n="scanner.lookup">
+              <button class="scanner-lookup-btn" data-action="lookup-barcode" data-i18n="scanner.lookup" aria-label="Look up barcode">
                 Look up
               </button>
             </div>
@@ -616,12 +616,12 @@
             </div>
           </div>
           <div class="scanner-action-row">
-            <button data-action="highlight-on-map" class="scanner-action-btn scanner-action-btn-ghost">&#128506;
+            <button data-action="highlight-on-map" class="scanner-action-btn scanner-action-btn-ghost" aria-label="Show medicine on map">&#128506;
               Show on Map</button>
-            <button data-action="quick-update-stock" class="scanner-action-btn scanner-action-btn-primary">&#128230;
+            <button data-action="quick-update-stock" class="scanner-action-btn scanner-action-btn-primary" aria-label="Update stock">
               Update Stock</button>
           </div>
-          <button data-action="scan-again" class="scanner-secondary-btn">
+          <button data-action="scan-again" class="scanner-secondary-btn" aria-label="Scan another barcode">
             <span class="scanner-btn-icon">&#128247;</span> Scan Another Barcode
           </button>
         </div>
@@ -679,10 +679,10 @@
             </div>
           </div>
           <div class="scanner-action-row">
-            <button data-action="open-add-from-scan" class="scanner-add-btn">&#10133;
+            <button data-action="open-add-from-scan" class="scanner-add-btn" aria-label="Add medicine to inventory">&#10133;
               Add to Inventory</button>
           </div>
-          <button data-action="scan-again" class="scanner-secondary-btn">
+          <button data-action="scan-again" class="scanner-secondary-btn" aria-label="Scan another barcode">
             <span class="scanner-btn-icon">&#128247;</span> Scan Another Barcode
           </button>
         </div>
